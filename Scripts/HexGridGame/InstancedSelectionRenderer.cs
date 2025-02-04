@@ -14,7 +14,10 @@ public class DebugPosScale
 public class InstancedSelectionRenderer : MonoBehaviour
 {
     [Inject]
-    IGameBoard hexGridManager;
+    IGameBoard gameBoard;
+
+    [Inject]
+    IStaticEvents staticEvents;
 
     public bool cacheRenderParams = false;
     public Material selectMaterial, hoverMaterial;
@@ -35,7 +38,7 @@ public class InstancedSelectionRenderer : MonoBehaviour
 
     void Update()
     {
-        if (hexGridManager.boardPositions.isBoardCreated)
+        if (gameBoard.boardPositions.isBoardCreated)
         {
             UpdateSelectedTiles();
             //RenderHexTilesInstanced(hexGridManager.selectedTiles, rpSelected);
@@ -45,7 +48,7 @@ public class InstancedSelectionRenderer : MonoBehaviour
 
     void UpdateSelectedTiles()
     {
-        numInstances = hexGridManager.selectedTiles.Count;
+        numInstances = gameBoard.selectedTiles.Count;
 
         if (!cacheRenderParams)
             rpSelected = new RenderParams(selectMaterial);
@@ -63,15 +66,15 @@ public class InstancedSelectionRenderer : MonoBehaviour
 
     void AddSelectedIndex(int i, bool add = true)
     {
-        if (!hexGridManager.selectedTiles[i].IsSelected || hoveredTiles.Contains(hexGridManager.selectedTiles[i]))
+        if (!gameBoard.selectedTiles[i].IsSelected || hoveredTiles.Contains(gameBoard.selectedTiles[i]))
         {
             if (add)
                 instData.Add(new Matrix4x4());
             return;
         }
 
-        Vector3 translation = hexGridManager.selectedTiles[i].transform.position.With(y: 0) + offset;
-        Vector3 matrixScale = hexGridManager.tileGameData.parentScale * scale;
+        Vector3 translation = gameBoard.selectedTiles[i].transform.position.With(y: 0) + offset;
+        Vector3 matrixScale = gameBoard.tileGameData.parentScale * scale;
         //posScales[i].position = translation;
         //posScales[i].scale = matrixScale;
         Matrix4x4 inst = new Matrix4x4();
@@ -95,7 +98,7 @@ public class InstancedSelectionRenderer : MonoBehaviour
         for (int i = 0; i < tiles.Count; i++)
         {
             Vector3 translation = tiles[i].transform.position.With(y: 0) + offset;
-            Vector3 matrixScale = hexGridManager.tileGameData.parentScale * scale;
+            Vector3 matrixScale = gameBoard.tileGameData.parentScale * scale;
             Matrix4x4 inst = new Matrix4x4();
             inst.SetTRS(translation, Quaternion.identity, matrixScale);
             renderMatrices[i] = inst;
@@ -126,7 +129,7 @@ public class InstancedSelectionRenderer : MonoBehaviour
         }
     }
 
-    void OnHoverTileEnter(HexTile tile)
+    void OnHoverTileEnter(IBoardPosition tile)
     {
         if (!hoveredTiles.Contains(tile))
         {
@@ -134,7 +137,7 @@ public class InstancedSelectionRenderer : MonoBehaviour
         }
     }
 
-    void OnHoverTileExit(HexTile tile)
+    void OnHoverTileExit(IBoardPosition tile)
     {
         if (hoveredTiles.Contains(tile))
         {
@@ -142,15 +145,15 @@ public class InstancedSelectionRenderer : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    public virtual void OnEnable()
     {
-        HexTile.OnTileHoverEnter += OnHoverTileEnter;
-        HexTile.OnTileHoverExit += OnHoverTileExit;
+        staticEvents.OnTileHoverEnter += OnHoverTileEnter;
+        staticEvents.OnTileHoverExit += OnHoverTileExit;
     }
 
-    private void OnDisable()
+    public virtual void OnDisable()
     {
-        HexTile.OnTileHoverEnter -= OnHoverTileEnter;
-        HexTile.OnTileHoverExit -= OnHoverTileExit;
+        staticEvents.OnTileHoverEnter -= OnHoverTileEnter;
+        staticEvents.OnTileHoverExit -= OnHoverTileExit;
     }
 }

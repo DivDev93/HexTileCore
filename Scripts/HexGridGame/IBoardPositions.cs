@@ -1,7 +1,6 @@
 using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.XR.CoreUtils.Bindings.Variables;
 using UnityLabs.Slices.Games.Chess;
 using UnityEngine.Jobs;
 
@@ -16,17 +15,6 @@ public enum VersusGameMode : byte
     HumanVsAI = 2,
     AIvsHuman = 3,
     AIvsAI = 4
-}
-
-public interface IGameBoard
-{
-    public void SetPiecesVisibility(bool state);
-    public BindableVariable<float> boardRotation { get; }
-    public void ClaimBoardStateOwnership();
-    public void StartGame(VersusGameMode mode, bool isLocal);
-    public IBoardPositions boardPositions { get; }
-    public TileGameDataScriptableObject tileGameData { get; }
-    public List<IBoardPosition> selectedTiles { get; }
 }
 
 public interface IBoardPositions

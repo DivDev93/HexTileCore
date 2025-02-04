@@ -533,6 +533,17 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
         }
 
     }
+
+    public bool TryGetTile(Collider collider, out IBoardPosition tile)
+    {
+        if(tileColliderDict.TryGetValue(collider, out HexTile hexTile))
+        {
+            tile = hexTile;
+            return true;
+        }
+        tile = default;
+        return false;
+    }
 }
 
 // Utility class for hexagonal grid calculations

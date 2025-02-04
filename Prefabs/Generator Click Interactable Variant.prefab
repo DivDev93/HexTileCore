@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: -4410142897673380276, guid: 16e1eca382366f646937393346284b47,
         type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 1187267730
+      value: 3079629310
       objectReference: {fileID: 0}
     - target: {fileID: 2270746595748025237, guid: 16e1eca382366f646937393346284b47,
         type: 3}
@@ -112,13 +112,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delegates:
-  - eventID: 14
+  - eventID: 2
     callback:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 976253019846758266}
           m_TargetAssemblyTypeName: TilePlaceable, Assembly-CSharp
-          m_MethodName: OnSelectExit
+          m_MethodName: OnSelected
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -128,13 +128,13 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  - eventID: 2
+  - eventID: 3
     callback:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 976253019846758266}
           m_TargetAssemblyTypeName: TilePlaceable, Assembly-CSharp
-          m_MethodName: OnSelected
+          m_MethodName: OnSelectExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

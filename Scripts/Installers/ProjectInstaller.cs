@@ -8,6 +8,7 @@ public class ProjectInstaller : MonoBehaviour, IInstaller
     public StartTileIndicesScriptableObject startTileIndicesScriptableObject;
     public void InstallBindings(ContainerBuilder builder)
     {
+        builder.AddSingleton<IStaticEvents>(IStaticEvents => new TileEventListeners());
         builder.AddSingleton(tileGameData);
         builder.AddSingleton(startTileIndicesScriptableObject);
         Debug.Log("Hello");
