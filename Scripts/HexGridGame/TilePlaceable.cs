@@ -7,16 +7,16 @@ using Reflex.Attributes;
 public class TilePlaceable : MonoBehaviour
 {
     [Inject]
-    HexGridManager hexGridManager;
+    IGameBoard gameBoard;
 
     public float displacement = 0.1f;
     Vector3 defaultScale;
-    float sphereCastSize => hexGridManager.sphereCastSize;
-    public HexTile placedTile;
-    private HexTile highlightedTile;
+    float sphereCastSize => gameBoard.tileGameData.sphereCastSize;
+    public ISelectableTarget placedTile;
+    private ISelectableTarget highlightedTile;
     int layerMask;// = LayerMask.GetMask("HexTile");
 
-    public HexTile PlacedTile
+    public ISelectableTarget PlacedTile
     {
         get { return placedTile; }
         set
@@ -30,7 +30,7 @@ public class TilePlaceable : MonoBehaviour
                 placedTile.OnTilePulse += OnTilePulse;
         }
     }
-    public HexTile HighlightedTile
+    public ISelectableTarget HighlightedTile
     {
         get { return highlightedTile; }
         set
@@ -120,12 +120,12 @@ public class TilePlaceable : MonoBehaviour
         //transform.parent = null;
         //var localPlayer = XRINetworkGameManager.Instance.GetLocalPlayer();
         localPlayerTransform = Camera.main.transform;
-        placedLocalRotation = Quaternion.LookRotation((localPlayerTransform.position - PlacedTile.transform.position).With(y:0f), Vector3.up);
+        placedLocalRotation = Quaternion.LookRotation((localPlayerTransform.position - PlacedTile.GetTransform().position).With(y:0f), Vector3.up);
         placedLocalPosition = Vector3.up * displacement;
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(transform.DOMove(PlacedTile.transform.position.With(y: 0) + placedLocalPosition, placementDuration))//DOJump(placedTile.transform.position + placedLocalPosition, jumpPower, 1, placementDuration))
+        sequence.Append(transform.DOMove(PlacedTile.GetTransform().position.With(y: 0) + placedLocalPosition, placementDuration))//DOJump(placedTile.transform.position + placedLocalPosition, jumpPower, 1, placementDuration))
             .Join(transform.DORotateQuaternion(placedLocalRotation, placementDuration))
-            .Join(transform.DOScale(hexGridManager.PlacedCardScale * Vector3.one, placementDuration))
+            .Join(transform.DOScale(gameBoard.tileGameData.PlacedCardScale * Vector3.one, placementDuration))
             .OnComplete(() =>
         {
             isPlaced = true;
@@ -142,7 +142,7 @@ public class TilePlaceable : MonoBehaviour
     {
         if (PlacedTile != null && isPlaced)
         {
-            PrimeTweenExtensions.PulseY(transform, PlacedTile.transform.position.With(y: 0f) + placedLocalPosition, jumpPower, 1, hexGridManager.pulseData.duration);
+            PrimeTweenExtensions.PulseY(transform, PlacedTile.GetTransform().position.With(y: 0f) + placedLocalPosition, jumpPower, 1, gameBoard.tileGameData.pulseData.duration);
         }
     }
 
@@ -161,7 +161,7 @@ public class TilePlaceable : MonoBehaviour
                 //    highlightedTile.OnHoverExit();
                 //}
 
-                if (!hexGridManager.selectedTiles.Contains(hexTile))
+                if (!gameBoard.selectedTiles.Contains(hexTile))
                 {
                     HighlightedTile = null;
                     //Debug.Log("Hovered Tile is not among selected " + hit.collider.name + " dict count is " + HexGridManager.tileColliderDict.Count);
@@ -192,7 +192,7 @@ public class TilePlaceable : MonoBehaviour
         {
             Gizmos.color = Color.red;
             Vector3 pos = transform.position;
-            Gizmos.DrawSphere(pos.With(y: HighlightedTile.transform.position.y), sphereCastSize);
+            Gizmos.DrawSphere(pos.With(y: HighlightedTile.GetTransform().position.y), sphereCastSize);
         }
     }
 }

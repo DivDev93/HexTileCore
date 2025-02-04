@@ -41,6 +41,7 @@ public class MainSceneInstaller : MonoBehaviour, IInstaller
         IShakeable shakeable = cameraScreenShake;
         builder.AddSingleton<IShakeable>(IShakeable => shakeable);
         builder.AddSingleton<IGameUI>(IGameUI => gameUIref.Value);
+        builder.AddSingleton<IGameBoard>(IGameBoard => hexGridManager);
         builder.AddSingleton(hexGridManager);
         builder.AddSingleton(networkGameManager);
         builder.AddSingleton(sentenceGenerator);

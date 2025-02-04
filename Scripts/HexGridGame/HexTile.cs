@@ -8,10 +8,10 @@ using UnityUtils;
 using Reflex.Attributes;
 using JSAM;
 
-public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition
+public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISelectableTarget
 {
     [Inject]
-    HexGridManager hexGridManager;
+    IGameBoard gameBoard;
 
     public Vector2Int GridPosition; // Axial coordinate
     public List<HexTile> Neighbors { get; private set; } = new List<HexTile>();
@@ -52,6 +52,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition
     Vector3 m_originalPos;
 
     public Vector3 originalPos { get => m_originalPos; set => m_originalPos = value; }
+    public Action OnTilePulse { get => onTilePulse; set => onTilePulse = value; }
 
     public Color selectColor = Color.yellow;
     public Color hoverColor = Color.cyan;
@@ -60,7 +61,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition
     bool ignoreHighlight = false;
 
     public static Action<HexTile> OnTileClicked;
-    public Action OnTilePulse;
+    Action onTilePulse;
     public static Action<HexTile> OnTileHoverEnter;
     public static Action<HexTile> OnTileHoverExit;
 
@@ -162,7 +163,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition
     {
         Sequence sequence = DOTween.Sequence();
         sequence.SetDelay(delay * pulseData.delay);
-        sequence.Append(PrimeTweenExtensions.PulseY(transform, transform.localPosition.With(y: 0f), pulseData.height * hexGridManager.parentScale, 1, pulseData.duration, true).SetEase(Ease.Linear));
+        sequence.Append(PrimeTweenExtensions.PulseY(transform, transform.localPosition.With(y: 0f), pulseData.height * gameBoard.tileGameData.parentScale, 1, pulseData.duration, true).SetEase(Ease.Linear));
         sequence.AppendCallback(() =>
         {
             OnTilePulse?.Invoke();
@@ -171,7 +172,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition
         });
         sequence.OnComplete(() =>
         {
-            if (delay != 0f && hexGridManager.selectedTiles.Contains(this))
+            if (delay != 0f && gameBoard.selectedTiles.Contains(this))
             {
                 IsSelected = true;
             }
@@ -187,7 +188,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition
 
     public void OnHoverExit()
     {
-        if (!hexGridManager.selectedTiles.Contains(this))
+        if (!gameBoard.selectedTiles.Contains(this))
         {
             ClearHighlight();
         }
@@ -196,6 +197,11 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition
             IsSelected = true;
         }
         OnTileHoverExit?.Invoke(this);
+    }
+
+    public Transform GetTransform()
+    {
+        return transform;
     }
 }
 

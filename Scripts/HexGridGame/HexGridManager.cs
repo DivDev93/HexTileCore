@@ -86,7 +86,14 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
 {
     public GeneratedBoardData boardData = new();
     public bool isBoardCreated = false;
+    bool IBoardPositions.isBoardCreated { get => isBoardCreated; set => isBoardCreated = value; }
+
+    [Inject]
     public StartTileIndicesScriptableObject startTileIndices;
+    
+    [Inject]
+    public TileGameDataScriptableObject tileGameData;
+
     public float minScale = 0.1f;
     public float maxScale = 0.99f;
     public float noiseScale = 0.1f;
@@ -99,18 +106,14 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     };
     public GameObject hexTilePrefab;// Assign the hex tile prefab
     public int movementRange = 3;
-    public PulseData pulseData = new PulseData { duration = 0.25f, delay = 0.1f, height = 0.3f };
 
     public int gridWidth = 10;   // Width of the grid
     public int gridHeight = 10;  // Height of the grid
-    public float parentScale = 0.025f; // Scale of the parent object
+    float parentScale => tileGameData.parentScale; // Scale of the parent object
     [SerializeField]
     float hexSize = 0.6f;   // Size of a hex tile
     public float HexSize => hexSize * parentScale;
-    [SerializeField]
-    float placedCardScale = 0.1f; // Scale of the placed card
-    public float PlacedCardScale => placedCardScale * parentScale;
-    public float sphereCastSize = 0.1f;
+    public PulseData pulseData => tileGameData.pulseData;    
     bool isInitialized = false;
     public bool IsInitialized => isInitialized;
 
@@ -137,13 +140,18 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
         }
     }
 
-    public TransformAccessArray m_TransformsAccessArray;
-
     public GameObject boardGameObject => gameObject;
 
     BindableVariable<float> m_BoardRotation = new BindableVariable<float>();
-
     public BindableVariable<float> boardRotation => m_BoardRotation;
+
+    TransformAccessArray m_TransformsAccessArray;
+    public TransformAccessArray transformAccessArray => m_TransformsAccessArray;
+
+    public IBoardPositions boardPositions => this;
+
+    TileGameDataScriptableObject IGameBoard.tileGameData => tileGameData;
+    List<IBoardPosition> IGameBoard.selectedTiles => selectedTiles.Cast<IBoardPosition>().ToList();
 
     public UnityEvent OnStartGame = new UnityEvent();
     public UnityEvent OnBoardCreate = new UnityEvent();

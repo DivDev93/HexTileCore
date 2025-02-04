@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 976202055685800931}
   - component: {fileID: 8108354757039579660}
+  - component: {fileID: -655816454291540082}
   m_Layer: 0
   m_Name: ProjectScope
   m_TagString: Untagged
@@ -44,3 +45,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 238ee66aa2bafad47bf60938e98aebca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-655816454291540082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5438506196132656335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f86535011d20e104cb95e93793f597a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileGameData: {fileID: 11400000, guid: 17ee4745f68f21648b39a4d89813b4a2, type: 2}
+  startTileIndicesScriptableObject: {fileID: 11400000, guid: bced12f82e3ef564e925f97e0263ca91,
+    type: 2}

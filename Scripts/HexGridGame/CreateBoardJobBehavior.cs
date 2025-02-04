@@ -13,7 +13,8 @@ public class CreateBoardJobBehavior : MonoBehaviour
     bool m_IsShuttingDown = false;
 
     [Inject]
-    HexGridManager m_Board;
+    IGameBoard m_Board;
+
     public float progress = 0f;
     NativeArray<Vector3> targetPositions;
     NativeArray<Pose> InitialPositions;
@@ -22,12 +23,12 @@ public class CreateBoardJobBehavior : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected void Awake()
     {
-        targetPositions = new NativeArray<Vector3>(m_Board.positionList.Count, Allocator.Persistent);
-        InitialPositions = new NativeArray<Pose>(m_Board.positionList.Count, Allocator.Persistent);
-        for (var i = 0; i < m_Board.positionList.Count; i++)
+        targetPositions = new NativeArray<Vector3>(m_Board.boardPositions.positionList.Count, Allocator.Persistent);
+        InitialPositions = new NativeArray<Pose>(m_Board.boardPositions.positionList.Count, Allocator.Persistent);
+        for (var i = 0; i < m_Board.boardPositions.positionList.Count; i++)
         {
-            targetPositions[i] = m_Board.positionList[i].originalPos;
-            var tile = m_Board.positionList[i].transform;
+            targetPositions[i] = m_Board.boardPositions.positionList[i].originalPos;
+            var tile = m_Board.boardPositions.positionList[i].transform;
             var pose = InitialPositions[i];
             pose.position = tile.localPosition;
             pose.rotation = tile.localRotation;
@@ -51,7 +52,7 @@ public class CreateBoardJobBehavior : MonoBehaviour
             progress = this.progress
         };
         
-        m_JobHandle = job.Schedule(m_Board.m_TransformsAccessArray);
+        m_JobHandle = job.Schedule(m_Board.boardPositions.transformAccessArray);
     }
 
     protected void UpdateVFX()
@@ -71,14 +72,14 @@ public class CreateBoardJobBehavior : MonoBehaviour
         enabled = false;
         m_JobHandle.Complete();
 
-        for(int i = 0; i < m_Board.positionList.Count; i++)
+        for(int i = 0; i < m_Board.boardPositions.positionList.Count; i++)
         {
-            var tile = m_Board.positionList[i].transform;
+            var tile = m_Board.boardPositions.positionList[i].transform;
             tile.transform.localPosition = targetPositions[i];
             tile.transform.localRotation = Quaternion.identity;
-            tile.transform.localScale = m_Board.parentScale * Vector3.one;
+            tile.transform.localScale = m_Board.tileGameData.parentScale * Vector3.one;
         }
-        m_Board.isBoardCreated = true;
+        m_Board.boardPositions.isBoardCreated = true;
     }
 
     protected virtual void LateUpdate()

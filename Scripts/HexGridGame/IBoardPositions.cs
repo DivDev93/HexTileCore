@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Unity.XR.CoreUtils.Bindings.Variables;
 using UnityLabs.Slices.Games.Chess;
+using UnityEngine.Jobs;
 
 public interface IGameUI
 {
@@ -23,12 +24,17 @@ public interface IGameBoard
     public BindableVariable<float> boardRotation { get; }
     public void ClaimBoardStateOwnership();
     public void StartGame(VersusGameMode mode, bool isLocal);
+    public IBoardPositions boardPositions { get; }
+    public TileGameDataScriptableObject tileGameData { get; }
+    public List<IBoardPosition> selectedTiles { get; }
 }
 
 public interface IBoardPositions
 { 
     public GameObject boardGameObject { get; }
     public List<IBoardPosition> positionList { get; }
+    public TransformAccessArray transformAccessArray { get; }
+    public bool isBoardCreated { get; set; }
 }
 
 public interface IBoardPosition
@@ -36,4 +42,5 @@ public interface IBoardPosition
     public bool IsHighlighted { get; set; }
     public Transform transform { get; }
     public Vector3 originalPos { get; set; }
+    public bool IsSelected { get; set; }
 }

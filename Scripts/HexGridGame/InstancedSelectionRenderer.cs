@@ -14,7 +14,7 @@ public class DebugPosScale
 public class InstancedSelectionRenderer : MonoBehaviour
 {
     [Inject]
-    HexGridManager hexGridManager;
+    IGameBoard hexGridManager;
 
     public bool cacheRenderParams = false;
     public Material selectMaterial, hoverMaterial;
@@ -24,7 +24,7 @@ public class InstancedSelectionRenderer : MonoBehaviour
     int numInstances = 0;
     //public List<DebugPosScale> posScales = new List<DebugPosScale>();
     private List<Matrix4x4> instData = new List<Matrix4x4>();
-    List<HexTile> hoveredTiles = new List<HexTile>();
+    List<IBoardPosition> hoveredTiles = new List<IBoardPosition>();
     RenderParams rpSelected, rpHover;
 
     private void Start()
@@ -35,7 +35,7 @@ public class InstancedSelectionRenderer : MonoBehaviour
 
     void Update()
     {
-        if (hexGridManager.isBoardCreated)
+        if (hexGridManager.boardPositions.isBoardCreated)
         {
             UpdateSelectedTiles();
             //RenderHexTilesInstanced(hexGridManager.selectedTiles, rpSelected);
@@ -71,7 +71,7 @@ public class InstancedSelectionRenderer : MonoBehaviour
         }
 
         Vector3 translation = hexGridManager.selectedTiles[i].transform.position.With(y: 0) + offset;
-        Vector3 matrixScale = hexGridManager.parentScale * scale;
+        Vector3 matrixScale = hexGridManager.tileGameData.parentScale * scale;
         //posScales[i].position = translation;
         //posScales[i].scale = matrixScale;
         Matrix4x4 inst = new Matrix4x4();
@@ -89,13 +89,13 @@ public class InstancedSelectionRenderer : MonoBehaviour
         }
     }
 
-    void RenderHexTilesInstanced(List<HexTile> tiles, RenderParams rp)
+    void RenderHexTilesInstanced(List<IBoardPosition> tiles, RenderParams rp)
     {
         Matrix4x4[] renderMatrices = new Matrix4x4[tiles.Count];
         for (int i = 0; i < tiles.Count; i++)
         {
             Vector3 translation = tiles[i].transform.position.With(y: 0) + offset;
-            Vector3 matrixScale = hexGridManager.parentScale * scale;
+            Vector3 matrixScale = hexGridManager.tileGameData.parentScale * scale;
             Matrix4x4 inst = new Matrix4x4();
             inst.SetTRS(translation, Quaternion.identity, matrixScale);
             renderMatrices[i] = inst;

@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using Reflex.Attributes;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityLabs.Slices.Games.Chess;
 
@@ -17,6 +18,9 @@ public class HexBoardUI : MonoBehaviour, IGameUI
     XRBaseInteractable[] m_StartReceiver = null;
 
     [SerializeField]
+    Button[] m_StartButtons = null;
+
+    [SerializeField]
     float[] m_StartYAngles = { 0f, 270f, 180f, 90f };
 
     void OnEnable()
@@ -26,6 +30,12 @@ public class HexBoardUI : MonoBehaviour, IGameUI
             float yAngle = m_StartYAngles[i];
             m_StartReceiver[i].selectEntered.AddListener(args => StartGame(yAngle));
         }
+
+        for (int i = 0; i < m_StartButtons.Length; ++i)
+        {
+            float yAngle = m_StartYAngles[i];
+            m_StartButtons[i].onClick.AddListener(() => StartGame(yAngle));
+        }
     }
 
     void OnDisable()
@@ -33,6 +43,11 @@ public class HexBoardUI : MonoBehaviour, IGameUI
         for (int i = 0; i < m_StartReceiver.Length; ++i)
         {
             m_StartReceiver[i].selectEntered.RemoveListener(args => StartGame(m_StartYAngles[i]));
+        }
+
+        for (int i = 0; i < m_StartButtons.Length; ++i)
+        {
+            m_StartButtons[i].onClick.RemoveListener(() => StartGame(m_StartYAngles[i]));
         }
     }
 
@@ -42,38 +57,18 @@ public class HexBoardUI : MonoBehaviour, IGameUI
         {
             m_StartReceiver[i].enabled = state;
         }
+
+        for (int i = 0; i < m_StartButtons.Length; ++i)
+        {
+            m_StartButtons[i].interactable = state;
+        }
     }
 
     async void StartGame(float rotateYAngle)
     {
-        //m_Board.ClaimBoardStateOwnership();
         m_Board.boardRotation.Value = rotateYAngle;
         m_NetworkGameManager.StartGame();
         await DelayDeactivateUniTask();
-        //Sequence sequence = DOTween.Sequence();
-        //sequence.SetDelay(0.5f);
-        //sequence.AppendCallback(() =>
-        //{
-        //    foreach (var receiver in m_StartReceiver)
-        //    {
-        //        receiver.gameObject.SetActive(false);
-        //    }
-        //});
-        //sequence.Play();
-
-        //m_Board.boardRotation.Value = rotateYAngle;
-
-        //if (NetworkManager.Singleton.IsServer && NetworkManager.Singleton.ConnectedClients.Count == 1)
-        //{
-
-        //    Debug.Log("Starting game with one player. Starting Human vs AI.");
-        //    m_Board.StartGame(VersusGameMode.HumanVsAI, true);
-        //}
-        //else
-        //{
-        //    Debug.Log("Starting game with two players. Starting Human vs AI.");
-        //    m_Board.StartGame(VersusGameMode.HumanVsHuman, true);
-        //}
     }
 
     async UniTask DelayDeactivateUniTask()
@@ -82,6 +77,10 @@ public class HexBoardUI : MonoBehaviour, IGameUI
         foreach (var receiver in m_StartReceiver)
         {
             receiver.gameObject.SetActive(false);
+        }
+        foreach (var button in m_StartButtons)
+        {
+            button.gameObject.SetActive(false);
         }
     }
 
