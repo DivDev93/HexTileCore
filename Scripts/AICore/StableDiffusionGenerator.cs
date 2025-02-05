@@ -9,6 +9,7 @@ using Unity.Netcode;
 using System.Collections.Generic;
 using Reflex.Attributes;
 using GLTFast.Schema;
+using Sentences;
 
 public struct ImageData : INetworkSerializable
 {
@@ -33,6 +34,7 @@ public class StableDiffusionGenerator : NetworkBehaviour
         public string inputs;
     }
 
+    public List<WordData> words;
     public string prompt = "A beautiful sunset over the city";
     Texture2D currentTexture;
     public TMP_InputField inputField;

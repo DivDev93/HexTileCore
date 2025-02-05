@@ -1,0 +1,117 @@
+{
+    "sentenceTemplates": [
+    {
+      "templateText": "The [MAINNOUN] [VERB] [ADVERB] with [SECONDARYNOUN]",
+      "slotSequence": ["MainNoun", "Verb", "Adverb", "SecondaryNoun"]
+    },
+    {
+      "templateText": "[MAINNOUN] [VERB] [ADVERB] using [ADJECTIVE] [SECONDARYNOUN]",
+      "slotSequence": ["MainNoun", "Verb", "Adverb", "Adjective", "SecondaryNoun"]
+    }
+  ],
+    "words": [
+      {
+        "wordType": "Adjective",
+        "possibleWords": [
+          { "wordType": "Adjective", "word": "fierce", "cost": 2, "attackModifier": 3, "defenseModifier": 0, "speedModifier": 1 },
+          { "wordType": "Adjective", "word": "gentle", "cost": 1, "attackModifier": 0, "defenseModifier": 3, "speedModifier": 1 },
+          { "wordType": "Adjective", "word": "fast", "cost": 2, "attackModifier": 2, "defenseModifier": 1, "speedModifier": 4 },
+          { "wordType": "Adjective", "word": "slow", "cost": 1, "attackModifier": 0, "defenseModifier": 3, "speedModifier": 0 },
+          { "wordType": "Adjective", "word": "brave", "cost": 2, "attackModifier": 4, "defenseModifier": 1, "speedModifier": 2 },
+          { "wordType": "Adjective", "word": "cowardly", "cost": 1, "attackModifier": 0, "defenseModifier": 2, "speedModifier": 1 },
+          { "wordType": "Adjective", "word": "happy", "cost": 1, "attackModifier": 1, "defenseModifier": 1, "speedModifier": 1 },
+          { "wordType": "Adjective", "word": "angry", "cost": 2, "attackModifier": 3, "defenseModifier": 0, "speedModifier": 1 },
+          { "wordType": "Adjective", "word": "sad", "cost": 1, "attackModifier": 0, "defenseModifier": 1, "speedModifier": 0 },
+          { "wordType": "Adjective", "word": "powerful", "cost": 3, "attackModifier": 5, "defenseModifier": 2, "speedModifier": 2 },
+          { "wordType": "Adjective", "word": "weak", "cost": 1, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 0 },
+          { "wordType": "Adjective", "word": "shiny", "cost": 1, "attackModifier": 1, "defenseModifier": 0, "speedModifier": 0 }
+        ]
+      },
+      {
+        "wordType": "MainNoun",
+        "possibleWords": [
+          { "wordType": "MainNoun", "word": "lion", "cost": 3, "attackModifier": 5, "defenseModifier": 2, "speedModifier": 3 },
+          { "wordType": "MainNoun", "word": "tiger", "cost": 1, "attackModifier": 0, "defenseModifier": 4, "speedModifier": 0 },
+          { "wordType": "MainNoun", "word": "bear", "cost": 2, "attackModifier": 2, "defenseModifier": 5, "speedModifier": 1 },
+          { "wordType": "MainNoun", "word": "dinosaur", "cost": 1, "attackModifier": 0, "defenseModifier": 3, "speedModifier": 0 },
+          { "wordType": "MainNoun", "word": "wolf", "cost": 3, "attackModifier": 4, "defenseModifier": 2, "speedModifier": 4 },
+          { "wordType": "MainNoun", "word": "panther", "cost": 2, "attackModifier": 2, "defenseModifier": 1, "speedModifier": 5 },
+          { "wordType": "MainNoun", "word": "snake", "cost": 1, "attackModifier": 0, "defenseModifier": 1, "speedModifier": 3 },
+          { "wordType": "MainNoun", "word": "dragon", "cost": 5, "attackModifier": 7, "defenseModifier": 5, "speedModifier": 5 },
+          { "wordType": "MainNoun", "word": "mammoth", "cost": 4, "attackModifier": 0, "defenseModifier": 8, "speedModifier": 0 },
+          { "wordType": "MainNoun", "word": "minotaur", "cost": 3, "attackModifier": 5, "defenseModifier": 3, "speedModifier": 2 },
+          { "wordType": "MainNoun", "word": "eagle", "cost": 2, "attackModifier": 0, "defenseModifier": 5, "speedModifier": 0 },
+          { "wordType": "MainNoun", "word": "crocodile", "cost": 1, "attackModifier": 1, "defenseModifier": 1, "speedModifier": 1 }
+        ]
+      },
+      {
+        "wordType": "Verb",
+        "possibleWords": [
+          { "wordType": "Verb", "word": "runs", "cost": 2, "attackModifier": 2, "defenseModifier": 0, "speedModifier": 4 },
+          { "wordType": "Verb", "word": "jumps", "cost": 2, "attackModifier": 3, "defenseModifier": 0, "speedModifier": 4 },
+          { "wordType": "Verb", "word": "bites", "cost": 1, "attackModifier": 0, "defenseModifier": 1, "speedModifier": 3 },
+          { "wordType": "Verb", "word": "roars", "cost": 3, "attackModifier": 4, "defenseModifier": 0, "speedModifier": 2 },
+          { "wordType": "Verb", "word": "leaps", "cost": 2, "attackModifier": 2, "defenseModifier": 1, "speedModifier": 5 },
+          { "wordType": "Verb", "word": "fights", "cost": 3, "attackModifier": 5, "defenseModifier": 0, "speedModifier": 2 },
+          { "wordType": "Verb", "word": "tears", "cost": 1, "attackModifier": 0, "defenseModifier": 2, "speedModifier": 0 },
+          { "wordType": "Verb", "word": "crushes", "cost": 2, "attackModifier": 1, "defenseModifier": 0, "speedModifier": 4 },
+          { "wordType": "Verb", "word": "obliterates", "cost": 1, "attackModifier": 2, "defenseModifier": 0, "speedModifier": 1 },
+          { "wordType": "Verb", "word": "slashes", "cost": 1, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 2 },
+          { "wordType": "Verb", "word": "eats", "cost": 3, "attackModifier": 0, "defenseModifier": 6, "speedModifier": 0 },
+          { "wordType": "Verb", "word": "destroys", "cost": 4, "attackModifier": 7, "defenseModifier": 0, "speedModifier": 0 }
+        ]
+      },
+      {
+        "wordType": "Adverb",
+        "possibleWords": [
+          { "wordType": "Adverb", "word": "quickly", "cost": 1, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 3 },
+          { "wordType": "Adverb", "word": "slowly", "cost": 1, "attackModifier": 0, "defenseModifier": 1, "speedModifier": 0 },
+          { "wordType": "Adverb", "word": "gracefully", "cost": 2, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 2 },
+          { "wordType": "Adverb", "word": "clumsily", "cost": 1, "attackModifier": 0, "defenseModifier": 1, "speedModifier": 0 },
+          { "wordType": "Adverb", "word": "deftly", "cost": 1, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 1 },
+          { "wordType": "Adverb", "word": "smoothly", "cost": 1, "attackModifier": 1, "defenseModifier": 0, "speedModifier": 1 },
+          { "wordType": "Adverb", "word": "wrathfully", "cost": 2, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 2 },
+          { "wordType": "Adverb", "word": "lazily", "cost": 1, "attackModifier": 0, "defenseModifier": 1, "speedModifier": 0 },
+          { "wordType": "Adverb", "word": "angrily", "cost": 2, "attackModifier": 2, "defenseModifier": 0, "speedModifier": 1 },
+          { "wordType": "Adverb", "word": "bravely", "cost": 2, "attackModifier": 3, "defenseModifier": 0, "speedModifier": 1 },
+          { "wordType": "Adverb", "word": "nervously", "cost": 1, "attackModifier": 0, "defenseModifier": 1, "speedModifier": 0 },
+          { "wordType": "Adverb", "word": "eagerly", "cost": 2, "attackModifier": 1, "defenseModifier": 0, "speedModifier": 2 }
+        ]
+      },
+      {
+        "wordType": "Preposition",
+        "possibleWords": [
+          { "wordType": "Preposition", "word": "above", "cost": 0, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 0 },
+          { "wordType": "Preposition", "word": "under", "cost": 0, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 0 },
+          { "wordType": "Preposition", "word": "beside", "cost": 0, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 0 },
+          { "wordType": "Preposition", "word": "behind", "cost": 0, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 0 },
+          { "wordType": "Preposition", "word": "inside", "cost": 0, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 0 },
+          { "wordType": "Preposition", "word": "outside", "cost": 0, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 0 },
+          { "wordType": "Preposition", "word": "near", "cost": 0, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 0 },
+          { "wordType": "Preposition", "word": "on", "cost": 0, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 0 },
+          { "wordType": "Preposition", "word": "off", "cost": 0, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 0 },
+          { "wordType": "Preposition", "word": "to", "cost": 0, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 0 },
+          { "wordType": "Preposition", "word": "into", "cost": 0, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 0 },
+          { "wordType": "Preposition", "word": "through", "cost": 0, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 0 }
+        ]
+      },
+    {
+        "wordType": "SecondaryNoun",
+        "possibleWords": [
+            { "wordType": "SecondaryNoun", "word": "guns", "cost": 3, "attackModifier": 5, "defenseModifier": 0, "speedModifier": 1 },
+            { "wordType": "SecondaryNoun", "word": "cannons", "cost": 4, "attackModifier": 7, "defenseModifier": 2, "speedModifier": 0 },
+            { "wordType": "SecondaryNoun", "word": "spines", "cost": 2, "attackModifier": 3, "defenseModifier": 1, "speedModifier": 2 },
+            { "wordType": "SecondaryNoun", "word": "horns", "cost": 2, "attackModifier": 4, "defenseModifier": 0, "speedModifier": 1 },
+            { "wordType": "SecondaryNoun", "word": "spikes", "cost": 3, "attackModifier": 5, "defenseModifier": 1, "speedModifier": 1 },
+            { "wordType": "SecondaryNoun", "word": "blades", "cost": 4, "attackModifier": 6, "defenseModifier": 0, "speedModifier": 2 },
+            { "wordType": "SecondaryNoun", "word": "fangs", "cost": 2, "attackModifier": 4, "defenseModifier": 0, "speedModifier": 3 },
+            { "wordType": "SecondaryNoun", "word": "claws", "cost": 2, "attackModifier": 3, "defenseModifier": 1, "speedModifier": 3 },
+            { "wordType": "SecondaryNoun", "word": "lasers", "cost": 3, "attackModifier": 4, "defenseModifier": 2, "speedModifier": 2 },
+            { "wordType": "SecondaryNoun", "word": "waves", "cost": 2, "attackModifier": 3, "defenseModifier": 0, "speedModifier": 4 },
+            { "wordType": "SecondaryNoun", "word": "missiles", "cost": 5, "attackModifier": 8, "defenseModifier": 0, "speedModifier": 0 },
+            { "wordType": "SecondaryNoun", "word": "flames", "cost": 5, "attackModifier": 7, "defenseModifier": 0, "speedModifier": 1 }
+        ]
+    }
+]
+}
+  

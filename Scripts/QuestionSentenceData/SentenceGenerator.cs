@@ -74,9 +74,23 @@ public class SentenceGenerator : MonoBehaviour
         return finalSentence;
     }
 
+    int RandomIndex(int count)
+    {
+        System.Random random = new System.Random(Time.frameCount);
+        return random.Next(0, count);
+    }
+
     public string GetRandomizedPrompt()
-    {    
-        var template = sentenceTemplates[Random.Range(0, sentenceTemplates.Count - 1)];
+    {
+        var template = sentenceTemplates[RandomIndex(sentenceTemplates.Count - 1)];
+        GetRandomizedWordDatas(template);
+        OnWordsChosen?.Invoke();
+        return InsertWordsToTemplate(template, chosenWords);
+        //return prompt;
+    }
+
+    public List<WordData> GetRandomizedWordDatas(SentenceTemplate template)
+    {
         string prompt = template.templateText;
         Debug.Log("Selected Template: " + template.templateText);
         List<WordData> possibleWords = new List<WordData>();
@@ -85,11 +99,11 @@ public class SentenceGenerator : MonoBehaviour
         {
             WordType wordType = template.slotSequence[i];
             possibleWords = sentenceData.words.Find(x => x.wordType == wordType).possibleWords;
-            int randomIndex = Random.Range(0, possibleWords.Count);
+            int randomIndex = RandomIndex(possibleWords.Count);
             chosenWords.Add(possibleWords[randomIndex]);
         }
         OnWordsChosen?.Invoke();
-        return InsertWordsToTemplate(template, chosenWords);
+        return chosenWords;
         //return prompt;
     }
 }

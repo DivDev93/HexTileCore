@@ -44,5 +44,6 @@ public class PlayableCard : MonoBehaviour, IPlayerCard
             totalDefense += wordData.defenseModifier;
             totalSpeed += wordData.speedModifier;
         }
+        sentenceGenerator.OnWordsChosen -= RefreshStats;
     }
 }
