@@ -161,7 +161,7 @@ public class TilePlaceable : MonoBehaviour
                 //    highlightedTile.OnHoverExit();
                 //}
 
-                if (!gameBoard.selectedTiles.Contains(hexTile))
+                if (!gameBoard.selectedTiles.Contains(hexTile as IBoardPosition))
                 {
                     HighlightedTile = null;
                     //Debug.Log("Hovered Tile is not among selected " + hit.collider.name + " dict count is " + HexGridManager.tileColliderDict.Count);

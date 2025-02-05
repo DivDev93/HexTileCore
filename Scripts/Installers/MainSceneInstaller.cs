@@ -9,7 +9,7 @@ public class MainSceneInstaller : MonoBehaviour, IInstaller
 {
     public TransformShaker cameraScreenShake;
     public HexGridManager hexGridManager;
-    public NetworkGameManager networkGameManager;
+    public InterfaceReference<IGameManager> gameManager;
     public SentenceGenerator sentenceGenerator;
     public InterfaceReference<IGameUI> gameUIref;
 
@@ -43,7 +43,7 @@ public class MainSceneInstaller : MonoBehaviour, IInstaller
         builder.AddSingleton<IGameUI>(IGameUI => gameUIref.Value);
         builder.AddSingleton<IGameBoard>(IGameBoard => hexGridManager);
         builder.AddSingleton(hexGridManager);
-        builder.AddSingleton<IGameManager>(IGameManager => networkGameManager);
+        builder.AddSingleton<IGameManager>(IGameManager => gameManager.Value);
         builder.AddSingleton(sentenceGenerator);
         Debug.Log("MainSceneInstaller bindings installed");
     }

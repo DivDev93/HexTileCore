@@ -111,8 +111,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7861129519107042784}
-  - component: {fileID: 5675916455761650589}
   - component: {fileID: 7230194643762819436}
+  - component: {fileID: 3240337808518212867}
+  - component: {fileID: 3535280388174157283}
   m_Layer: 0
   m_Name: RoulettleWheel
   m_TagString: Untagged
@@ -137,22 +138,6 @@ Transform:
   - {fileID: 5789065189044222590}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5675916455761650589
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1745363980070037610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f50fe629069389840a09d54ee2c193b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sentenceData: {fileID: 11400000, guid: 01dc84e232fa5a946952ccfe8276d2ac, type: 2}
-  wordOptionsCount: 8
-  sentenceText: {fileID: 0}
-  rouletteWheel: {fileID: 8022997996422471989}
 --- !u!114 &7230194643762819436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,8 +151,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jsonFileName: SentenceData.json
-  loadedData: {fileID: 11400000, guid: 01dc84e232fa5a946952ccfe8276d2ac, type: 2}
+  loadedData: {fileID: 11400000, guid: 8ae8a171eb201924a934b162f63326e7, type: 2}
   validate: 0
+--- !u!114 &3240337808518212867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745363980070037610}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb8dec683c66588489ef12a3e5f59530, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wordOptionsCount: 8
+  sentenceText: {fileID: 0}
+  chosenWords: []
+  rouletteWheel: {fileID: 8022997996422471989}
+--- !u!114 &3535280388174157283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745363980070037610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f50fe629069389840a09d54ee2c193b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wordOptionsCount: 8
+  sentenceText: {fileID: 0}
+  chosenWords: []
 --- !u!1 &1831523362232143604
 GameObject:
   m_ObjectHideFlags: 0

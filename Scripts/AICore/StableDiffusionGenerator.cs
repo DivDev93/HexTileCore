@@ -8,6 +8,7 @@ using Cysharp.Threading.Tasks;
 using Unity.Netcode;
 using System.Collections.Generic;
 using Reflex.Attributes;
+using GLTFast.Schema;
 
 public struct ImageData : INetworkSerializable
 {
@@ -37,6 +38,7 @@ public class StableDiffusionGenerator : NetworkBehaviour
     public TMP_InputField inputField;
     static ServerConfigEndpoints endpoints = null;
     public bool validate = false;
+    public bool isTextureReady = false;
 
     private void Awake()
     {
@@ -48,6 +50,16 @@ public class StableDiffusionGenerator : NetworkBehaviour
     {
         prompt = newPrompt; 
 
+    }
+
+    void SetMainMaterialTexture(ref Texture2D texture)
+    {
+        Renderer r = GetComponent<Renderer>();
+        if (r != null)
+        {
+            r.material.mainTexture = texture;
+            isTextureReady = true;
+        }
     }
 
     private void OnValidate()
@@ -62,10 +74,13 @@ public class StableDiffusionGenerator : NetworkBehaviour
     private void Start()
     {
         // Call this from somewhere to begin the image generation
-        if (generateOnStart && IsServer)
+        if (generateOnStart)
         {
-            prompt = sentenceGenerator.GetRandomizedPrompt();
-            StartImageGeneration();
+            if (IsServer || !NetworkManager.Singleton.IsListening)
+            {
+                prompt = sentenceGenerator.GetRandomizedPrompt();
+                StartImageGeneration();
+            }          
         }
 
         if(inputField != null)
@@ -85,11 +100,7 @@ public class StableDiffusionGenerator : NetworkBehaviour
         Texture2D texture = new Texture2D(2, 2);
         texture.LoadImage(textureData);
 
-        Renderer r = GetComponent<Renderer>();
-        if (r != null)
-        {
-            r.material.mainTexture = texture;
-        }
+        SetMainMaterialTexture(ref texture);
     }
 
     List<byte> textureBuffer = new List<byte>();
@@ -107,11 +118,7 @@ public class StableDiffusionGenerator : NetworkBehaviour
             textureBuffer.Clear();
 
             // Apply the texture
-            Renderer r = GetComponent<Renderer>();
-            if (r != null)
-            {
-                r.material.mainTexture = texture;
-            }
+            SetMainMaterialTexture(ref texture);
         }
     }
 
@@ -126,11 +133,7 @@ public class StableDiffusionGenerator : NetworkBehaviour
     {
         Texture2D texture = new Texture2D(2, 2);
         texture.LoadImage(imageData.data);
-        Renderer r = GetComponent<Renderer>();
-        if (r != null)
-        {
-            r.material.mainTexture = texture;
-        }
+        SetMainMaterialTexture(ref texture);
     }
 
     public void SendTextureInChunks(byte[] textureData)
@@ -186,11 +189,7 @@ public class StableDiffusionGenerator : NetworkBehaviour
                 //RPCSendImageDataSerializableRpc(imageData);
 
                 // Example: apply the texture to this GameObject's material
-                Renderer r = GetComponent<Renderer>();
-                if (r != null)
-                {
-                    r.material.mainTexture = currentTexture;
-                }
+                SetMainMaterialTexture(ref currentTexture);
 
                 // If using UI, you could assign tex to an Image component's sprite, for example.
             }

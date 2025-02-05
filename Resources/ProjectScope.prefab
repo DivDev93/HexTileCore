@@ -60,3 +60,4 @@ MonoBehaviour:
   tileGameData: {fileID: 11400000, guid: 17ee4745f68f21648b39a4d89813b4a2, type: 2}
   startTileIndicesScriptableObject: {fileID: 11400000, guid: bced12f82e3ef564e925f97e0263ca91,
     type: 2}
+  sentenceData: {fileID: 11400000, guid: 8ae8a171eb201924a934b162f63326e7, type: 2}

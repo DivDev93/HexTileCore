@@ -12,7 +12,7 @@ public class HexBoardUI : MonoBehaviour, IGameUI
     HexGridManager m_Board;
 
     [Inject]
-    IGameManager m_NetworkGameManager;
+    IGameManager gameManager;
 
     [SerializeField]
     XRBaseInteractable[] m_StartReceiver = null;
@@ -67,7 +67,7 @@ public class HexBoardUI : MonoBehaviour, IGameUI
     async void StartGame(float rotateYAngle)
     {
         m_Board.boardRotation.Value = rotateYAngle;
-        m_NetworkGameManager.StartGame();
+        gameManager.StartGame();
         await DelayDeactivateUniTask();
     }
 

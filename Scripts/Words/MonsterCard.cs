@@ -1,4 +1,5 @@
 using UnityEngine;
+using Sentences;
 
 public class MonsterCard : MonoBehaviour
 {

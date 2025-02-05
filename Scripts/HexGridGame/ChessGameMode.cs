@@ -75,7 +75,7 @@ public class ChessGameMode : NetworkBehaviour//, IGameMode
             //// Load Chess Scene
             TileGameRoot.SetActive(false);
             NetworkManager.SceneManager.OnSceneEvent += SceneManager_OnSceneEvent;
-            var status = NetworkManager.SceneManager.LoadScene(m_SceneName, LoadSceneMode.Additive);
+            var status = NetworkManager.SceneManager.LoadScene(m_SceneName, LoadSceneMode.Single);
             CheckStatus(status);
         }
      

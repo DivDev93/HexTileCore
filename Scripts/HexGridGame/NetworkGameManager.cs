@@ -36,7 +36,7 @@ public class NetworkGameManager : NetworkBehaviour, IGameManager
         {
             totalPlayers = 2;
             gameBoard.SelectStartHexTilesForPlayer(0);
-            gameBoard.StartGame(VersusGameMode.HumanVsAI, IsOnline);
+            gameBoard.StartGame(VersusGameMode.HumanVsHuman, IsOnline);
             Debug.Log("Game started OFFLINE");
         }
         else
