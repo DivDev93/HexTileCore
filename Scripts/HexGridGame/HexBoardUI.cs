@@ -12,7 +12,7 @@ public class HexBoardUI : MonoBehaviour, IGameUI
     HexGridManager m_Board;
 
     [Inject]
-    NetworkGameManager m_NetworkGameManager;
+    IGameManager m_NetworkGameManager;
 
     [SerializeField]
     XRBaseInteractable[] m_StartReceiver = null;

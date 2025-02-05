@@ -13,16 +13,16 @@ public class MainSceneInstaller : MonoBehaviour, IInstaller
     public SentenceGenerator sentenceGenerator;
     public InterfaceReference<IGameUI> gameUIref;
 
-    //IEnumerator Start()
-    //{
-    //    while(!SceneManager.GetActiveScene().isLoaded)
-    //    {
-    //        yield return null;
-    //    }
+    IEnumerator Start()
+    {
+        while (!SceneManager.GetActiveScene().isLoaded)
+        {
+            yield return null;
+        }
 
-    //    Debug.Log("Scene merging active scene is " + SceneManager.GetActiveScene().name);
-    //    SceneManager.MergeScenes(SceneManager.GetActiveScene(), gameObject.scene);
-    //}
+        Debug.Log("Scene merging active scene is " + SceneManager.GetActiveScene().name + " loaded count is " + SceneManager.loadedSceneCount);
+        SceneManager.MergeScenes(SceneManager.GetActiveScene(), gameObject.scene);
+    }
     //IEnumerator Start()
     //{
     //    //Sequence sequence = DOTween.Sequence();
@@ -32,7 +32,7 @@ public class MainSceneInstaller : MonoBehaviour, IInstaller
 
     //    yield return null;
 
-       
+
     //}
 
     public void InstallBindings(ContainerBuilder builder)
@@ -43,7 +43,7 @@ public class MainSceneInstaller : MonoBehaviour, IInstaller
         builder.AddSingleton<IGameUI>(IGameUI => gameUIref.Value);
         builder.AddSingleton<IGameBoard>(IGameBoard => hexGridManager);
         builder.AddSingleton(hexGridManager);
-        builder.AddSingleton(networkGameManager);
+        builder.AddSingleton<IGameManager>(IGameManager => networkGameManager);
         builder.AddSingleton(sentenceGenerator);
         Debug.Log("MainSceneInstaller bindings installed");
     }

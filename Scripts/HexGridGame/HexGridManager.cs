@@ -84,7 +84,7 @@ public struct GeneratedBoardData : INetworkSerializable
 
 public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Singleton<HexGridManager>
 {
-    public GeneratedBoardData boardData = new();
+    GeneratedBoardData m_boardData = new();
     public bool isBoardCreated = false;
     bool IBoardPositions.isBoardCreated { get => isBoardCreated; set => isBoardCreated = value; }
 
@@ -152,6 +152,8 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
 
     TileGameDataScriptableObject IGameBoard.tileGameData => tileGameData;
     List<IBoardPosition> IGameBoard.selectedTiles => selectedTiles.Cast<IBoardPosition>().ToList();
+
+    public GeneratedBoardData boardData { get => m_boardData; set => m_boardData = value; }
 
     public UnityEvent OnStartGame = new UnityEvent();
     public UnityEvent OnBoardCreate = new UnityEvent();
@@ -312,7 +314,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
         if(!boardData.IsInitialized())
         {
             Debug.Log("Board data not initialized allocated nativelist for it");
-            boardData.boardTiles = new NativeList<BoardTileData>(Allocator.Persistent);
+            m_boardData.boardTiles = new NativeList<BoardTileData>(Allocator.Persistent);
         }
 
         //generate tiles in a hexagon shape layout with 0,0 at the center

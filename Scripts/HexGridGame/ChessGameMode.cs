@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class ChessGameMode : NetworkBehaviour//, IGameMode
 {
     public int gameModeID => 3;
+    public GameObject TileGameRoot;
 
 #if UNITY_EDITOR
     public UnityEditor.SceneAsset SceneAsset;
@@ -69,13 +70,15 @@ public class ChessGameMode : NetworkBehaviour//, IGameMode
 
     public void ShowGameMode()
     {
-        if (IsServer && !string.IsNullOrEmpty(m_SceneName))
+        if (!string.IsNullOrEmpty(m_SceneName))
         {
-            // Load Chess Scene
+            //// Load Chess Scene
+            TileGameRoot.SetActive(false);
             NetworkManager.SceneManager.OnSceneEvent += SceneManager_OnSceneEvent;
             var status = NetworkManager.SceneManager.LoadScene(m_SceneName, LoadSceneMode.Additive);
             CheckStatus(status);
         }
+     
         Debug.Log("Chess Game Mode Shown for " + m_SceneName);
     }
 

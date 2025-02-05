@@ -2,27 +2,45 @@ using Reflex.Attributes;
 using Unity.Netcode;
 using UnityEngine;
 
-public class NetworkGameManager : NetworkBehaviour
+public interface IGameManager
+{
+    public void StartGame();
+    
+}
+
+public class NetworkGameManager : NetworkBehaviour, IGameManager
 {
     [Inject]
-    HexGridManager hexGridManager;
+    IGameBoard gameBoard;
     private NetworkVariable<int> currentPlayerTurn = new NetworkVariable<int>(0);
     private NetworkVariable<bool> isGameActive = new NetworkVariable<bool>(false);
 
     private int totalPlayers;
+    bool IsOnline => NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening;
+    bool RunLocal => !IsOnline || IsServer;
+    //public GameObject offlineObjects;
 
     public override void OnNetworkSpawn()
     {
         if (IsServer)
         {
             totalPlayers = NetworkManager.Singleton.ConnectedClientsIds.Count;
-        }           
+        }
+        //offlineObjects?.SetActive(false);
         SetGameBoard();
     }
 
     public void StartGame()
     {
-        StartGameRpc(); 
+        if (!IsOnline)
+        {
+            totalPlayers = 2;
+            gameBoard.SelectStartHexTilesForPlayer(0);
+            gameBoard.StartGame(VersusGameMode.HumanVsAI, IsOnline);
+            Debug.Log("Game started OFFLINE");
+        }
+        else
+            StartGameRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -41,7 +59,7 @@ public class NetworkGameManager : NetworkBehaviour
         {
             Debug.Log("It's your turn!");
             EnablePlayerControls();
-            hexGridManager.SelectStartHexTilesForPlayer(playerIndex);
+            gameBoard.SelectStartHexTilesForPlayer(playerIndex);
         }
         else
         {
@@ -101,28 +119,27 @@ public class NetworkGameManager : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost)]
     public void StartGameRpc()
     {
-        if (IsServer)
+        if (RunLocal)
         {
             isGameActive.Value = true;
             currentPlayerTurn.Value = 0;
             NotifyPlayerTurnClientRpc(currentPlayerTurn.Value);
         }
-        hexGridManager.StartGame();
+        gameBoard.StartGame(VersusGameMode.HumanVsHuman, IsOnline);
     }
+
+   
 
     public void SetGameBoard()
     {
         if (IsServer)
         {
-            if (!hexGridManager.IsInitialized)
-            {
-                hexGridManager.Initialize();
-            }
-            GeneratedBoardData boardData = hexGridManager.boardData;
+            gameBoard.Initialize();
+            GeneratedBoardData boardData = gameBoard.boardData;
             Debug.Log("Setting board data for clients board data count: " + boardData.boardTiles.Length);
             SetBoardDataClientRpc(boardData);
         }
-        else 
+        else
             SetGameBoardRpc();
     }
 
@@ -135,9 +152,10 @@ public class NetworkGameManager : NetworkBehaviour
     [Rpc(SendTo.NotMe)]
     public void SetBoardDataClientRpc(GeneratedBoardData boardData)
     {
-        hexGridManager.boardData = boardData;
-        hexGridManager.Initialize();
+        gameBoard.boardData = boardData;
+        gameBoard.Initialize();
     }
+
     public void OnPlayerConnected()
     {
         Debug.Log("Player connected");
