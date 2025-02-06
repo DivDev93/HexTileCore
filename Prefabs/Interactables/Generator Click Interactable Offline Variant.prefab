@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: -4410142897673380276, guid: 16e1eca382366f646937393346284b47,
         type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 3079629310
+      value: 1199869181
       objectReference: {fileID: 0}
     - target: {fileID: -4410142897673380276, guid: 16e1eca382366f646937393346284b47,
         type: 3}
@@ -26,7 +26,7 @@ PrefabInstance:
     - target: {fileID: 2270746595748025237, guid: 16e1eca382366f646937393346284b47,
         type: 3}
       propertyPath: m_Name
-      value: Generator Click Interactable Variant
+      value: Generator Click Interactable Offline Variant
       objectReference: {fileID: 0}
     - target: {fileID: 7908071726068982232, guid: 16e1eca382366f646937393346284b47,
         type: 3}
@@ -83,7 +83,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 180
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3393606911819460183, guid: 16e1eca382366f646937393346284b47, type: 3}
+    - {fileID: 6636892491929127564, guid: 16e1eca382366f646937393346284b47, type: 3}
+    - {fileID: -4410142897673380276, guid: 16e1eca382366f646937393346284b47, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:

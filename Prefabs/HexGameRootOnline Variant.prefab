@@ -68,6 +68,11 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 2719440044
       objectReference: {fileID: 0}
+    - target: {fileID: 7015162765479565186, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: OnStartGame.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8173954489391641820, guid: abe7ca6670b2d5e4a980827f65b38214,
         type: 3}
       propertyPath: m_Name
@@ -75,7 +80,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1081308313374473168, guid: abe7ca6670b2d5e4a980827f65b38214, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 867885514484221339, guid: abe7ca6670b2d5e4a980827f65b38214, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2341851648280308385, guid: abe7ca6670b2d5e4a980827f65b38214,

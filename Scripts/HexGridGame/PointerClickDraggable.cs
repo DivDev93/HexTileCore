@@ -31,7 +31,7 @@ public class PointerClickDraggable : MonoBehaviour, IPointerClickHandler, IBegin
         
     }
 
-    void TweenUp()
+    public void TweenUp()
     {
         if (!tweenUp.IsPlaying())
         {
@@ -47,8 +47,6 @@ public class PointerClickDraggable : MonoBehaviour, IPointerClickHandler, IBegin
         //    Debug.Log("Clicked: " + gameObject.name);
         //}
         isDragged = false;
-
-        TweenUp();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -61,7 +59,7 @@ public class PointerClickDraggable : MonoBehaviour, IPointerClickHandler, IBegin
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
         mXCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).x;
         mYCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).y;
-        mPos = eventData.pointerCurrentRaycast.worldPosition;
+        mPos = eventData.pointerCurrentRaycast.worldPosition.With(y: startPosY);
         mLastPos = gameObject.transform.position;
         mLastPos2 = gameObject.transform.position;
         isDragging = true;
