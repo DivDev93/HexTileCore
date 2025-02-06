@@ -13,8 +13,8 @@ public interface IGameBoard
     public IBoardPositions boardPositions { get; }
     public TileGameDataScriptableObject tileGameData { get; }
     public List<IBoardPosition> selectedTiles { get; }
-    public bool TryGetTile(Collider collider, out IBoardPosition tile);
     public void SelectStartHexTilesForPlayer(int playerIndex);
     public GeneratedBoardData boardData { get; set; }
+    public Dictionary<Collider, IBoardPosition> tileColliderDict { get; }
 
 }

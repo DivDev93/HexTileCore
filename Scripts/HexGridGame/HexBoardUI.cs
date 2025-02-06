@@ -8,6 +8,7 @@ using UnityLabs.Slices.Games.Chess;
 
 public class HexBoardUI : MonoBehaviour, IGameUI
 {
+    public CameraRotationBehavior cameraRotation;
     [Inject]
     HexGridManager m_Board;
 
@@ -68,6 +69,7 @@ public class HexBoardUI : MonoBehaviour, IGameUI
     {
         m_Board.boardRotation.Value = rotateYAngle;
         gameManager.StartGame();
+        cameraRotation.OnGameStart(rotateYAngle);
         await DelayDeactivateUniTask();
     }
 

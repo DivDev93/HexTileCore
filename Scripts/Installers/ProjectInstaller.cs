@@ -14,6 +14,11 @@ public class ProjectInstaller : MonoBehaviour, IInstaller
         builder.AddSingleton(tileGameData);
         builder.AddSingleton(startTileIndicesScriptableObject);
         builder.AddSingleton(sentenceData);
+
+        var linePool = new VolumetricLinePool();
+        linePool.Initialize();
+        builder.AddSingleton(linePool);
+
         Debug.Log("Hello");
     }
 }

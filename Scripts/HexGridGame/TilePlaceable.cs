@@ -3,6 +3,7 @@ using UnityEngine;
 using PrimeTween;
 using UnityUtils;
 using Reflex.Attributes;
+using VolumetricLines;
 
 public class TilePlaceable : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class TilePlaceable : MonoBehaviour
     public ISelectableTarget placedTile;
     private ISelectableTarget highlightedTile;
     int layerMask;// = LayerMask.GetMask("HexTile");
-
+    public VolumetricLineStripBehavior currentRaycastLine = null;
     public ISelectableTarget PlacedTile
     {
         get { return placedTile; }
@@ -35,13 +36,24 @@ public class TilePlaceable : MonoBehaviour
         get { return highlightedTile; }
         set
         {
-            if (highlightedTile != null && highlightedTile != value)            
+            if (highlightedTile != null && highlightedTile != value)
+            {
                 highlightedTile.OnHoverExit();
-            
+            }
+
             highlightedTile = value;
 
-            if(highlightedTile != null)
+            if (highlightedTile != null)
+            {
                 highlightedTile.OnHoverEnter();
+            }
+
+            if (highlightedTile == null)
+            {
+                ReleaseCurrentLine();
+            }
+            else
+                currentRaycastLine = VolumetricLinePool.DrawLine(transform.position, highlightedTile.GetTransform().position.With(y: 0f), Color.cyan, currentRaycastLine);
         }
     }
     public bool isPlaced = false;
@@ -69,6 +81,15 @@ public class TilePlaceable : MonoBehaviour
         }
     }
 
+    void ReleaseCurrentLine()
+    {
+        if (currentRaycastLine != null)
+        {
+            VolumetricLinePool.lineStripPool.Release(currentRaycastLine);
+            currentRaycastLine = null;
+        }
+    }
+
     private void FixedUpdate()
     {
         if (isPlaced)
@@ -87,7 +108,7 @@ public class TilePlaceable : MonoBehaviour
         //transform.parent = null;
         Sequence sequence = DOTween.Sequence();
         sequence.SetDelay(0.01f);
-        sequence.Append(transform.DOScale(defaultScale, 0.25f).OnComplete(() =>
+        sequence.Append(transform.DOScale(defaultScale, gameBoard.tileGameData.selectAnimationDuration).OnComplete(() =>
         {
             Debug.Log("SHOULD HAVE RESET GRABBABLE SCALE");
         }));
@@ -117,6 +138,7 @@ public class TilePlaceable : MonoBehaviour
 
     void PlaceOnTile()
     {
+        ReleaseCurrentLine();
         //transform.parent = null;
         //var localPlayer = XRINetworkGameManager.Instance.GetLocalPlayer();
         localPlayerTransform = Camera.main.transform;
@@ -134,7 +156,7 @@ public class TilePlaceable : MonoBehaviour
             PlacedTile.OnTileClick();
             //placedTile.transform.DOShakePosition(0.25f, 0.08f);
         });
-
+        
         sequence.Play();
     }
 
@@ -150,10 +172,11 @@ public class TilePlaceable : MonoBehaviour
     {
         Ray ray = new Ray(transform.position, Vector3.down);
         RaycastHit hit;
+
         if (Physics.SphereCast(ray, sphereCastSize, out hit, 100f, layerMask))
         {
-            HexTile hexTile = null;
-            if (HexGridManager.tileColliderDict.TryGetValue(hit.collider, out hexTile))
+            IBoardPosition hexTile = null;
+            if (gameBoard.tileColliderDict.TryGetValue(hit.collider, out hexTile))
             {                
                 //if (highlightedTile != null && hexTile != highlightedTile)
                 //{
@@ -161,14 +184,16 @@ public class TilePlaceable : MonoBehaviour
                 //    highlightedTile.OnHoverExit();
                 //}
 
-                if (!gameBoard.selectedTiles.Contains(hexTile as IBoardPosition))
+                if (!gameBoard.selectedTiles.Contains(hexTile))
                 {
                     HighlightedTile = null;
                     //Debug.Log("Hovered Tile is not among selected " + hit.collider.name + " dict count is " + HexGridManager.tileColliderDict.Count);
                     return;
                 }
 
-                HighlightedTile = hexTile;
+                if (HighlightedTile != hexTile.selectableTarget)
+                    HighlightedTile = hexTile.selectableTarget;
+
                 //Debug.Log("Tile hit" + hexTile.GridPosition);
             }
             else

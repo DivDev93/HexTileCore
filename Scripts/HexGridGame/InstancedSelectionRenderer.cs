@@ -22,7 +22,8 @@ public class InstancedSelectionRenderer : MonoBehaviour
     public bool cacheRenderParams = false;
     public Material selectMaterial, hoverMaterial;
     public Mesh mesh;
-    public Vector3 scale = Vector3.up * 0.7f;
+    public Vector3 selectedScale = Vector3.up * 0.7f;
+    public Vector3 hoveredScale = Vector3.up * 1.4f;
     public Vector3 offset = Vector3.up;
     int numInstances = 0;
     //public List<DebugPosScale> posScales = new List<DebugPosScale>();
@@ -74,7 +75,7 @@ public class InstancedSelectionRenderer : MonoBehaviour
         }
 
         Vector3 translation = gameBoard.selectedTiles[i].transform.position.With(y: 0) + offset;
-        Vector3 matrixScale = gameBoard.tileGameData.parentScale * scale;
+        Vector3 matrixScale = gameBoard.tileGameData.parentScale * selectedScale;
         //posScales[i].position = translation;
         //posScales[i].scale = matrixScale;
         Matrix4x4 inst = new Matrix4x4();
@@ -98,7 +99,7 @@ public class InstancedSelectionRenderer : MonoBehaviour
         for (int i = 0; i < tiles.Count; i++)
         {
             Vector3 translation = tiles[i].transform.position.With(y: 0) + offset;
-            Vector3 matrixScale = gameBoard.tileGameData.parentScale * scale;
+            Vector3 matrixScale = gameBoard.tileGameData.parentScale * hoveredScale;
             Matrix4x4 inst = new Matrix4x4();
             inst.SetTRS(translation, Quaternion.identity, matrixScale);
             renderMatrices[i] = inst;

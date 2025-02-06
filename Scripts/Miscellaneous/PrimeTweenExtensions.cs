@@ -1,6 +1,7 @@
 using UnityEngine;
 using PrimeTween;
 using UnityEngine.Assertions;
+using TMPro;
 
 public static class PrimeTweenExtensions
 {
@@ -144,4 +145,8 @@ public static class PrimeTweenExtensions
         return s;
     }
 
+    public static Tween Counter(this TMP_Text text, int startValue, int endValue, float duration, Ease ease = Ease.Default)
+    {
+        return Tween.Custom(text, startValue, endValue, duration, (target, val) => target.SetText("{0:0}", val), ease);
+    }
 }

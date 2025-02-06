@@ -1,29 +1,38 @@
+using Reflex.Attributes;
 using UnityEngine;
 
 public class HexTilePoker : MonoBehaviour
 {
-    public HexTile currentHexTile = null;
+    [Inject]
+    IGameBoard gameBoard;
+
+    public IBoardPosition m_currentHexTile = null;
     public float durationToClick = 0.35f;
     float currentHexHoverDuration = 0f;
 
     private void OnTriggerEnter(Collider other)
     {
-        if(HexGridManager.tileColliderDict.TryGetValue(other, out HexTile hexTile))
+        if(gameBoard.tileColliderDict.TryGetValue(other, out IBoardPosition boardPosition))
         {
-            if (currentHexTile != null && currentHexTile != hexTile)
+            HexTile currentHexTile = m_currentHexTile as HexTile;
+            HexTile triggerHextile = boardPosition as HexTile;
+            if (currentHexTile != null && currentHexTile != triggerHextile)
                 currentHexTile.OnHoverExit();
 
             currentHexHoverDuration = 0f;
-            currentHexTile = hexTile;
-            hexTile.OnHoverEnter();
+            currentHexTile = triggerHextile;
+            triggerHextile.OnHoverEnter();
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (HexGridManager.tileColliderDict.TryGetValue(other, out HexTile hexTile))
+        if (gameBoard.tileColliderDict.TryGetValue(other, out IBoardPosition boardPosition))
         {
-            if (currentHexTile == hexTile)
+            HexTile currentHexTile = m_currentHexTile as HexTile;
+            HexTile triggerHextile = boardPosition as HexTile;
+
+            if (currentHexTile == triggerHextile)
             {
                 currentHexHoverDuration += Time.deltaTime;
                 if (currentHexHoverDuration > durationToClick)
@@ -37,18 +46,21 @@ public class HexTilePoker : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (HexGridManager.tileColliderDict.TryGetValue(other, out HexTile hexTile))
+        if (gameBoard.tileColliderDict.TryGetValue(other, out IBoardPosition boardPosition))
         {
+            HexTile currentHexTile = m_currentHexTile as HexTile;
+            HexTile triggerHextile = boardPosition as HexTile;
+
             if (currentHexTile != null)
             {
                 currentHexTile.OnHoverExit();
-                if (hexTile == currentHexTile)
+                if (triggerHextile == currentHexTile)
                     currentHexTile = null;
 
                 currentHexHoverDuration = 0f;
             }
             else
-                hexTile.OnHoverExit();
+                triggerHextile.OnHoverExit();
         }
     }
 }

@@ -16,4 +16,5 @@ public class TileGameDataScriptableObject : ScriptableObject
     float placedCardScale = 0.18f; // Scale of the placed card
     public float PlacedCardScale => placedCardScale * parentScale;
     public float sphereCastSize = 0.017f;
+    public float selectAnimationDuration = 0.25f;
 }

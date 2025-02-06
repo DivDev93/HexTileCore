@@ -96,6 +96,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isBoardCreated: 0
   startTileIndices: {fileID: 11400000, guid: bced12f82e3ef564e925f97e0263ca91, type: 2}
+  tileGameData: {fileID: 0}
   minScale: 0.1
   maxScale: 0.99
   noiseScale: 0.1
@@ -109,16 +110,9 @@ MonoBehaviour:
   hexTilePrefab: {fileID: 810010503384965848, guid: 2241e5b661a28e64db5911e117b57498,
     type: 3}
   movementRange: 3
-  pulseData:
-    duration: 0.25
-    delay: 0.1
-    height: 0.3
   gridWidth: 10
   gridHeight: 10
-  parentScale: 0.025
   hexSize: 0.6
-  placedCardScale: 0.18
-  sphereCastSize: 0.017
   validate: 0
   selectedTiles: []
   OnStartGame:
@@ -179,7 +173,8 @@ MonoBehaviour:
   selectMaterial: {fileID: 2100000, guid: ca1dd585582c4b942801583eb7d6d36b, type: 2}
   hoverMaterial: {fileID: 2100000, guid: d0cdcc8a6f7767845bc47d2ec97db2f7, type: 2}
   mesh: {fileID: 2534964839176971238, guid: 303858b05cdc2474d9cc45c585ccc058, type: 3}
-  scale: {x: 0.7, y: 0.25, z: 0.7}
+  selectedScale: {x: 1, y: 0.7, z: 1}
+  hoveredScale: {x: 1, y: 1.4, z: 1}
   offset: {x: 0, y: 0.0055, z: 0}
 --- !u!114 &4397128386631289835
 MonoBehaviour:

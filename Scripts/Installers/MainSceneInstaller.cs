@@ -13,16 +13,16 @@ public class MainSceneInstaller : MonoBehaviour, IInstaller
     public SentenceGenerator sentenceGenerator;
     public InterfaceReference<IGameUI> gameUIref;
 
-    IEnumerator Start()
-    {
-        while (!SceneManager.GetActiveScene().isLoaded)
-        {
-            yield return null;
-        }
+    //IEnumerator Start()
+    //{
+    //    while (!SceneManager.GetActiveScene().isLoaded)
+    //    {
+    //        yield return null;
+    //    }
 
-        Debug.Log("Scene merging active scene is " + SceneManager.GetActiveScene().name + " loaded count is " + SceneManager.loadedSceneCount);
-        SceneManager.MergeScenes(SceneManager.GetActiveScene(), gameObject.scene);
-    }
+    //    Debug.Log("Scene merging active scene is " + SceneManager.GetActiveScene().name + " loaded count is " + SceneManager.loadedSceneCount);
+    //    SceneManager.MergeScenes(SceneManager.GetActiveScene(), gameObject.scene);
+    //}
     //IEnumerator Start()
     //{
     //    //Sequence sequence = DOTween.Sequence();

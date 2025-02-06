@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityLabs.Slices.Games.Chess;
 using UnityEngine.Jobs;
+using UnityEditor.Experimental.GraphView;
 
 public interface IGameUI
 {
@@ -31,4 +32,5 @@ public interface IBoardPosition
     public Transform transform { get; }
     public Vector3 originalPos { get; set; }
     public bool IsSelected { get; set; }
+    public ISelectableTarget selectableTarget { get; }
 }

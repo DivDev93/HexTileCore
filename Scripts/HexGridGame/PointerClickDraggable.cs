@@ -1,3 +1,5 @@
+using PrimeTween;
+using Reflex.Attributes;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityUtils;
@@ -6,6 +8,9 @@ using UnityUtils;
 
 public class PointerClickDraggable : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, ISelectHandler
 {
+    [Inject]
+    TileGameDataScriptableObject gameData;
+
     //script to enable draggable functionality on attached gameobject
     private Vector3 mOffset;
     private float mZCoord;
@@ -18,23 +23,41 @@ public class PointerClickDraggable : MonoBehaviour, IPointerClickHandler, IBegin
     private Vector3 mLastPos;
     private Vector3 mLastPos2;
     float startPosY = 0f;
+    Tween tweenUp;
 
     void Awake()
     {
         startPosY = transform.position.y;
+        
     }
 
+    void TweenUp()
+    {
+        if (!tweenUp.IsPlaying())
+        {
+            tweenUp = Tween.PositionY(transform, startPosY, gameData.selectAnimationDuration);//.OnComplete(() => isTweeningUp = false);
+            tweenUp.SetEase(Ease.InBounce);
+        }
+    }
+   
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!isDragged)
-        {
-            Debug.Log("Clicked: " + gameObject.name);
-        }
+        //if (!isDragged)
+        //{
+        //    Debug.Log("Clicked: " + gameObject.name);
+        //}
         isDragged = false;
+
+        TweenUp();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if(tweenUp.IsPlaying())
+        {
+            tweenUp.Stop();
+        }
+
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
         mXCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).x;
         mYCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).y;

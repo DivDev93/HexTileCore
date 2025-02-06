@@ -120,7 +120,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     public bool validate = false;
 
     public List<HexTile> selectedTiles = new List<HexTile>();
-    public static Dictionary<Collider, HexTile> tileColliderDict = new Dictionary<Collider, HexTile>();
+    public Dictionary<Collider, IBoardPosition> m_tileColliderDict = new Dictionary<Collider, IBoardPosition>();
 
     private Dictionary<Vector2Int, HexTile> hexTiles = new(); // Store tiles with axial coordinates
     //public HexTile[,] hexGrid;
@@ -154,6 +154,8 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     List<IBoardPosition> IGameBoard.selectedTiles => selectedTiles.Cast<IBoardPosition>().ToList();
 
     public GeneratedBoardData boardData { get => m_boardData; set => m_boardData = value; }
+
+    public Dictionary<Collider, IBoardPosition> tileColliderDict => m_tileColliderDict;//.ToDictionary(kvp => kvp.Key, kvp => (IBoardPosition)kvp.Value);
 
     public UnityEvent OnStartGame = new UnityEvent();
     public UnityEvent OnBoardCreate = new UnityEvent();
@@ -477,7 +479,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
 
     void OnTileClick(HexTile tile)
     {
-        Debug.Log($"Clicked Hex: {tile.GridPosition}");
+        //Debug.Log($"Clicked Hex: {tile.GridPosition}");
         ClearHighlights();
         tile.SelectNeighbors(movementRange, out selectedTiles);
         tile.PulseSelect(pulseData);
@@ -534,17 +536,6 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
             }
         }
 
-    }
-
-    public bool TryGetTile(Collider collider, out IBoardPosition tile)
-    {
-        if(tileColliderDict.TryGetValue(collider, out HexTile hexTile))
-        {
-            tile = hexTile;
-            return true;
-        }
-        tile = default;
-        return false;
     }
 }
 

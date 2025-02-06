@@ -53,6 +53,8 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISel
     public Vector3 originalPos { get => m_originalPos; set => m_originalPos = value; }
     public Action OnTilePulse { get => onTilePulse; set => onTilePulse = value; }
 
+    public ISelectableTarget selectableTarget => this;
+
     public Color selectColor = Color.yellow;
     public Color hoverColor = Color.cyan;
     MeshRenderer tileRenderer;
@@ -151,10 +153,21 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISel
         }
     }
 
+    public bool isPulsing = false;
     public void OnHoverEnter()
     {
         isHighlighted = true;
-        //tileRenderer.material.color = hoverColor;
+        if (!isPulsing)
+        {
+            isPulsing = true;
+            Sequence sequence = Sequence.Create();
+            sequence.AppendCallback(() =>
+                transform.PulseY(transform.localPosition.With(y: 0f), gameBoard.tileGameData.pulseData.height * gameBoard.tileGameData.parentScale, 1, gameBoard.tileGameData.pulseData.duration, true).SetEase(Ease.Linear)
+            );
+            sequence.OnComplete(() => isPulsing = false);
+            sequence.Play();
+            //Debug.Log("Pulsing" + GridPosition);
+        }
         OnTileHoverEnter?.Invoke(this);
     }
 
