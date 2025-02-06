@@ -34,8 +34,6 @@ public class VolumetricLinePool
     {
         stripBehaviorPrefab = Resources.Load<VolumetricLineStripBehavior>("LineStripLightSaber");
         InitPool();
-        lineStripPool.Get();
-
     }
 
     void InitPool()
