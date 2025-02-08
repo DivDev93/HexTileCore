@@ -119,15 +119,15 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
 
     public bool validate = false;
 
-    public List<HexTile> selectedTiles = new List<HexTile>();
-    public Dictionary<Collider, IBoardPosition> m_tileColliderDict = new Dictionary<Collider, IBoardPosition>();
+    public List<IBoardSelectablePosition> selectedTiles = new List<IBoardSelectablePosition>();
+    public Dictionary<Collider, IBoardSelectablePosition> m_tileColliderDict = new Dictionary<Collider, IBoardSelectablePosition>();
 
     private Dictionary<Vector2Int, HexTile> hexTiles = new(); // Store tiles with axial coordinates
     //public HexTile[,] hexGrid;
     [Inject] IShakeable gridShake;
 
-    List<IBoardPosition> m_positionList = new List<IBoardPosition>();
-    public List<IBoardPosition> positionList
+    List<IBoardSelectablePosition> m_positionList = new List<IBoardSelectablePosition>();
+    public List<IBoardSelectablePosition> positionList
     {
         get
         {
@@ -151,11 +151,11 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     public IBoardPositions boardPositions => this;
 
     TileGameDataScriptableObject IGameBoard.tileGameData => tileGameData;
-    List<IBoardPosition> IGameBoard.selectedTiles => selectedTiles.Cast<IBoardPosition>().ToList();
+    List<IBoardSelectablePosition> IGameBoard.selectedTiles => selectedTiles.Cast<IBoardSelectablePosition>().ToList();
 
     public GeneratedBoardData boardData { get => m_boardData; set => m_boardData = value; }
 
-    public Dictionary<Collider, IBoardPosition> tileColliderDict => m_tileColliderDict;//.ToDictionary(kvp => kvp.Key, kvp => (IBoardPosition)kvp.Value);
+    public Dictionary<Collider, IBoardSelectablePosition> tileColliderDict => m_tileColliderDict;//.ToDictionary(kvp => kvp.Key, kvp => (IBoardPosition)kvp.Value);
 
     public UnityEvent OnStartGame = new UnityEvent();
     public UnityEvent OnBoardCreate = new UnityEvent();
@@ -477,7 +477,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
         return null;
     }
 
-    void OnTileClick(HexTile tile)
+    void OnTileClick(IBoardSelectablePosition tile)
     {
         //Debug.Log($"Clicked Hex: {tile.GridPosition}");
         ClearHighlights();

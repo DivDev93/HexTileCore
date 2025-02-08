@@ -31,14 +31,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2270746595748025237}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0.7071068, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.225, y: 1.486, z: -10.687}
   m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1453462420423966815}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 180}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &5568695333560035680
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -58,7 +58,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5.67, y: 0.02, z: 5.73}
+  m_Size: {x: 5.67, y: 5.73, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &2096723927603545895
 Rigidbody:
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displacement: 0.01
-  placedTile: {fileID: 0}
+  currentRaycastLine: {fileID: 0}
   isPlaced: 0
   jumpPower: 0.025
   placementDuration: 0.5
@@ -224,13 +224,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8150947880652871725}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.55863965, y: 0.5586395, z: 0.5586395}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8230217376939817145}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!33 &4727771345778727443
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -300,9 +300,11 @@ MonoBehaviour:
   sentenceGenerator: {fileID: 0}
   generateOnStart: 1
   shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  words: []
   prompt: A purple dragon with a laser cannon
   inputField: {fileID: 0}
   validate: 0
+  isTextureReady: 0
 --- !u!114 &7908071726068982232
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,9 +12,9 @@ public interface IGameBoard
     public void StartGame(VersusGameMode mode, bool isLocal);
     public IBoardPositions boardPositions { get; }
     public TileGameDataScriptableObject tileGameData { get; }
-    public List<IBoardPosition> selectedTiles { get; }
+    public List<IBoardSelectablePosition> selectedTiles { get; }
     public void SelectStartHexTilesForPlayer(int playerIndex);
     public GeneratedBoardData boardData { get; set; }
-    public Dictionary<Collider, IBoardPosition> tileColliderDict { get; }
+    public Dictionary<Collider, IBoardSelectablePosition> tileColliderDict { get; }
 
 }

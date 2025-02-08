@@ -7,13 +7,14 @@ using UnityUtils;
 using Reflex.Attributes;
 using JSAM;
 
-public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISelectableTarget
+public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosition, ISelectableTarget
 {
     [Inject]
     IGameBoard gameBoard;
 
-    public Vector2Int GridPosition; // Axial coordinate
-    public List<HexTile> Neighbors { get; private set; } = new List<HexTile>();
+    Vector2Int m_gridPosition;
+    public Vector2Int GridPosition { get => m_gridPosition; set => m_gridPosition = value; } // Axial coordinate
+    public List<IBoardSelectablePosition> Neighbors { get; private set; } = new List<IBoardSelectablePosition>();
     
     bool isSelected = false;
 
@@ -36,7 +37,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISel
 
 
     bool isHighlighted = false;
-    bool IBoardPosition.IsHighlighted 
+    bool IBoardSelectablePosition.IsHighlighted 
     { 
         get => isHighlighted;
         set 
@@ -46,7 +47,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISel
         } 
     }
 
-    Transform IBoardPosition.transform => gameObject.transform;
+    Transform IBoardSelectablePosition.transform => gameObject.transform;
 
     Vector3 m_originalPos;
 
@@ -101,9 +102,9 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISel
     }
 
     //Recursive function to highlight neighbors
-    public int SelectNeighbors(int step, out List<HexTile> selectedTiles)
+    public int SelectNeighbors(int step, out List<IBoardSelectablePosition> selectedTiles)
     {
-        selectedTiles = new List<HexTile>();
+        selectedTiles = new List<IBoardSelectablePosition>();
         if (step == 0)
         {
             return 0;
@@ -113,7 +114,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISel
         foreach (var neighbor in Neighbors)
         {
             // Add a delay based on the step
-            neighbor.SelectNeighbors(step - 1, out List<HexTile> subSelectedTiles);
+            neighbor.SelectNeighbors(step - 1, out List<IBoardSelectablePosition> subSelectedTiles);
             HexUtility.AddUniqueRange(selectedTiles, subSelectedTiles);
         }
 
@@ -162,7 +163,11 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISel
             isPulsing = true;
             Sequence sequence = Sequence.Create();
             sequence.AppendCallback(() =>
-                transform.PulseY(transform.localPosition.With(y: 0f), gameBoard.tileGameData.pulseData.height * gameBoard.tileGameData.parentScale, 1, gameBoard.tileGameData.pulseData.duration, true).SetEase(Ease.Linear)
+            {
+                transform.PulseY(transform.localPosition.With(y: 0f), gameBoard.tileGameData.pulseData.height * gameBoard.tileGameData.parentScale, 1, gameBoard.tileGameData.pulseData.duration, true).SetEase(Ease.Linear);
+                if (!AudioManager.IsSoundPlaying(HexTileAudioLibSounds.Clunk, transform))
+                    AudioManager.PlaySound(HexTileAudioLibSounds.Clunk, transform);
+            }
             );
             sequence.OnComplete(() => isPulsing = false);
             sequence.Play();

@@ -23,6 +23,31 @@ PrefabInstance:
       propertyPath: SceneMigrationSynchronization
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1453462420423966815, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453462420423966815, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453462420423966815, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453462420423966815, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453462420423966815, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2270746595748025237, guid: 16e1eca382366f646937393346284b47,
         type: 3}
       propertyPath: m_Name
@@ -51,7 +76,7 @@ PrefabInstance:
     - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
         type: 3}
@@ -61,17 +86,17 @@ PrefabInstance:
     - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.7071068
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.7071068
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
         type: 3}
@@ -81,7 +106,7 @@ PrefabInstance:
     - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3393606911819460183, guid: 16e1eca382366f646937393346284b47, type: 3}
@@ -102,6 +127,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 862719566254518601}
+    - targetCorrespondingSourceObject: {fileID: 2270746595748025237, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8946099646683669749}
   m_SourcePrefab: {fileID: 100100000, guid: 16e1eca382366f646937393346284b47, type: 3}
 --- !u!114 &976253019846758266 stripped
 MonoBehaviour:
@@ -174,6 +203,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 8946099646683669749}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
   - eventID: 3
     callback:
       m_PersistentCalls:
@@ -182,6 +223,18 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: TilePlaceable, Assembly-CSharp
           m_MethodName: OnSelectExit
           m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8946099646683669749}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -222,6 +275,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  - eventID: 13
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 976253019846758266}
+          m_TargetAssemblyTypeName: TilePlaceable, Assembly-CSharp
+          m_MethodName: ClickPlacedTile
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &3411524056755302804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,3 +320,15 @@ MonoBehaviour:
   totalAttack: 0
   totalDefense: 0
   totalSpeed: 0
+--- !u!114 &8946099646683669749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7394608878028184278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6a44ceaef819dc438c89364be24f9d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

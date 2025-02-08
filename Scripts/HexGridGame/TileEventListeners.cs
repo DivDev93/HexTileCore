@@ -3,13 +3,13 @@ using UnityEngine;
 
 public interface IStaticEvents
 {
-    public Action<IBoardPosition> OnTileHoverEnter { get; set; }
-    public Action<IBoardPosition> OnTileHoverExit { get; set; }
+    public Action<IBoardSelectablePosition> OnTileHoverEnter { get; set; }
+    public Action<IBoardSelectablePosition> OnTileHoverExit { get; set; }
 }
 
 public class TileEventListeners : IStaticEvents
 {
-    public Action<IBoardPosition> OnTileHoverEnter { get => (Action<IBoardPosition>)HexTile.OnTileHoverEnter; set => HexTile.OnTileHoverEnter = value; }
-    public Action<IBoardPosition> OnTileHoverExit { get => (Action<IBoardPosition>)HexTile.OnTileHoverExit; set => HexTile.OnTileHoverExit = value; }
+    public Action<IBoardSelectablePosition> OnTileHoverEnter { get => (Action<IBoardSelectablePosition>)HexTile.OnTileHoverEnter; set => HexTile.OnTileHoverEnter = value; }
+    public Action<IBoardSelectablePosition> OnTileHoverExit { get => (Action<IBoardSelectablePosition>)HexTile.OnTileHoverExit; set => HexTile.OnTileHoverExit = value; }
 
 }

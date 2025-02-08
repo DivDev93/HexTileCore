@@ -77,11 +77,11 @@ namespace UnityLabs.Slices.Games.Chess
             m_WinningPiece = winningPiece;
         }
 
-        protected override void UpdateVFX(List<IBoardPosition> boardList)
+        protected override void UpdateVFX(List<IBoardSelectablePosition> boardList)
         {
         }
 
-        protected override void ShutDownVFX(List<IBoardPosition> boardList)
+        protected override void ShutDownVFX(List<IBoardSelectablePosition> boardList)
         {
         }
 

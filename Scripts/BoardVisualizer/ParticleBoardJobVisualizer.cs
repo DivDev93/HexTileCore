@@ -198,7 +198,7 @@ namespace UnityLabs.Slices.Games.Chess
             */
         }
 
-        protected override void UpdateVFX(List<IBoardPosition> boardList)
+        protected override void UpdateVFX(List<IBoardSelectablePosition> boardList)
         {
             RebuildGravityWells();
 
@@ -218,7 +218,7 @@ namespace UnityLabs.Slices.Games.Chess
             }
         }
 
-        protected override void ShutDownVFX(List<IBoardPosition> boardList)
+        protected override void ShutDownVFX(List<IBoardSelectablePosition> boardList)
         {
             DestroyGravityWells(true);
             for (int i = 0; i < boardList.Count; i++)

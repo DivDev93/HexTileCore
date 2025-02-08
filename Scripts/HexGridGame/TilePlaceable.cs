@@ -4,6 +4,7 @@ using PrimeTween;
 using UnityUtils;
 using Reflex.Attributes;
 using VolumetricLines;
+using UnityEngine.Events;
 
 public class TilePlaceable : MonoBehaviour
 {
@@ -63,6 +64,7 @@ public class TilePlaceable : MonoBehaviour
     Vector3 placedLocalPosition = Vector3.zero;
     Quaternion placedLocalRotation = Quaternion.identity;
     public Transform localPlayerTransform;
+    public UnityEvent OnTilePlaced = new();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -113,8 +115,11 @@ public class TilePlaceable : MonoBehaviour
             Debug.Log("SHOULD HAVE RESET GRABBABLE SCALE");
         }));
         
-        sequence.Play();
+        sequence.Play();       
+    }
 
+    public void ClickPlacedTile()
+    {
         isPlaced = false;
         if (PlacedTile != null)
         {
@@ -158,6 +163,7 @@ public class TilePlaceable : MonoBehaviour
         });
         
         sequence.Play();
+        OnTilePlaced.Invoke();
     }
 
     public void OnTilePulse()
@@ -175,7 +181,7 @@ public class TilePlaceable : MonoBehaviour
 
         if (Physics.SphereCast(ray, sphereCastSize, out hit, 100f, layerMask))
         {
-            IBoardPosition hexTile = null;
+            IBoardSelectablePosition hexTile = null;
             if (gameBoard.tileColliderDict.TryGetValue(hit.collider, out hexTile))
             {                
                 //if (highlightedTile != null && hexTile != highlightedTile)

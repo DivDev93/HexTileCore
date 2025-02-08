@@ -28,7 +28,7 @@ public class InstancedSelectionRenderer : MonoBehaviour
     int numInstances = 0;
     //public List<DebugPosScale> posScales = new List<DebugPosScale>();
     private List<Matrix4x4> instData = new List<Matrix4x4>();
-    List<IBoardPosition> hoveredTiles = new List<IBoardPosition>();
+    List<IBoardSelectablePosition> hoveredTiles = new List<IBoardSelectablePosition>();
     RenderParams rpSelected, rpHover;
 
     private void Start()
@@ -93,7 +93,7 @@ public class InstancedSelectionRenderer : MonoBehaviour
         }
     }
 
-    void RenderHexTilesInstanced(List<IBoardPosition> tiles, RenderParams rp)
+    void RenderHexTilesInstanced(List<IBoardSelectablePosition> tiles, RenderParams rp)
     {
         Matrix4x4[] renderMatrices = new Matrix4x4[tiles.Count];
         for (int i = 0; i < tiles.Count; i++)
@@ -130,7 +130,7 @@ public class InstancedSelectionRenderer : MonoBehaviour
         }
     }
 
-    void OnHoverTileEnter(IBoardPosition tile)
+    void OnHoverTileEnter(IBoardSelectablePosition tile)
     {
         if (!hoveredTiles.Contains(tile))
         {
@@ -138,7 +138,7 @@ public class InstancedSelectionRenderer : MonoBehaviour
         }
     }
 
-    void OnHoverTileExit(IBoardPosition tile)
+    void OnHoverTileExit(IBoardSelectablePosition tile)
     {
         if (hoveredTiles.Contains(tile))
         {

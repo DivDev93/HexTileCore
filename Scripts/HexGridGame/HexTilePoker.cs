@@ -6,13 +6,13 @@ public class HexTilePoker : MonoBehaviour
     [Inject]
     IGameBoard gameBoard;
 
-    public IBoardPosition m_currentHexTile = null;
+    public IBoardSelectablePosition m_currentHexTile = null;
     public float durationToClick = 0.35f;
     float currentHexHoverDuration = 0f;
 
     private void OnTriggerEnter(Collider other)
     {
-        if(gameBoard.tileColliderDict.TryGetValue(other, out IBoardPosition boardPosition))
+        if(gameBoard.tileColliderDict.TryGetValue(other, out IBoardSelectablePosition boardPosition))
         {
             HexTile currentHexTile = m_currentHexTile as HexTile;
             HexTile triggerHextile = boardPosition as HexTile;
@@ -27,7 +27,7 @@ public class HexTilePoker : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (gameBoard.tileColliderDict.TryGetValue(other, out IBoardPosition boardPosition))
+        if (gameBoard.tileColliderDict.TryGetValue(other, out IBoardSelectablePosition boardPosition))
         {
             HexTile currentHexTile = m_currentHexTile as HexTile;
             HexTile triggerHextile = boardPosition as HexTile;
@@ -46,7 +46,7 @@ public class HexTilePoker : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (gameBoard.tileColliderDict.TryGetValue(other, out IBoardPosition boardPosition))
+        if (gameBoard.tileColliderDict.TryGetValue(other, out IBoardSelectablePosition boardPosition))
         {
             HexTile currentHexTile = m_currentHexTile as HexTile;
             HexTile triggerHextile = boardPosition as HexTile;
