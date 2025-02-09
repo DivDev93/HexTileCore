@@ -68,10 +68,30 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 2719440044
       objectReference: {fileID: 0}
+    - target: {fileID: 4646738585914222167, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 108
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646738585914222167, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 84
+      objectReference: {fileID: 0}
     - target: {fileID: 7015162765479565186, guid: abe7ca6670b2d5e4a980827f65b38214,
         type: 3}
       propertyPath: OnStartGame.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7128430954027462533, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: OnCameraRotationStop.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5430264988892052904}
+    - target: {fileID: 7128430954027462533, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: OnCameraRotationStop.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetActive
       objectReference: {fileID: 0}
     - target: {fileID: 8173954489391641820, guid: abe7ca6670b2d5e4a980827f65b38214,
         type: 3}
@@ -137,3 +157,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+--- !u!1 &5430264988892052904 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2522843626431796344, guid: abe7ca6670b2d5e4a980827f65b38214,
+    type: 3}
+  m_PrefabInstance: {fileID: 7520692338720893392}
+  m_PrefabAsset: {fileID: 0}

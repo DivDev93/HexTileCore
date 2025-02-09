@@ -1520,6 +1520,21 @@ MonoBehaviour:
   cam: {fileID: 1432122264529064090}
   rotationSpeed: 12.5
   snapDuration: 1
+  OnCameraRotationStop:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8631326013399364501}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!1001 &1859569815114462333
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2043,7 +2058,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 220ac0d0109da184fa8fb565a4009850, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPrefab: {fileID: 7394608878028184278, guid: b8817fef37deba34980193376ed14f7b,
+  cardPrefab: {fileID: 7394608878028184278, guid: 2d0381c2bb1c72b4d9805c12df7b1e2a,
     type: 3}
   currentInteractable: {fileID: 0}
   distanceToSpawnNew: 0.065
@@ -2066,7 +2081,7 @@ PrefabInstance:
     - target: {fileID: 263057633889402065, guid: bacca8682a9c1bc49b7373a5fcd88e68,
         type: 3}
       propertyPath: OnStartGame.m_PersistentCalls.m_Calls.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 263057633889402065, guid: bacca8682a9c1bc49b7373a5fcd88e68,
         type: 3}

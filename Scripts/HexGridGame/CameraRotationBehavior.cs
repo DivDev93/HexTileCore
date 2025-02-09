@@ -1,6 +1,7 @@
 using DG.Tweening;
 using PrimeTween;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CameraRotationBehavior : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class CameraRotationBehavior : MonoBehaviour
     public float rotationSpeed = 12.5f;
     public float snapDuration = 0.25f;
     bool gameStarted = false;
-
+    public UnityEvent OnCameraRotationStop;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -28,7 +29,8 @@ public class CameraRotationBehavior : MonoBehaviour
     {
         gameStarted = true;
         transform.DORotate(Vector3.up * targetYRot, snapDuration).OnComplete(
-            () => { 
+            () => {
+                OnCameraRotationStop.Invoke();
                 enabled = false;
             } );
     }
