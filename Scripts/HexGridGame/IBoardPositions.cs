@@ -25,15 +25,14 @@ public interface IBoardPositions
     public bool isBoardCreated { get; set; }
 }
 
-public interface IBoardSelectablePosition
+public interface IBoardPosition
 {
     public Vector2Int GridPosition { get; set; }
     public bool IsHighlighted { get; set; }
     public Transform transform { get; }
     public Vector3 originalPos { get; set; }
-    public bool IsSelected { get; set; }
-    public ISelectableTarget selectableTarget { get; }
-    public int SelectNeighbors(int step, out List<IBoardSelectablePosition> selectedTiles);
-    public void ClearHighlight();
-    public void PulseSelect(PulseData pulseData, float delay = 0f);
+}
+
+public interface IBoardSelectablePosition : ISelectableTarget, IBoardPosition
+{
 }

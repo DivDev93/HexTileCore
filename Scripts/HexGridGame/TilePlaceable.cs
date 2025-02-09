@@ -75,7 +75,7 @@ public class TilePlaceable : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public virtual void Update()
     {
         if(!isPlaced)
         {
@@ -92,7 +92,7 @@ public class TilePlaceable : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    public virtual void FixedUpdate()
     {
         if (isPlaced)
         {
@@ -141,7 +141,7 @@ public class TilePlaceable : MonoBehaviour
         Debug.Log("UNSELECTED" + gameObject.name);
     }
 
-    void PlaceOnTile()
+    public virtual void PlaceOnTile()
     {
         ReleaseCurrentLine();
         //transform.parent = null;
@@ -174,7 +174,7 @@ public class TilePlaceable : MonoBehaviour
         }
     }
 
-    void RayCastTile()
+    public virtual void RayCastTile()
     {
         Ray ray = new Ray(transform.position, Vector3.down);
         RaycastHit hit;

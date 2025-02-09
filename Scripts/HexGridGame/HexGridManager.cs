@@ -89,6 +89,9 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     bool IBoardPositions.isBoardCreated { get => isBoardCreated; set => isBoardCreated = value; }
 
     [Inject]
+    IStaticEvents staticEvents;
+
+    [Inject]
     public StartTileIndicesScriptableObject startTileIndices;
     
     [Inject]
@@ -122,7 +125,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     public List<IBoardSelectablePosition> selectedTiles = new List<IBoardSelectablePosition>();
     public Dictionary<Collider, IBoardSelectablePosition> m_tileColliderDict = new Dictionary<Collider, IBoardSelectablePosition>();
 
-    private Dictionary<Vector2Int, HexTile> hexTiles = new(); // Store tiles with axial coordinates
+    private Dictionary<Vector2Int, IBoardSelectablePosition> hexTiles = new(); // Store tiles with axial coordinates
     //public HexTile[,] hexGrid;
     [Inject] IShakeable gridShake;
 
@@ -196,9 +199,9 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
         {
             validate = false;
             Debug.Log("hextiles count is " + hexTiles.Values.Count);
-            foreach (HexTile hTile in hexTiles.Values)
+            foreach (IBoardSelectablePosition hTile in hexTiles.Values)
             {
-                DelayDestroy(hTile.gameObject);
+                DelayDestroy(hTile.transform.gameObject);
             }
 
             DelayInit();
@@ -233,12 +236,12 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
 
     void OnEnable()
     {
-        HexTile.OnTileClicked += OnTileClick;
+        staticEvents.OnTileClicked += OnTileClick;
     }
 
     void OnDisable()
     {
-        HexTile.OnTileClicked -= OnTileClick;
+        staticEvents.OnTileClicked -= OnTileClick;
     }
 
     void OnDestroy()
@@ -257,11 +260,11 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     {
         foreach (var tileData in boardData.boardTiles)
         {
-            HexTile hexTile = GetTile(tileData.gridPosition);
+            IBoardSelectablePosition hexTile = GetTile(tileData.gridPosition);
             if (hexTile != null)
             {
                 Mesh selectedPrefab = hexMeshPrefabs[(int)tileData.tileType];
-                hexTile.GetComponent<MeshFilter>().mesh = selectedPrefab;
+                hexTile.transform.GetComponent<MeshFilter>().mesh = selectedPrefab;
             }
         }
     }
@@ -445,7 +448,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
             {
                 Vector2Int neighborCoord = tile.GridPosition + offset;
 
-                if (hexTiles.TryGetValue(neighborCoord, out HexTile neighbor))
+                if (hexTiles.TryGetValue(neighborCoord, out IBoardSelectablePosition neighbor))
                 {
                     tile.AddNeighbor(neighbor);
                 }
@@ -468,9 +471,9 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
         selectedTiles.Clear();
     }
 
-    public HexTile GetTile(Vector2Int gridPosition)
+    public IBoardSelectablePosition GetTile(Vector2Int gridPosition)
     {
-        if (hexTiles.TryGetValue(gridPosition, out HexTile tile))
+        if (hexTiles.TryGetValue(gridPosition, out IBoardSelectablePosition tile))
         {
             return tile;
         }
@@ -495,7 +498,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     {
         foreach (var tile in hexTiles.Values)
         {
-            tile.gameObject.SetActive(state);
+            tile.transform.gameObject.SetActive(state);
         }
     }
 

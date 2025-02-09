@@ -7,7 +7,7 @@ using UnityUtils;
 using Reflex.Attributes;
 using JSAM;
 
-public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosition, ISelectableTarget
+public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosition
 {
     [Inject]
     IGameBoard gameBoard;
@@ -37,7 +37,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
 
 
     bool isHighlighted = false;
-    bool IBoardSelectablePosition.IsHighlighted 
+    public bool IsHighlighted 
     { 
         get => isHighlighted;
         set 
@@ -47,7 +47,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
         } 
     }
 
-    Transform IBoardSelectablePosition.transform => gameObject.transform;
+    new Transform transform => gameObject.transform;
 
     Vector3 m_originalPos;
 
@@ -81,7 +81,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     }
 
     // Add a neighbor to this tile
-    public void AddNeighbor(HexTile neighbor)
+    public void AddNeighbor(IBoardSelectablePosition neighbor)
     {
         if (!Neighbors.Contains(neighbor))
         {
