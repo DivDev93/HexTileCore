@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IPlayerCard
 {
-    public TilePlaceable placeable { get; set; }
+    public BoardPlaceable placeable { get; set; }
     public StableDiffusionGenerator imageGenerator { get; set; }
     public SentenceGenerator sentenceGenerator { get; set; }
 }
@@ -14,11 +14,11 @@ public class PlayableCard : MonoBehaviour, IPlayerCard
     async void Start()
     {
         imageGenerator = GetComponentInChildren<StableDiffusionGenerator>();
-        placeable = GetComponent<TilePlaceable>();        
+        placeable = GetComponent<BoardPlaceable>();        
         sentenceGenerator.OnWordsChosen += RefreshStats;      
     }
 
-    public TilePlaceable placeable { get; set; }
+    public BoardPlaceable placeable { get; set; }
     public StableDiffusionGenerator imageGenerator { get; set; }
     
     [Inject]

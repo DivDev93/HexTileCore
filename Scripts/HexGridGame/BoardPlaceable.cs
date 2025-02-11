@@ -6,12 +6,12 @@ using Reflex.Attributes;
 using VolumetricLines;
 using UnityEngine.Events;
 
-public class TilePlaceable : MonoBehaviour
+public class BoardPlaceable : MonoBehaviour
 {
     [Inject]
     IGameBoard gameBoard;
 
-    public float displacement = 0.1f;
+    public float displacement = 0.01f;
     Vector3 defaultScale;
     float sphereCastSize => gameBoard.tileGameData.sphereCastSize;
     public ISelectableTarget placedTile;
@@ -58,7 +58,7 @@ public class TilePlaceable : MonoBehaviour
         }
     }
     public bool isPlaced = false;
-    public float jumpPower = 0.5f;
+    public float jumpPower = 0.025f;
     public float placementDuration = 0.5f;
     private Rigidbody rb;
     Vector3 placedLocalPosition = Vector3.zero;
