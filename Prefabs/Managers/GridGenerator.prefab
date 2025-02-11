@@ -114,7 +114,6 @@ MonoBehaviour:
   gridHeight: 10
   hexSize: 0.6
   validate: 0
-  selectedTiles: []
   OnStartGame:
     m_PersistentCalls:
       m_Calls:

@@ -24,12 +24,12 @@ public class TilePlaceable : MonoBehaviour
         set
         {
             if (placedTile != null && placedTile != value)
-                placedTile.OnTilePulse -= OnTilePulse;
+                placedTile.OnSelect -= OnTilePulse;
 
             placedTile = value;
 
             if (placedTile != null)
-                placedTile.OnTilePulse += OnTilePulse;
+                placedTile.OnSelect += OnTilePulse;
         }
     }
     public ISelectableTarget HighlightedTile

@@ -9,6 +9,9 @@ public class HexGameManager : MonoBehaviour, IGameManager
     public int currentPlayerTurn;
     public List<HexPlayer> players = new List<HexPlayer>();
 
+    bool isStarted = false;
+    public bool IsStarted { get => isStarted; set => isStarted = value; }
+
     public void StartGame()
     {
         gameBoard.SelectStartHexTilesForPlayer(0);

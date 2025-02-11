@@ -12,6 +12,9 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     [Inject]
     IGameBoard gameBoard;
 
+    [Inject]
+    IStaticEvents staticEvents;
+
     Vector2Int m_gridPosition;
     public Vector2Int GridPosition { get => m_gridPosition; set => m_gridPosition = value; } // Axial coordinate
     public List<IBoardSelectablePosition> Neighbors { get; private set; } = new List<IBoardSelectablePosition>();
@@ -52,13 +55,14 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     Vector3 m_originalPos;
 
     public Vector3 originalPos { get => m_originalPos; set => m_originalPos = value; }
-    public Action OnTilePulse { get => onTilePulse; set => onTilePulse = value; }
+    public Action OnSelect { get => onTilePulse; set => onTilePulse = value; }
 
     public ISelectableTarget selectableTarget => this;
 
     public Color selectColor = Color.yellow;
     public Color hoverColor = Color.cyan;
     MeshRenderer tileRenderer;
+    EventTrigger eventTrigger;
     //AudioSource audioSource;
     bool ignoreHighlight = false;
 
@@ -70,7 +74,17 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     void Awake()
     {
         tileRenderer = GetComponent<MeshRenderer>();
+        eventTrigger = GetComponent<EventTrigger>();
         //audioSource = GetComponent<AudioSource>();
+    }
+    void Start()
+    {
+        staticEvents.OnGameStarted += EnableEventTrigger;
+    }
+
+    public void EnableEventTrigger()
+    {
+        eventTrigger.enabled = true;
     }
     // Initialize tile
     public void Initialize(Vector2Int gridPosition)
@@ -183,7 +197,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
         sequence.Append(PrimeTweenExtensions.PulseY(transform, transform.localPosition.With(y: 0f), pulseData.height * gameBoard.tileGameData.parentScale, 1, pulseData.duration, true).SetEase(Ease.Linear));
         sequence.AppendCallback(() =>
         {
-            OnTilePulse?.Invoke();
+            OnSelect?.Invoke();
             if(!AudioManager.IsSoundPlaying(HexTileAudioLibSounds.Clunk, transform))
                 AudioManager.PlaySound(HexTileAudioLibSounds.Clunk, transform);
         });

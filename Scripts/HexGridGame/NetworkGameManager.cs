@@ -4,6 +4,7 @@ using UnityEngine;
 
 public interface IGameManager
 {
+    public bool IsStarted { get; set; }
     public void StartGame();
     
 }
@@ -18,6 +19,10 @@ public class NetworkGameManager : NetworkBehaviour, IGameManager
     private int totalPlayers;
     bool IsOnline => NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening;
     bool RunLocal => !IsOnline || IsServer;
+
+    bool isStarted = false;
+    public bool IsStarted { get => isStarted; set => isStarted = value; }
+
     //public GameObject offlineObjects;
 
     public override void OnNetworkSpawn()

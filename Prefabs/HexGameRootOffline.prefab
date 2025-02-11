@@ -2080,6 +2080,32 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 263057633889402065, guid: bacca8682a9c1bc49b7373a5fcd88e68,
         type: 3}
+      propertyPath: noiseScale
+      value: 0.8175706
+      objectReference: {fileID: 0}
+    - target: {fileID: 263057633889402065, guid: bacca8682a9c1bc49b7373a5fcd88e68,
+        type: 3}
+      propertyPath: tileGameData
+      value: 
+      objectReference: {fileID: 11400000, guid: 17ee4745f68f21648b39a4d89813b4a2,
+        type: 2}
+    - target: {fileID: 263057633889402065, guid: bacca8682a9c1bc49b7373a5fcd88e68,
+        type: 3}
+      propertyPath: 'tileTypeArray.Array.data[0]'
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 263057633889402065, guid: bacca8682a9c1bc49b7373a5fcd88e68,
+        type: 3}
+      propertyPath: 'tileTypeArray.Array.data[2]'
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 263057633889402065, guid: bacca8682a9c1bc49b7373a5fcd88e68,
+        type: 3}
+      propertyPath: 'tileTypeArray.Array.data[3]'
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 263057633889402065, guid: bacca8682a9c1bc49b7373a5fcd88e68,
+        type: 3}
       propertyPath: OnStartGame.m_PersistentCalls.m_Calls.Array.size
       value: 2
       objectReference: {fileID: 0}
