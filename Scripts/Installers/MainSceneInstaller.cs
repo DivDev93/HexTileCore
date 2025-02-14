@@ -4,6 +4,17 @@ using Reflex.Core;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using Unity.Netcode;
+using UnityEngine.XR.Interaction.Toolkit.AR.Inputs;
+using System;
+
+[Serializable]
+public class ScreenSpaceInputs
+{
+    public ScreenSpaceRayPoseDriver screenSpaceRayPoseDriver;
+    public ScreenSpaceRotateInput screenSpaceRotateInput;
+    public ScreenSpaceSelectInput screenSpaceSelectInput;
+    public ScreenSpacePinchScaleInput screenSpacePinchScaleInput;
+}
 
 public class MainSceneInstaller : MonoBehaviour, IInstaller
 {
@@ -12,6 +23,7 @@ public class MainSceneInstaller : MonoBehaviour, IInstaller
     public InterfaceReference<IGameManager> gameManager;
     public SentenceGenerator sentenceGenerator;
     public InterfaceReference<IGameUI> gameUIref;
+    public ScreenSpaceInputs screenSpaceInputs;
 
     //IEnumerator Start()
     //{
@@ -45,6 +57,7 @@ public class MainSceneInstaller : MonoBehaviour, IInstaller
         builder.AddSingleton(hexGridManager);
         builder.AddSingleton<IGameManager>(IGameManager => gameManager.Value);
         builder.AddSingleton(sentenceGenerator);
+        builder.AddSingleton(screenSpaceInputs);
         Debug.Log("MainSceneInstaller bindings installed");
     }
 }

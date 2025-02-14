@@ -162,15 +162,18 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4854546800112601674}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 819deed21e848ae4aba60cad66ae6c49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pitchDelta: 0
   zoomSpeed: 1
-  zoomMin: 1
-  zoomMax: 10
+  zoomMin: 0.1
+  zoomMax: 0.8
   zoomCurrent: 5
-  zoomSensitivity: 1
-  zoomActionRef: {fileID: 2938420847884704322, guid: c348712bda248c246b8c49b3db54643f,
-    type: 3}
+  zoomSensitivity: 0.5
+  pitchMin: -30
+  pitchMax: 15
+  panFactor: 20
+  previousPitch: 0

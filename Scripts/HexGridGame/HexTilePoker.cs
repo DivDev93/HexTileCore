@@ -37,7 +37,7 @@ public class HexTilePoker : MonoBehaviour
                 currentHexHoverDuration += Time.deltaTime;
                 if (currentHexHoverDuration > durationToClick)
                 {
-                    currentHexTile.OnTileClick();
+                    currentHexTile.OnSelectionClick();
                     currentHexHoverDuration = 0f;
                 }
             }

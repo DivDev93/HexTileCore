@@ -44,9 +44,10 @@ public class OfflineCardSpawner : MonoBehaviour
         (
             cardPrefab,
             spawnerTransform.position,
-            spawnerTransform.rotation
+            spawnerTransform.rotation,
+            spawnerTransform
         );
-        currentInteractable.transform.localScale = spawnerTransform.localScale;
+        currentInteractable.transform.localScale = Vector3.one;//spawnerTransform.localScale;
 
         return currentInteractable;
     }

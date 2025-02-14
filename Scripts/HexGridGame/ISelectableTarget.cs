@@ -6,10 +6,9 @@ public interface ISelectableTarget
 {
     public void OnHoverEnter();
     public void OnHoverExit();
-    public void OnTileClick();
+    public void OnSelectionClick();
     public Transform GetTransform();
     public bool IsSelected { get; set; }
-    public ISelectableTarget selectableTarget { get; }
     public void ClearHighlight();
     public Action OnSelect { get; set; }
 }

@@ -57,8 +57,6 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     public Vector3 originalPos { get => m_originalPos; set => m_originalPos = value; }
     public Action OnSelect { get => onTilePulse; set => onTilePulse = value; }
 
-    public ISelectableTarget selectableTarget => this;
-
     public Color selectColor = Color.yellow;
     public Color hoverColor = Color.cyan;
     MeshRenderer tileRenderer;
@@ -103,7 +101,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
         }
     }
 
-    public void OnTileClick()
+    public void OnSelectionClick()
     {
         ignoreHighlight = true;
         OnTileClicked?.Invoke(this);
@@ -112,7 +110,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        OnTileClick();
+        OnSelectionClick();
     }
 
     //Recursive function to highlight neighbors
@@ -176,15 +174,12 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
         {
             isPulsing = true;
             Sequence sequence = Sequence.Create();
-            sequence.AppendCallback(() =>
-            {
-                transform.PulseY(transform.localPosition.With(y: 0f), gameBoard.tileGameData.pulseData.height * gameBoard.tileGameData.parentScale, 1, gameBoard.tileGameData.pulseData.duration, true).SetEase(Ease.Linear);
-                if (!AudioManager.IsSoundPlaying(HexTileAudioLibSounds.Clunk, transform))
-                    AudioManager.PlaySound(HexTileAudioLibSounds.Clunk, transform);
-            }
-            );
+            sequence.Append(transform.PulseY(transform.localPosition.With(y: 0f), gameBoard.tileGameData.pulseData.height * gameBoard.tileGameData.parentScale, 1, gameBoard.tileGameData.pulseData.duration, true).SetEase(Ease.Linear));
             sequence.OnComplete(() => isPulsing = false);
             sequence.Play();
+
+            if (!AudioManager.IsSoundPlaying(HexTileAudioLibSounds.Clunk, transform))
+                AudioManager.PlaySound(HexTileAudioLibSounds.Clunk, transform);
             //Debug.Log("Pulsing" + GridPosition);
         }
         OnTileHoverEnter?.Invoke(this);
