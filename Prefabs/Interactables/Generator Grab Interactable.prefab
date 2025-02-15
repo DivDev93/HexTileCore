@@ -121,13 +121,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 2270746595748025237}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ad068c43b636844cae31717c2327c5b, type: 3}
+  m_Script: {fileID: 11500000, guid: 25346c8fb321719409d649542bc95872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   displacement: 0.01
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 64
   currentRaycastLine: {fileID: 0}
   isPlaced: 0
-  jumpPower: 0.025
+  isPlacing: 0
   placementDuration: 0.5
   localPlayerTransform: {fileID: 0}
   OnTilePlaced:

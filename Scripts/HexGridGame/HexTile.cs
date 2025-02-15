@@ -15,6 +15,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     [Inject]
     IStaticEvents staticEvents;
 
+    public ETileType tileType;
     Vector2Int m_gridPosition;
     public Vector2Int GridPosition { get => m_gridPosition; set => m_gridPosition = value; } // Axial coordinate
     public List<IBoardSelectablePosition> Neighbors { get; private set; } = new List<IBoardSelectablePosition>();
@@ -85,10 +86,11 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
         eventTrigger.enabled = true;
     }
     // Initialize tile
-    public void Initialize(Vector2Int gridPosition)
+    public void Initialize(BoardTileData tileData)
     {
-        GridPosition = gridPosition;
-        gameObject.name = $"Hex ({gridPosition.x}, {gridPosition.y})";
+        tileType = tileData.tileType;
+        GridPosition = tileData.gridPosition;
+        gameObject.name = $"Hex ({GridPosition.x}, {GridPosition.y})";
         //gameObject.AddComponent<MeshCollider>().convex = true;
     }
 

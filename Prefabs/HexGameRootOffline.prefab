@@ -1428,6 +1428,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraScreenShake: {fileID: 6915822724349403320}
   hexGridManager: {fileID: 7015162765479565186}
+  cardSpawner:
+    underlyingValue: {fileID: 0}
   gameManager:
     underlyingValue: {fileID: 1081308313374473168}
   sentenceGenerator: {fileID: 2936718784148873630}
@@ -1631,7 +1633,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3240337808518212867, guid: 0699584150f998841b5e8b63a462a76e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1775,7 +1778,7 @@ PrefabInstance:
     - target: {fileID: 1307340355526728043, guid: 1793edc7f4b44374aa0f52840574557d,
         type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 1844773199
+      value: 898661159
       objectReference: {fileID: 0}
     - target: {fileID: 1566188858967115160, guid: 1793edc7f4b44374aa0f52840574557d,
         type: 3}

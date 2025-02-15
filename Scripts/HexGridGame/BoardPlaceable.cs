@@ -11,25 +11,29 @@ public class BoardPlaceable : MonoBehaviour
     [Inject]
     IGameBoard gameBoard;
 
-    public float displacement = 0.01f;
     Vector3 defaultScale;
+    float displacement => gameBoard.tileGameData.cardPlacedDisplacement;
     float sphereCastSize => gameBoard.tileGameData.sphereCastSize;
     public ISelectableTarget placedTarget;
     private ISelectableTarget highlightedTarget;
-    int layerMask;// = LayerMask.GetMask("HexTile");
+    public LayerMask layerMask;// = LayerMask.GetMask("HexTile");
+    int m_layerMask => layerMask.value;// = LayerMask.GetMask("HexTile");
     public VolumetricLineStripBehavior currentRaycastLine = null;
     public ISelectableTarget PlacedTarget
     {
         get { return placedTarget; }
         set
         {
-            if (placedTarget != null && placedTarget != value)
-                placedTarget.OnSelect -= OnTargetPlace;
+            if (placedTarget != value)
+            {
+                if (placedTarget != null)
+                    placedTarget.OnSelect -= OnTargetPlace;
 
-            placedTarget = value;
+                placedTarget = value;
 
-            if (placedTarget != null)
-                placedTarget.OnSelect += OnTargetPlace;
+                if (placedTarget != null)
+                    placedTarget.OnSelect += OnTargetPlace;
+            }
         }
     }
     public ISelectableTarget HighlightedTarget
@@ -37,47 +41,55 @@ public class BoardPlaceable : MonoBehaviour
         get { return highlightedTarget; }
         set
         {
-            if (highlightedTarget != null && highlightedTarget != value)
+            if (highlightedTarget != value)
             {
-                highlightedTarget.OnHoverExit();
-            }
+                if (highlightedTarget != null)
+                {
+                    highlightedTarget.OnHoverExit();
+                }
 
-            highlightedTarget = value;
+                highlightedTarget = value;
 
-            if (highlightedTarget != null)
-            {
-                highlightedTarget.OnHoverEnter();
-            }
+                if (highlightedTarget != null)
+                {
+                    highlightedTarget.OnHoverEnter();
+                    //Debug.Log("HIGHLIGHTED TARGET IS " + highlightedTarget.GetTransform().name);
+                }
 
-            if (highlightedTarget == null)
-            {
-                ReleaseCurrentLine();
+                if (highlightedTarget == null)
+                {
+                    ReleaseCurrentLine();
+                }
+                else
+                {
+                    //Debug.Log("DRAWING LINE");
+                    currentRaycastLine = VolumetricLinePool.DrawLine(transform.position, highlightedTarget.GetTransform().position, Color.cyan, currentRaycastLine);
+                }
             }
-            else
-                currentRaycastLine = VolumetricLinePool.DrawLine(transform.position, highlightedTarget.GetTransform().position.With(y: 0f), Color.cyan, currentRaycastLine);
         }
     }
     public bool isPlaced = false;
-    public float jumpPower = 0.025f;
+    public bool isPlacing = false;
+    public float jumpPower => gameBoard.tileGameData.cardPulsePower * gameBoard.tileGameData.parentScale; //0.025f;
     public float placementDuration = 0.5f;
     private Rigidbody rb;
-    Vector3 placedLocalPosition = Vector3.zero;
+    Vector3 placedPosition = Vector3.zero;
     Quaternion placedLocalRotation = Quaternion.identity;
     public Transform localPlayerTransform;
     public UnityEvent OnTilePlaced = new();
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         defaultScale = transform.lossyScale;
         rb = GetComponent<Rigidbody>();
-        layerMask = LayerMask.GetMask("HexTile");
     }
 
     // Update is called once per frame
     public virtual void Update()
     {
-        if(!isPlaced)
+        if(!isPlaced && !isPlacing)
         {
             RayCastTile();
         }
@@ -99,24 +111,17 @@ public class BoardPlaceable : MonoBehaviour
             if (rb != null && rb.isKinematic && transform.parent != null)
             {
                 // Synchronize the Rigidbody's position and rotation with the parent
-                rb.MovePosition(transform.parent.position + placedLocalPosition);
+                rb.MovePosition(transform.parent.position + placedPosition);
                 rb.MoveRotation(transform.parent.rotation * placedLocalRotation);
             }
         }
     }
 
     public void OnSelected()
-    {
+    {        
         transform.parent = null;
-        //transform.parent = null;
-        Sequence sequence = DOTween.Sequence();
-        sequence.SetDelay(0.01f);
-        sequence.Append(transform.DOScale(defaultScale, gameBoard.tileGameData.selectAnimationDuration).OnComplete(() =>
-        {
-            Debug.Log("SHOULD HAVE RESET GRABBABLE SCALE");
-        }));
-        
-        sequence.Play();       
+        Tween scaleTween = Tween.Delay(0.01f);
+        scaleTween.Chain(transform.DOScale(defaultScale, gameBoard.tileGameData.selectAnimationDuration));        
     }
 
     public void ClickPlacedTile()
@@ -132,46 +137,56 @@ public class BoardPlaceable : MonoBehaviour
     {
         if (HighlightedTarget != null)
         {
-            PlacedTarget = HighlightedTarget;
-        }
-
-        if (PlacedTarget != null)
-        {
             PlaceOnTile();
         }
-        Debug.Log("UNSELECTED" + gameObject.name);
+        else if (PlacedTarget != null)
+        {
+            HighlightedTarget = PlacedTarget;
+            PlaceOnTile();
+        }
+        //Debug.Log("UNSELECTED" + gameObject.name);
     }
 
     public virtual void PlaceOnTile()
     {
+        isPlacing = true;
         ReleaseCurrentLine();
         //transform.parent = null;
         //var localPlayer = XRINetworkGameManager.Instance.GetLocalPlayer();
         localPlayerTransform = Camera.main.transform;
-        placedLocalRotation = Quaternion.LookRotation((localPlayerTransform.position - PlacedTarget.GetTransform().position).With(y:0f), Vector3.up);
-        placedLocalPosition = Vector3.up * displacement;
-        Sequence sequence = DOTween.Sequence();
-        sequence.Append(transform.DOMove(PlacedTarget.GetTransform().position.With(y: 0) + placedLocalPosition, placementDuration))//DOJump(placedTile.transform.position + placedLocalPosition, jumpPower, 1, placementDuration))
-            .Join(transform.DORotateQuaternion(placedLocalRotation, placementDuration))
-            .Join(transform.DOScale(gameBoard.tileGameData.PlacedCardScale * Vector3.one, placementDuration))
-            .OnComplete(() =>
+        //placedLocalRotation = Quaternion.LookRotation((localPlayerTransform.position - HighlightedTarget.GetTransform().position), Vector3.up);
+        placedPosition = HighlightedTarget.GetTransform().position + Vector3.up * displacement;    
+       
+        Sequence sequence = Sequence.Create();
+        sequence.Group(transform.DOMove(placedPosition, placementDuration));
+        sequence.Group(transform.DORotateQuaternion(placedLocalRotation, placementDuration));
+        sequence.Group(transform.DOScale(gameBoard.tileGameData.PlacedCardScale * Vector3.one, placementDuration));
+        sequence.OnComplete(() =>
         {
+            HighlightedTarget.OnHoverExit();
+            HighlightedTarget.OnSelectionClick();
+            PlacedTarget = HighlightedTarget; //neccessary to prevent unneccessary listener invocation making object pulse
             isPlaced = true;
-            //transform.parent = placedTile.transform;
-            PlacedTarget.OnHoverExit();
-            PlacedTarget.OnSelectionClick();
-            //placedTile.transform.DOShakePosition(0.25f, 0.08f);
         });
-        
         sequence.Play();
         OnTilePlaced.Invoke();
     }
 
+    //comes roundabout through events from the OnSelect event invocation in the SelectedTarget
     public virtual void OnTargetPlace()
     {
-        if (PlacedTarget != null && isPlaced)
+        if (!isPlaced)
+            return;        
+
+        if (PlacedTarget != null)
         {
-            PrimeTweenExtensions.PulseY(transform, PlacedTarget.GetTransform().position.With(y: 0f) + placedLocalPosition, jumpPower, 1, gameBoard.tileGameData.pulseData.duration);
+            if (isPlacing)
+                isPlacing = false;
+            else
+            {
+                Debug.Log("Placed target is jumppower is" + jumpPower);
+                transform.PulseY(transform.localPosition, jumpPower, 1, gameBoard.tileGameData.pulseData.duration, true).SetEase(Ease.Linear);
+            }
         }
     }
 
@@ -180,7 +195,7 @@ public class BoardPlaceable : MonoBehaviour
         Ray ray = new Ray(transform.position, Vector3.down);
         RaycastHit hit;
 
-        if (Physics.SphereCast(ray, sphereCastSize, out hit, 100f, layerMask))
+        if (Physics.SphereCast(ray, sphereCastSize, out hit, 100f, m_layerMask))
         {
             IBoardSelectablePosition hexTile = null;
             if (gameBoard.tileColliderDict.TryGetValue(hit.collider, out hexTile))
@@ -194,25 +209,27 @@ public class BoardPlaceable : MonoBehaviour
                 if (!gameBoard.selectedTiles.Contains(hexTile))
                 {
                     HighlightedTarget = null;
-                    //Debug.Log("Hovered Tile is not among selected " + hit.collider.name + " dict count is " + HexGridManager.tileColliderDict.Count);
+                    //Debug.Log("Hovered Tile is not among selected " + hit.collider.name + " dict count is " + gameBoard.tileColliderDict.Count);
                     return;
                 }
 
                 if (HighlightedTarget != hexTile)
+                {
                     HighlightedTarget = hexTile;
+                    //Debug.Log("Tile hit" + hexTile.GridPosition);
+                }
 
-                //Debug.Log("Tile hit" + hexTile.GridPosition);
             }
-            else
+            else if (HighlightedTarget != null)
             {
                 HighlightedTarget = null;
-                //Debug.Log("No tile hit but found collider " + hit.collider.name + " dict count is " + HexGridManager.tileColliderDict.Count);
+                //Debug.Log("No tile hit but found collider " + hit.collider.name + " dict count is " + gameBoard.tileColliderDict.Count);
             }
         }
-        else
+        else if (HighlightedTarget != null)
         {
             HighlightedTarget = null;
-            //Debug.Log("No tile hit" + HexGridManager.tileColliderDict.Count);
+            //Debug.Log("No tile hit" + gameBoard.tileColliderDict.Count);
         }
     }
 

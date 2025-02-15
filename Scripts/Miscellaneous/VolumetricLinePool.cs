@@ -15,7 +15,7 @@ public class VolumetricLinePool
     public static VolumetricLineStripBehavior DrawLine(Vector3 start, Vector3 end, Color color, VolumetricLineStripBehavior cachedLine = null, float duration = 0f)
     {
         var line = cachedLine == null ? VolumetricLinePool.lineStripPool.Get() : cachedLine;
-        Vector3[] linePositions = { start, end.With(y : (start.y - end.y)/2f),  end };
+        Vector3[] linePositions = { start, end.With(y : end.y + (start.y - end.y)/2f),  end };
         line.UpdateLineVertices(linePositions);
         line.LineColor = color;
 

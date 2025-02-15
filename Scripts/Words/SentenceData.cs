@@ -23,6 +23,7 @@ namespace Sentences
 
     public enum WordType
     {
+        Type,
         Adjective,
         MainNoun,
         Verb,

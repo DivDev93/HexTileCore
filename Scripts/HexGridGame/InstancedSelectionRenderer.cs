@@ -26,9 +26,10 @@ public class InstancedSelectionRenderer : MonoBehaviour
     public Vector3 hoveredScale = Vector3.up * 1.4f;
     public Vector3 offset = Vector3.up;
     int numInstances = 0;
-    //public List<DebugPosScale> posScales = new List<DebugPosScale>();
     private List<Matrix4x4> instData = new List<Matrix4x4>();
-    List<IBoardSelectablePosition> hoveredTiles = new List<IBoardSelectablePosition>();
+    private List<IBoardSelectablePosition> hoveredTiles = new List<IBoardSelectablePosition>();
+    private Matrix4x4[] renderMatrices;
+    private Matrix4x4[] instDataArray;
     RenderParams rpSelected, rpHover;
 
     private void Start()
@@ -42,7 +43,6 @@ public class InstancedSelectionRenderer : MonoBehaviour
         if (gameBoard.boardPositions.isBoardCreated)
         {
             UpdateSelectedTiles();
-            //RenderHexTilesInstanced(hexGridManager.selectedTiles, rpSelected);
             RenderHexTilesInstanced(hoveredTiles, rpHover);
         }
     }
@@ -62,7 +62,14 @@ public class InstancedSelectionRenderer : MonoBehaviour
         }
 
         if (numInstances > 0)
-            Graphics.RenderMeshInstanced(rpSelected, mesh, 0, instData.ToArray());
+        {
+            if (instDataArray == null || instDataArray.Length < numInstances)
+            {
+                instDataArray = new Matrix4x4[numInstances];
+            }
+            instData.CopyTo(instDataArray);
+            Graphics.RenderMeshInstanced(rpSelected, mesh, 0, instDataArray, numInstances);
+        }
     }
 
     void AddSelectedIndex(int i, bool add = true)
@@ -74,39 +81,37 @@ public class InstancedSelectionRenderer : MonoBehaviour
             return;
         }
 
-        Vector3 translation = gameBoard.selectedTiles[i].transform.position.With(y: 0) + offset;
+        Vector3 translation = gameBoard.selectedTiles[i].transform.position.With(y: transform.position.y) + offset;
         Vector3 matrixScale = gameBoard.tileGameData.parentScale * selectedScale;
-        //posScales[i].position = translation;
-        //posScales[i].scale = matrixScale;
-        Matrix4x4 inst = new Matrix4x4();
-        inst.SetTRS(translation, Quaternion.identity, matrixScale);
+        Matrix4x4 inst = Matrix4x4.TRS(translation, Quaternion.identity, matrixScale);
 
         if (add)
         {
-            
             instData.Add(inst);
         }
         else
         {
             instData[i] = inst;
-            //Debug.Log("Should have updated data without adding to the list at " + i + " translation and scale are: " + translation + " " + matrixScale);
         }
     }
 
     void RenderHexTilesInstanced(List<IBoardSelectablePosition> tiles, RenderParams rp)
     {
-        Matrix4x4[] renderMatrices = new Matrix4x4[tiles.Count];
+        if (renderMatrices == null || renderMatrices.Length < tiles.Count)
+        {
+            renderMatrices = new Matrix4x4[tiles.Count];
+        }
+
         for (int i = 0; i < tiles.Count; i++)
         {
-            Vector3 translation = tiles[i].transform.position.With(y: 0) + offset;
+            Vector3 translation = tiles[i].transform.position.With(y: transform.position.y) + offset;
             Vector3 matrixScale = gameBoard.tileGameData.parentScale * hoveredScale;
-            Matrix4x4 inst = new Matrix4x4();
-            inst.SetTRS(translation, Quaternion.identity, matrixScale);
+            Matrix4x4 inst = Matrix4x4.TRS(translation, Quaternion.identity, matrixScale);
             renderMatrices[i] = inst;
         }
 
-        if(tiles.Count > 0)
-            Graphics.RenderMeshInstanced(rp, mesh, 0, renderMatrices);
+        if (tiles.Count > 0)
+            Graphics.RenderMeshInstanced(rp, mesh, 0, renderMatrices, tiles.Count);
     }
 
     void AdjustInstanceData()
@@ -114,18 +119,15 @@ public class InstancedSelectionRenderer : MonoBehaviour
         if (instData.Count == numInstances)
             return;
 
-        // Adjust the size of the list
         if (instData.Count < numInstances)
         {
             for (int i = instData.Count; i < numInstances; i++)
             {
-                //posScales.Add(new DebugPosScale());
                 AddSelectedIndex(i);
             }
         }
         else if (instData.Count > numInstances)
         {
-            //posScales.RemoveRange(numInstances, posScales.Count - numInstances);
             instData.RemoveRange(numInstances, instData.Count - numInstances);
         }
     }

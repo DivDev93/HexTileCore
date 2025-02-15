@@ -6,7 +6,7 @@ using Reflex.Attributes;
 public class SentenceGenerator : MonoBehaviour
 {
     [Inject]
-    SentenceData sentenceData;
+    public SentenceData sentenceData;
     public int wordOptionsCount = 8;
 
     public TMPro.TextMeshProUGUI sentenceText;
@@ -76,7 +76,7 @@ public class SentenceGenerator : MonoBehaviour
 
     int RandomIndex(int count)
     {
-        System.Random random = new System.Random(Time.frameCount);
+        System.Random random = new System.Random(System.Guid.NewGuid().GetHashCode());
         return random.Next(0, count);
     }
 
@@ -84,6 +84,15 @@ public class SentenceGenerator : MonoBehaviour
     {
         var template = sentenceTemplates[RandomIndex(sentenceTemplates.Count - 1)];
         GetRandomizedWordDatas(template);
+        OnWordsChosen?.Invoke();
+        return InsertWordsToTemplate(template, chosenWords);
+        //return prompt;
+    }
+
+    public string GetRandomizedPrompt(out List<WordData> datas)
+    {
+        var template = sentenceTemplates[RandomIndex(sentenceTemplates.Count - 1)];
+        datas = GetRandomizedWordDatas(template);
         OnWordsChosen?.Invoke();
         return InsertWordsToTemplate(template, chosenWords);
         //return prompt;

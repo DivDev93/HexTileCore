@@ -1,7 +1,14 @@
+using Reflex.Attributes;
+using System;
 using UnityEngine;
 
-public class OfflineCardSpawner : MonoBehaviour
+public class OfflineCardSpawner : MonoBehaviour, ICardSpawner
 {
+    [Inject]
+    IStaticEvents staticEvents;
+
+    public int playerId = 0;
+
     //offline version of NetworkObjectDispenser
     public GameObject cardPrefab;
     public GameObject currentInteractable;
@@ -52,19 +59,43 @@ public class OfflineCardSpawner : MonoBehaviour
         return currentInteractable;
     }
 
-    private void LateUpdate()
+    public void OnEnable()
     {
-        float deltaTime;
-        deltaTime = Time.deltaTime;
+        staticEvents.OnTurnEnd += OnTurnEnd;
+        SpawnInteractablePrefab(spawnTransform);
+    }
 
-        if(CheckInteractablePosition())
+    public void OnDisable()
+    {
+        staticEvents.OnTurnEnd -= OnTurnEnd;
+    }
+
+    private void OnTurnEnd(int player)
+    {
+        if (CheckInteractablePosition())
         {
             currentInteractable = null;
         }
 
-        if (CanSpawn(deltaTime))
+        if (player == playerId && currentInteractable == null)
         {
             SpawnInteractablePrefab(spawnTransform);
         }
     }
+
+    //private void LateUpdate()
+    //{
+    //    float deltaTime;
+    //    deltaTime = Time.deltaTime;
+
+    //    if(CheckInteractablePosition())
+    //    {
+    //        currentInteractable = null;
+    //    }
+
+    //    if (CanSpawn(deltaTime))
+    //    {
+    //        SpawnInteractablePrefab(spawnTransform);
+    //    }
+    //}
 }

@@ -110,7 +110,7 @@ public static class PrimeTweenExtensions
         return s;
     }
 
-    public static Sequence PulseY(this Transform target, Vector3 startPos, float height, int numPulses = 1, float duration = 0.5f, bool isLocal = false)
+    public static Tween PulseY(this Transform target, Vector3 startPos, float height, int numPulses = 1, float duration = 0.5f, bool isLocal = false)
     {
         if (numPulses < 1)
         {
@@ -118,23 +118,21 @@ public static class PrimeTweenExtensions
         }
         float startPosY = startPos.y;
         float endPosY = startPos.y + height;
-        Sequence s = PrimeTween.Sequence.Create();
         Tween yTween = default;
         if(isLocal)
         {
-            yTween = PrimeTween.Tween.LocalPositionY(target, endPosY, duration / (numPulses * 2), Ease.OutQuad);           
+            yTween = PrimeTween.Tween.LocalPositionY(target, endPosY, duration / (numPulses * 2), Ease.Linear);           
         }
         else
         {
-            yTween = PrimeTween.Tween.PositionY(target, endPosY, duration / (numPulses * 2), Ease.OutQuad);
+            yTween = PrimeTween.Tween.PositionY(target, endPosY, duration / (numPulses * 2), Ease.Linear);
               
         }
         yTween.SetRelative()
             .SetLoops(numPulses * 2, LoopType.Yoyo);
 
-        s.Append(yTween)
-         .SetEase(Ease.Linear);
-        s.OnComplete(() =>
+       yTween.SetEase(Ease.Linear);
+       yTween.OnComplete(() =>
         {
             if (isLocal)
                 target.localPosition = startPos;
@@ -142,7 +140,7 @@ public static class PrimeTweenExtensions
                 target.position = startPos;
         });
 
-        return s;
+        return yTween;
     }
 
     public static Tween Counter(this TMP_Text text, int startValue, int endValue, float duration, Ease ease = Ease.Default)

@@ -285,7 +285,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
             hexTileObject.GetComponent<MeshFilter>().mesh = selectedPrefab;
             // Add HexTile component and initialize
             HexTile hexTile = hexTileObject.GetOrAdd<HexTile>();
-            hexTile.Initialize(tileData.gridPosition);
+            hexTile.Initialize(tileData);
             // Store the tile in the dictionary
             hexTiles[tileData.gridPosition] = hexTile;
             MeshCollider collider = hexTileObject.GetComponent<MeshCollider>();
@@ -352,7 +352,8 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
 
                 // Add HexTile component and initialize
                 HexTile hexTile = hexTileObject.GetOrAdd<HexTile>();
-                hexTile.Initialize(new Vector2Int(q, r));
+                var tileData = new BoardTileData { gridPosition = new Vector2Int(q, r), tileType = selectedType };
+                hexTile.Initialize(tileData);
 
                 // Store the tile in the dictionary
                 hexTiles[new Vector2Int(q, r)] = hexTile;
@@ -370,7 +371,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
                 //hexGrid[q, r] = hexTile;
                 count++;
 
-                boardData.boardTiles.Add(new BoardTileData { gridPosition = new Vector2Int(q, r), tileType = selectedType });
+                boardData.boardTiles.Add(tileData);
             }
         }
         var TransformArray = new Transform[count];

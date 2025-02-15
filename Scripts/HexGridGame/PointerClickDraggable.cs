@@ -35,7 +35,7 @@ public class PointerClickDraggable : MonoBehaviour, IPointerClickHandler, IBegin
     {
         if (!tweenUp.IsPlaying())
         {
-            tweenUp = Tween.PositionY(transform, startPosY, gameData.selectAnimationDuration);//.OnComplete(() => isTweeningUp = false);
+            tweenUp = Tween.PositionY(transform, gameData.cardSelectionPlaneHeight, gameData.selectAnimationDuration);//.OnComplete(() => isTweeningUp = false);
             tweenUp.SetEase(Ease.InBounce);
         }
     }
@@ -70,7 +70,7 @@ public class PointerClickDraggable : MonoBehaviour, IPointerClickHandler, IBegin
         mPos = eventData.pointerCurrentRaycast.worldPosition.With(y: startPosY);
         if (isDragging)
         {
-            transform.position = mPos;
+            transform.position = mPos + gameData.YOffset * Vector3.up;
             isDragged = true;
         }
     }
@@ -78,10 +78,10 @@ public class PointerClickDraggable : MonoBehaviour, IPointerClickHandler, IBegin
     public void OnEndDrag(PointerEventData eventData)
     {
         isDragging = false;
-        if (Vector3.Distance(mLastPos, mPos) < 0.1f)
-        {
-            Debug.Log("Clicked: " + gameObject.name);
-        }
+        //if (Vector3.Distance(mLastPos, mPos) < 0.1f)
+        //{
+        //    Debug.Log("Clicked: " + gameObject.name);
+        //}
     }
 
     private Vector3 GetMouseAsWorldPoint(Vector3 mousePoint)

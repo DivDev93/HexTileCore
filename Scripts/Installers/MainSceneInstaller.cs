@@ -20,6 +20,7 @@ public class MainSceneInstaller : MonoBehaviour, IInstaller
 {
     public TransformShaker cameraScreenShake;
     public HexGridManager hexGridManager;
+    public InterfaceReference<ICardSpawner> cardSpawner;
     public InterfaceReference<IGameManager> gameManager;
     public SentenceGenerator sentenceGenerator;
     public InterfaceReference<IGameUI> gameUIref;
@@ -51,6 +52,7 @@ public class MainSceneInstaller : MonoBehaviour, IInstaller
     {
         // Add Scene bindings here
         IShakeable shakeable = cameraScreenShake;
+        builder.AddSingleton<ICardSpawner>(ICardSpawner => cardSpawner.Value);
         builder.AddSingleton<IShakeable>(IShakeable => shakeable);
         builder.AddSingleton<IGameUI>(IGameUI => gameUIref.Value);
         builder.AddSingleton<IGameBoard>(IGameBoard => hexGridManager);

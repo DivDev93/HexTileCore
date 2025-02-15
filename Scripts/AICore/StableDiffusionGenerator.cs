@@ -68,7 +68,7 @@ public class StableDiffusionGenerator : NetworkBehaviour
     {
         if (validate)
         {
-            prompt = sentenceGenerator.GetRandomizedPrompt();
+            prompt = sentenceGenerator.GetRandomizedPrompt(out words);
             validate = false;
         }
     }
@@ -80,7 +80,7 @@ public class StableDiffusionGenerator : NetworkBehaviour
         {
             if (IsServer || !NetworkManager.Singleton.IsListening)
             {
-                prompt = sentenceGenerator.GetRandomizedPrompt();
+                prompt = sentenceGenerator.GetRandomizedPrompt(out words);
                 StartImageGeneration();
             }          
         }
@@ -210,16 +210,16 @@ public class StableDiffusionGenerator : NetworkBehaviour
     }
 
     //ongui button to trigger the image generation
-    private void OnGUI()
-    {
-        if (GUI.Button(new Rect(10, 130, 150, 50), "Generate Image"))
-        {
-            StartImageGeneration();
-        }
+    //private void OnGUI()
+    //{
+    //    if (GUI.Button(new Rect(10, 130, 150, 50), "Generate Image"))
+    //    {
+    //        StartImageGeneration();
+    //    }
 
-        if (GUI.Button(new Rect(10, 190, 150, 50), "Create Model"))
-        {
-            CreateModelFromCurrentTexture();
-        }
-    }
+    //    if (GUI.Button(new Rect(10, 190, 150, 50), "Create Model"))
+    //    {
+    //        CreateModelFromCurrentTexture();
+    //    }
+    //}
 }
