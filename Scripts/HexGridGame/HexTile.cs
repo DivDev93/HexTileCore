@@ -15,7 +15,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     [Inject]
     IStaticEvents staticEvents;
 
-    public ETileType tileType;
+    public EElementType tileType;
     Vector2Int m_gridPosition;
     public Vector2Int GridPosition { get => m_gridPosition; set => m_gridPosition = value; } // Axial coordinate
     public List<IBoardSelectablePosition> Neighbors { get; private set; } = new List<IBoardSelectablePosition>();
@@ -191,13 +191,13 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     {
         Sequence sequence = DOTween.Sequence();
         sequence.SetDelay(delay * pulseData.delay);
-        sequence.Append(PrimeTweenExtensions.PulseY(transform, transform.localPosition.With(y: 0f), pulseData.height * gameBoard.tileGameData.parentScale, 1, pulseData.duration, true).SetEase(Ease.Linear));
         sequence.AppendCallback(() =>
         {
             OnSelect?.Invoke();
-            if(!AudioManager.IsSoundPlaying(HexTileAudioLibSounds.Clunk, transform))
+            if (!AudioManager.IsSoundPlaying(HexTileAudioLibSounds.Clunk, transform))
                 AudioManager.PlaySound(HexTileAudioLibSounds.Clunk, transform);
         });
+        sequence.Append(PrimeTweenExtensions.PulseY(transform, transform.localPosition.With(y: 0f), pulseData.height * gameBoard.tileGameData.parentScale, 1, pulseData.duration, true).SetEase(Ease.InOutCirc));  
         sequence.OnComplete(() =>
         {
             if (delay != 0f && gameBoard.selectedTiles.Contains(this))

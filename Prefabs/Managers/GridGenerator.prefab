@@ -100,13 +100,6 @@ MonoBehaviour:
   minScale: 0.1
   maxScale: 0.99
   noiseScale: 0.1
-  hexMeshPrefabs:
-  - {fileID: -143568367455913774, guid: a77956872da942644ad1aba8746d6590, type: 3}
-  - {fileID: -2390174610433020786, guid: 149d8927bd4aeda4180d00b52ef07eb3, type: 3}
-  - {fileID: 7282060047093973861, guid: 3fa629d1e1e1dd044add4e2c7cf45bb6, type: 3}
-  - {fileID: 334754362335456594, guid: 489b678ff476c8b48bace4050b642876, type: 3}
-  - {fileID: -1729850970784767945, guid: c0288cf8911e14e4889c9773d3b76dbc, type: 3}
-  tileTypeArray: 0000000001000000020000000300000004000000
   hexTilePrefab: {fileID: 810010503384965848, guid: 2241e5b661a28e64db5911e117b57498,
     type: 3}
   movementRange: 3
@@ -168,6 +161,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ad1a5ba46f51d94db69d816bd523df7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectionColor: {r: 1, g: 0.94509804, b: 0, a: 0.21568628}
+  initAlpha: 1
+  blinkSpeed: 1.25
   cacheRenderParams: 1
   selectMaterial: {fileID: 2100000, guid: ca1dd585582c4b942801583eb7d6d36b, type: 2}
   hoverMaterial: {fileID: 2100000, guid: d0cdcc8a6f7767845bc47d2ec97db2f7, type: 2}

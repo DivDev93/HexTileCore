@@ -16,14 +16,7 @@ using Unity.Collections;
 using System.Text.RegularExpressions;
 using System.Linq;
 
-public enum ETileType
-{
-    WATER = 0,
-    DIRT = 1,
-    SAND = 2,
-    GRASS = 3,
-    STONE = 4
-}
+
 
 [Serializable]
 public struct PulseData
@@ -37,7 +30,7 @@ public struct PulseData
 public struct BoardTileData : INetworkSerializable
 {
     public Vector2Int gridPosition;
-    public ETileType tileType;
+    public EElementType tileType;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
@@ -97,16 +90,13 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     [Inject]
     public TileGameDataScriptableObject tileGameData;
 
+    [Inject]
+    HexTileFactory hexTileFactory;
+
     public float minScale = 0.1f;
     public float maxScale = 0.99f;
     public float noiseScale = 0.1f;
-    public Mesh[] hexMeshPrefabs;
-    public ETileType[] tileTypeArray = { ETileType.WATER,
-        ETileType.DIRT,
-        ETileType.SAND,
-        ETileType.GRASS,
-        ETileType.STONE
-    };
+
     public GameObject hexTilePrefab;// Assign the hex tile prefab
     public int movementRange = 3;
 
@@ -163,20 +153,11 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     public UnityEvent OnStartGame = new UnityEvent();
     public UnityEvent OnBoardCreate = new UnityEvent();
 
-    void ShuffleTypes()
-    {
-        for (int i = 0; i < tileTypeArray.Length; i++)
-        {
-            int randomIndex = UnityEngine.Random.Range(0, tileTypeArray.Length);
-            ETileType temp = tileTypeArray[i];
-            tileTypeArray[i] = tileTypeArray[randomIndex];
-            tileTypeArray[randomIndex] = temp;
-        }
-    }
+    
 
     public void Initialize()
     {
-        ShuffleTypes();
+        hexTileFactory.ShuffleTypes();
         noiseScale = UnityEngine.Random.Range(minScale, maxScale);
         isInitialized = true;
         if(boardData.IsInitialized())
@@ -263,7 +244,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
             IBoardSelectablePosition hexTile = GetTile(tileData.gridPosition);
             if (hexTile != null)
             {
-                Mesh selectedPrefab = hexMeshPrefabs[(int)tileData.tileType];
+                Mesh selectedPrefab = hexTileFactory.GetMeshForTileType(tileData.tileType);
                 hexTile.transform.GetComponent<MeshFilter>().mesh = selectedPrefab;
             }
         }
@@ -277,7 +258,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
             float xPos = Mathf.Sqrt(3) * HexSize * (tileData.gridPosition.x + tileData.gridPosition.y / 2f);
             float yPos = 1.5f * HexSize * tileData.gridPosition.y;
             // Select prefab based on index
-            Mesh selectedPrefab = hexMeshPrefabs[(int)tileData.tileType];
+            Mesh selectedPrefab = hexTileFactory.GetMeshForTileType(tileData.tileType);
             // Instantiate the hex tile
             Vector3 hexPos = transform.position + new Vector3(xPos, 0, yPos);
             GameObject hexTileObject = Instantiate(hexTilePrefab, Application.isPlaying ? transform.position : hexPos, Quaternion.identity, transform);
@@ -314,7 +295,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     public void GenerateHexagonalGrid()
     {
         int count = 0;
-        float subsectionAmount = 1f / hexMeshPrefabs.Length;
+        float subsectionAmount = 1f / hexTileFactory.hexMeshPrefabs.Length;
 
         if(!boardData.IsInitialized())
         {
@@ -338,11 +319,11 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
 
                 // Determine which prefab to use
                 int prefabIndex = Mathf.FloorToInt(noiseValue / subsectionAmount); // Maps 0-250 into 5 sections (0-4)
-                prefabIndex = Mathf.Clamp(prefabIndex, 0, hexMeshPrefabs.Length - 1); // Ensure valid index
+                prefabIndex = Mathf.Clamp(prefabIndex, 0, hexTileFactory.hexMeshPrefabs.Length - 1); // Ensure valid index
 
                 // Select prefab based on index
-                ETileType selectedType = tileTypeArray[prefabIndex];
-                Mesh selectedPrefab = hexMeshPrefabs[(int)selectedType];
+                EElementType selectedType = hexTileFactory.tileTypeArray[prefabIndex];
+                Mesh selectedPrefab = hexTileFactory.hexMeshPrefabs[(int)selectedType];
 
                 // Instantiate the hex tile
                 Vector3 hexPos = transform.position + new Vector3(xPos, 0, yPos);

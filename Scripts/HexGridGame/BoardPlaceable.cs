@@ -36,7 +36,7 @@ public class BoardPlaceable : MonoBehaviour
             }
         }
     }
-    public ISelectableTarget HighlightedTarget
+    public virtual ISelectableTarget HighlightedTarget
     {
         get { return highlightedTarget; }
         set
@@ -56,21 +56,13 @@ public class BoardPlaceable : MonoBehaviour
                     //Debug.Log("HIGHLIGHTED TARGET IS " + highlightedTarget.GetTransform().name);
                 }
 
-                if (highlightedTarget == null)
-                {
-                    ReleaseCurrentLine();
-                }
-                else
-                {
-                    //Debug.Log("DRAWING LINE");
-                    currentRaycastLine = VolumetricLinePool.DrawLine(transform.position, highlightedTarget.GetTransform().position, Color.cyan, currentRaycastLine);
-                }
+                HandleHighlightLine();
             }
         }
     }
     public bool isPlaced = false;
     public bool isPlacing = false;
-    public float jumpPower => gameBoard.tileGameData.cardPulsePower * gameBoard.tileGameData.parentScale; //0.025f;
+    public float jumpPower => gameBoard.tileGameData.pulseData.height * gameBoard.tileGameData.parentScale; //0.025f;
     public float placementDuration = 0.5f;
     private Rigidbody rb;
     Vector3 placedPosition = Vector3.zero;
@@ -78,9 +70,8 @@ public class BoardPlaceable : MonoBehaviour
     public Transform localPlayerTransform;
     public UnityEvent OnTilePlaced = new();
 
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public virtual void Start()
     {
         defaultScale = transform.lossyScale;
         rb = GetComponent<Rigidbody>();
@@ -93,9 +84,19 @@ public class BoardPlaceable : MonoBehaviour
         {
             RayCastTile();
         }
+
+        UpdateLine();
     }
 
-    void ReleaseCurrentLine()
+    public virtual void UpdateLine()
+    {
+        if (currentRaycastLine != null)
+        {
+            HandleHighlightLine();
+        }
+    }
+
+    protected void ReleaseCurrentLine()
     {
         if (currentRaycastLine != null)
         {
@@ -185,7 +186,9 @@ public class BoardPlaceable : MonoBehaviour
             else
             {
                 Debug.Log("Placed target is jumppower is" + jumpPower);
-                transform.PulseY(transform.localPosition, jumpPower, 1, gameBoard.tileGameData.pulseData.duration, true).SetEase(Ease.Linear);
+                float tempPlacedPos = placedPosition.y;
+                Tween.Custom(tempPlacedPos, placedPosition.y + gameBoard.tileGameData.cardPlacedDisplacement, gameBoard.tileGameData.pulseData.duration, (val) => transform.position = placedPosition.With(y: val), Ease.InOutCirc, 2, CycleMode.Rewind);
+                //PrimeTweenExtensions.PulseY(transform, placedPosition, jumpPower, 1, gameBoard.tileGameData.pulseData.duration, true).SetEase(Ease.Linear);
             }
         }
     }
@@ -242,6 +245,19 @@ public class BoardPlaceable : MonoBehaviour
             Gizmos.color = Color.red;
             Vector3 pos = transform.position;
             Gizmos.DrawSphere(pos.With(y: HighlightedTarget.GetTransform().position.y), sphereCastSize);
+        }
+    }
+
+    public virtual void HandleHighlightLine()
+    {
+        if (highlightedTarget == null)
+        {
+            ReleaseCurrentLine();
+        }
+        else
+        {
+            //Debug.Log("DRAWING LINE");
+            currentRaycastLine = VolumetricLinePool.DrawLine(transform.position.With(y : transform.position.y - gameBoard.tileGameData.VolumetricStartOffset), highlightedTarget.GetTransform().position, Color.cyan, currentRaycastLine);
         }
     }
 }

@@ -42,12 +42,6 @@ public class StableDiffusionGenerator : NetworkBehaviour
     public bool validate = false;
     public bool isTextureReady = false;
 
-    private void Awake()
-    {
-        if (endpoints == null)
-            endpoints = Resources.Load<ServerConfigEndpoints>("EndpointsConfig");
-    }
-
     public void SetPrompt(string newPrompt)
     {
         prompt = newPrompt; 
@@ -73,8 +67,11 @@ public class StableDiffusionGenerator : NetworkBehaviour
         }
     }
 
-    private void Start()
+    private void Awake()
     {
+        if (endpoints == null)
+            endpoints = Resources.Load<ServerConfigEndpoints>("EndpointsConfig");
+
         // Call this from somewhere to begin the image generation
         if (generateOnStart)
         {

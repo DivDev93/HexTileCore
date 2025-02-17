@@ -4,46 +4,50 @@ using UnityEngine;
 
 public interface IPlayerCard
 {
-    public BoardPlaceable placeable { get; set; }
+    public PlaceableCard placeable { get; set; }
     public StableDiffusionGenerator imageGenerator { get; set; }
-    public SentenceGenerator sentenceGenerator { get; set; }
 }
 
 public class PlayableCard : MonoBehaviour, IPlayerCard
 {
-    async void Start()
+    [Inject]
+    public CardInfoUI cardInfoUI;
+
+    public EElementType cardType => placeable.cardElementType;
+    void Start()
     {
         imageGenerator = GetComponentInChildren<StableDiffusionGenerator>();
-        placeable = GetComponent<BoardPlaceable>();        
-        sentenceGenerator.OnWordsChosen += RefreshStats;      
+        placeable = GetComponent<PlaceableCard>();
+        RefreshStats();
     }
 
-    public BoardPlaceable placeable { get; set; }
+    public PlaceableCard placeable { get; set; }
     public StableDiffusionGenerator imageGenerator { get; set; }
-    
-    [Inject]
-    private SentenceGenerator m_sentenceGenerator;
-    public SentenceGenerator sentenceGenerator {
-        get { return m_sentenceGenerator; }
-        set
-        {
-            m_sentenceGenerator = value;
-        }
-    }
 
     public int totalAttack, totalDefense, totalSpeed;
 
     public void RefreshStats()
     {
+        var _monsterType = imageGenerator.words.Find(x => x.wordType == Sentences.WordType.Type).word.ToUpper();
+        placeable.cardElementType = (EElementType)System.Enum.Parse(typeof(EElementType), _monsterType);
         totalAttack = 0;
         totalDefense = 0;
         totalSpeed = 0;
-        foreach (var wordData in sentenceGenerator.chosenWords)
+        foreach (var wordData in imageGenerator.words)
         {
             totalAttack += wordData.attackModifier;
             totalDefense += wordData.defenseModifier;
             totalSpeed += wordData.speedModifier;
         }
-        sentenceGenerator.OnWordsChosen -= RefreshStats;
+    }
+
+    public void SetInfoUI()
+    {
+        cardInfoUI.SetPlayableCard(this);
+    }
+
+    public void UnsetInfoUI()
+    {
+        cardInfoUI.SetPlayableCard(null);
     }
 }

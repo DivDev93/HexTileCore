@@ -19,6 +19,9 @@ public class InstancedSelectionRenderer : MonoBehaviour
     [Inject]
     IStaticEvents staticEvents;
 
+    public Color selectionColor;
+    public float initAlpha = 0.25f;
+    public float blinkSpeed = 1.0f;
     public bool cacheRenderParams = false;
     public Material selectMaterial, hoverMaterial;
     public Mesh mesh;
@@ -54,6 +57,9 @@ public class InstancedSelectionRenderer : MonoBehaviour
         if (!cacheRenderParams)
             rpSelected = new RenderParams(selectMaterial);
 
+        MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
+        propertyBlock.SetColor("_BaseColor", selectionColor * Mathf.PingPong(Time.time * blinkSpeed, initAlpha));
+        rpSelected.matProps = propertyBlock;
         AdjustInstanceData();
 
         for (int i = 0; i < numInstances; ++i)

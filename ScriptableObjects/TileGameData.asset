@@ -23,4 +23,5 @@ MonoBehaviour:
   selectAnimationDuration: 0.25
   cardSelectionPlaneHeight: 0.2
   cardPlacedDisplacement: 0.01
-  cardPulsePower: 0
+  cardPulsePower: 1
+  m_volumetricStartOffset: 297.6

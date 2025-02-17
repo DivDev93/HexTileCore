@@ -13,13 +13,13 @@
       {
         "wordType": "Type",
         "possibleWords": [
-          { "wordType": "Type", "word": "Fire", "cost": 3, "attackModifier": 3, "defenseModifier": 0, "speedModifier": 0 },
-          { "wordType": "Type", "word": "Water", "cost": 3, "attackModifier": 1, "defenseModifier": 2, "speedModifier": 0 },
-          { "wordType": "Type", "word": "Cosmic", "cost": 4, "attackModifier": 2, "defenseModifier": 0, "speedModifier": 1 },
-          { "wordType": "Type", "word": "Electric", "cost": 3, "attackModifier": 1, "defenseModifier": 0, "speedModifier": 2 },
-          { "wordType": "Type", "word": "Earth", "cost": 2, "attackModifier": 0, "defenseModifier": 3, "speedModifier": 0 },
-          { "wordType": "Type", "word": "Ice", "cost": 2, "attackModifier": 0, "defenseModifier": 1, "speedModifier": 2 },
-          { "wordType": "Type", "word": "Wind", "cost": 2, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 3 }
+          { "wordType": "Type", "word": "FIRE", "cost": 3, "attackModifier": 3, "defenseModifier": 0, "speedModifier": 0 },
+          { "wordType": "Type", "word": "METAL", "cost": 3, "attackModifier": 1, "defenseModifier": 2, "speedModifier": 0 },
+          { "wordType": "Type", "word": "COSMIC", "cost": 4, "attackModifier": 2, "defenseModifier": 0, "speedModifier": 1 },
+          { "wordType": "Type", "word": "ELECTRIC", "cost": 3, "attackModifier": 1, "defenseModifier": 0, "speedModifier": 2 },
+          { "wordType": "Type", "word": "EARTH", "cost": 2, "attackModifier": 0, "defenseModifier": 3, "speedModifier": 0 },
+          { "wordType": "Type", "word": "ICE", "cost": 2, "attackModifier": 0, "defenseModifier": 1, "speedModifier": 2 },
+          { "wordType": "Type", "word": "WIND", "cost": 2, "attackModifier": 0, "defenseModifier": 0, "speedModifier": 3 }
         ]
       },
       {

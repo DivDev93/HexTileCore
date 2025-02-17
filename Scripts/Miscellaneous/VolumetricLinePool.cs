@@ -30,6 +30,14 @@ public class VolumetricLinePool
         //_lines.Add(seg);
     }
 
+    public static VolumetricLineStripBehavior DrawLine(Vector3[] linePositions, Color color, VolumetricLineStripBehavior cachedLine = null)
+    {
+        var line = cachedLine == null ? VolumetricLinePool.lineStripPool.Get() : cachedLine;
+        line.UpdateLineVertices(linePositions);
+        line.LineColor = color;
+        return line;
+    }
+
     public void Initialize()
     {
         stripBehaviorPrefab = Resources.Load<VolumetricLineStripBehavior>("LineStripLightSaber");

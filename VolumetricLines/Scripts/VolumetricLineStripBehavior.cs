@@ -28,6 +28,8 @@ namespace VolumetricLines
     [ExecuteInEditMode]
 	public class VolumetricLineStripBehavior : MonoBehaviour 
 	{
+		public bool useScaleOverride = true;
+		public float lineScaleOverride = 0.1f;
 		// Used to compute the average value of all the Vector3's components:
 		static readonly Vector3 Average = new Vector3(1f/3f, 1f/3f, 1f/3f);
 		
@@ -215,7 +217,7 @@ namespace VolumetricLines
 		{
 			if (null != m_material) 
 			{
-				m_material.SetFloat("_LineScale", CalculateLineScale());
+				m_material.SetFloat("_LineScale", useScaleOverride? lineScaleOverride :CalculateLineScale());
 			}
 		}
 

@@ -63,6 +63,11 @@ PrefabInstance:
       propertyPath: gameManager.underlyingValue
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2522843626431796344, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4176873763924646113, guid: abe7ca6670b2d5e4a980827f65b38214,
         type: 3}
       propertyPath: GlobalObjectIdHash
@@ -71,12 +76,17 @@ PrefabInstance:
     - target: {fileID: 4646738585914222167, guid: abe7ca6670b2d5e4a980827f65b38214,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 108
+      value: 257
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646738585914222167, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 454
       objectReference: {fileID: 0}
     - target: {fileID: 4646738585914222167, guid: abe7ca6670b2d5e4a980827f65b38214,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 84
+      value: -66
       objectReference: {fileID: 0}
     - target: {fileID: 7015162765479565186, guid: abe7ca6670b2d5e4a980827f65b38214,
         type: 3}
@@ -93,10 +103,70 @@ PrefabInstance:
       propertyPath: OnCameraRotationStop.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SetActive
       objectReference: {fileID: 0}
+    - target: {fileID: 7192829946323107884, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7192829946323107884, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7192829946323107884, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7192829946323107884, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8173954489391641820, guid: abe7ca6670b2d5e4a980827f65b38214,
         type: 3}
       propertyPath: m_Name
       value: HexGameRootOnline Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 8443156799747662532, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8443156799747662532, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8443156799747662532, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8443156799747662532, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8533794682224408896, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8533794682224408896, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8533794682224408896, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8533794682224408896, guid: abe7ca6670b2d5e4a980827f65b38214,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1081308313374473168, guid: abe7ca6670b2d5e4a980827f65b38214, type: 3}

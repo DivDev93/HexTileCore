@@ -22,12 +22,12 @@ public class PointerClickDraggable : MonoBehaviour, IPointerClickHandler, IBegin
 
     private Vector3 mLastPos;
     private Vector3 mLastPos2;
-    float startPosY = 0f;
+    //float startPosY = 0f;
     Tween tweenUp;
 
     void Awake()
     {
-        startPosY = transform.position.y;
+        //startPosY = transform.position.y;
         
     }
 
@@ -59,7 +59,7 @@ public class PointerClickDraggable : MonoBehaviour, IPointerClickHandler, IBegin
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
         mXCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).x;
         mYCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).y;
-        mPos = eventData.pointerCurrentRaycast.worldPosition.With(y: startPosY);
+        mPos = eventData.pointerCurrentRaycast.worldPosition.With(y: gameData.cardSelectionPlaneHeight);
         mLastPos = gameObject.transform.position;
         mLastPos2 = gameObject.transform.position;
         isDragging = true;
@@ -67,7 +67,7 @@ public class PointerClickDraggable : MonoBehaviour, IPointerClickHandler, IBegin
 
     public void OnDrag(PointerEventData eventData)
     {
-        mPos = eventData.pointerCurrentRaycast.worldPosition.With(y: startPosY);
+        mPos = eventData.pointerCurrentRaycast.worldPosition.With(y: gameData.cardSelectionPlaneHeight);
         if (isDragging)
         {
             transform.position = mPos + gameData.YOffset * Vector3.up;

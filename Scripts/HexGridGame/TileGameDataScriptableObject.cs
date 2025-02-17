@@ -24,4 +24,10 @@ public class TileGameDataScriptableObject : ScriptableObject
     public float cardPlacedDisplacement = 0.01f;
     public float cardPulsePower = 0.00001f;
 
+    [SerializeField]
+    float m_volumetricStartOffset = 0.1f;
+    public float VolumetricStartOffset => m_volumetricStartOffset * parentScale;
+
+
+
 }
