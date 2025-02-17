@@ -13,7 +13,7 @@ public interface IStaticEvents
 
 public class TileEventListeners : IStaticEvents
 {
-    public Action<int> m_TurnEnd;
+    public Action<int> m_TurnEnd = default;
     public Action m_OnGameStarted;
     public Action<int> OnTurnEnd { get => m_TurnEnd; set => m_TurnEnd = value; }
     public Action OnGameStarted { get => m_OnGameStarted; set => m_OnGameStarted = value; }

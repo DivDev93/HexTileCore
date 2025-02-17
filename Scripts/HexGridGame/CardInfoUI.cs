@@ -5,6 +5,7 @@ using UnityEngine.Playables;
 
 public class CardInfoUI : MonoBehaviour
 {
+    public bool parentToCard = false;
     public float localScale = 0.012f;
     public CanvasGroup canvasGroup;
     PlayableCard currentCard = null;
@@ -20,10 +21,18 @@ public class CardInfoUI : MonoBehaviour
                 return;
             }
 
-            transform.parent = CurrentCard.transform;
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
-            transform.localScale = localScale * Vector3.one;
+            if (parentToCard)
+            {
+                transform.SetParent(CurrentCard.transform);
+
+                transform.localPosition = Vector3.zero;
+                transform.localRotation = Quaternion.identity;
+                transform.localScale = localScale * Vector3.one;
+            }
+            else
+            {
+                transform.SetParent(null);
+            }
 
             cardType.text = value.cardType.ToString();
             attackValue.text = value.totalAttack.ToString();

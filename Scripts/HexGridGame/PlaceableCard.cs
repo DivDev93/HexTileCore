@@ -30,7 +30,7 @@ public class PlaceableCard : BoardPlaceable
         if (!placedForFirstTime)
         {
             placedForFirstTime = true;
-            staticEvents.OnTurnEnd(0);
+            staticEvents.OnTurnEnd?.Invoke(0);
         }
     }
 

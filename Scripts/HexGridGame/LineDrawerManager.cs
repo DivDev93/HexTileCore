@@ -1,6 +1,4 @@
 using UnityEngine;
-
-using UnityEngine;
 using System.Collections.Generic;
 using UnityUtils;
 
@@ -22,8 +20,9 @@ public class LineDrawerManager : Singleton<LineDrawerManager>
 
     private static List<LineSegment> _lines = new List<LineSegment>();
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         lineMaterial = Resources.Load<Material>("LineMaterial");       
     }
 

@@ -62,8 +62,6 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     public Color hoverColor = Color.cyan;
     MeshRenderer tileRenderer;
     EventTrigger eventTrigger;
-    //AudioSource audioSource;
-    bool ignoreHighlight = false;
 
     public static Action<HexTile> OnTileClicked;
     Action onTilePulse;
@@ -74,11 +72,15 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     {
         tileRenderer = GetComponent<MeshRenderer>();
         eventTrigger = GetComponent<EventTrigger>();
-        //audioSource = GetComponent<AudioSource>();
     }
-    void Start()
+    void OnEnable()
     {
         staticEvents.OnGameStarted += EnableEventTrigger;
+    }
+
+    void OnDisable()
+    {
+        staticEvents.OnGameStarted -= EnableEventTrigger;
     }
 
     public void EnableEventTrigger()
@@ -105,9 +107,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
 
     public void OnSelectionClick()
     {
-        ignoreHighlight = true;
         OnTileClicked?.Invoke(this);
-        ignoreHighlight = false;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -133,7 +133,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
         }
 
         HexUtility.AddUniqueRange(selectedTiles, Neighbors);
-        selectedTiles.RemoveAll(tile => tile == this);
+        selectedTiles.RemoveAll(tile => (HexTile)tile == this);
         return step - 1;
     }
 

@@ -5,8 +5,6 @@ using VolumetricLines;
 
 public class VolumetricLinePool 
 {
-    bool _initialized = false;
-
     [SerializeField]
     VolumetricLineStripBehavior stripBehaviorPrefab;
 

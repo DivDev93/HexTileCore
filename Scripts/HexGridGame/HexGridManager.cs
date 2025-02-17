@@ -151,9 +151,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     public Dictionary<Collider, IBoardSelectablePosition> tileColliderDict => m_tileColliderDict;//.ToDictionary(kvp => kvp.Key, kvp => (IBoardPosition)kvp.Value);
 
     public UnityEvent OnStartGame = new UnityEvent();
-    public UnityEvent OnBoardCreate = new UnityEvent();
-
-    
+    public UnityEvent OnBoardCreate = new UnityEvent();    
 
     public void Initialize()
     {
@@ -531,7 +529,6 @@ public static class HexUtility
     {
         return (Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.x + a.y - b.x - b.y)) / 2;
     }
-
     public static void AddUniqueRange<T>(List<T> list, IEnumerable<T> range)
     {
         foreach (var item in range)

@@ -27,6 +27,7 @@ public class ProjectInstaller : MonoBehaviour, IInstaller
         linePool.Initialize();
         builder.AddSingleton(linePool);
         builder.AddSingleton(hexTileFactory);
+        builder.AddSingleton<IStatModifierFactory>(IStatModifierFactory => new StatModifierFactory());
 
         Debug.Log("Project bindings halfway installed about to do strengths now");
         if (elementalStrengths == null)

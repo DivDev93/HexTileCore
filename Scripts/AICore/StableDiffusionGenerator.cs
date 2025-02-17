@@ -67,7 +67,7 @@ public class StableDiffusionGenerator : NetworkBehaviour
         }
     }
 
-    private void Awake()
+    public void Initialize()
     {
         if (endpoints == null)
             endpoints = Resources.Load<ServerConfigEndpoints>("EndpointsConfig");

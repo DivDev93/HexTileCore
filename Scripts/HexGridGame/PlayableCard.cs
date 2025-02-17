@@ -18,6 +18,7 @@ public class PlayableCard : MonoBehaviour, IPlayerCard
     {
         imageGenerator = GetComponentInChildren<StableDiffusionGenerator>();
         placeable = GetComponent<PlaceableCard>();
+        imageGenerator.Initialize();
         RefreshStats();
     }
 
