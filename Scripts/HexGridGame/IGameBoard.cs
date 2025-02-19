@@ -7,9 +7,8 @@ public interface IGameBoard
 {
     public void Initialize();
     public void SetPiecesVisibility(bool state);
-    public BindableVariable<float> boardRotation { get; }
     public void ClaimBoardStateOwnership();
-    public void StartGame(VersusGameMode mode, bool isLocal);
+    public void OnGameStart(VersusGameMode mode, bool isLocal);
     public IBoardPositions boardPositions { get; }
     public TileGameDataScriptableObject tileGameData { get; }
     public List<IBoardSelectablePosition> selectedTiles { get; }

@@ -136,7 +136,6 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     public GameObject boardGameObject => gameObject;
 
     BindableVariable<float> m_BoardRotation = new BindableVariable<float>();
-    public BindableVariable<float> boardRotation => m_BoardRotation;
 
     TransformAccessArray m_TransformsAccessArray;
     public TransformAccessArray transformAccessArray => m_TransformsAccessArray;
@@ -487,7 +486,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
         Debug.Log("Claiming board state ownership in hex grid remember to set ownership");
     }
 
-    public void StartGame(VersusGameMode mode, bool isLocal)
+    public void OnGameStart(VersusGameMode mode, bool isLocal)
     {
         StartGame();
     }

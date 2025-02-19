@@ -35,9 +35,9 @@ public class CardInfoUI : MonoBehaviour
             }
 
             cardType.text = value.cardType.ToString();
-            attackValue.text = value.totalAttack.ToString();
-            defenseValue.text = value.totalDefense.ToString();
-            speedValue.text = value.totalSpeed.ToString();
+            attackValue.text = value.Stats.Attack.ToString();
+            defenseValue.text = value.Stats.Defense.ToString();
+            speedValue.text = value.Stats.Speed.ToString();
             SetWindowOpened(true);
         }
     }

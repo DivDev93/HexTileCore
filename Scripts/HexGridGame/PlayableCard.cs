@@ -8,7 +8,7 @@ public interface IPlayerCard
     public StableDiffusionGenerator imageGenerator { get; set; }
 }
 
-public class PlayableCard : MonoBehaviour, IPlayerCard
+public class PlayableCard : Entity, IPlayerCard
 {
     [Inject]
     public CardInfoUI cardInfoUI;
@@ -25,20 +25,18 @@ public class PlayableCard : MonoBehaviour, IPlayerCard
     public PlaceableCard placeable { get; set; }
     public StableDiffusionGenerator imageGenerator { get; set; }
 
-    public int totalAttack, totalDefense, totalSpeed;
-
     public void RefreshStats()
     {
         var _monsterType = imageGenerator.words.Find(x => x.wordType == Sentences.WordType.Type).word.ToUpper();
         placeable.cardElementType = (EElementType)System.Enum.Parse(typeof(EElementType), _monsterType);
-        totalAttack = 0;
-        totalDefense = 0;
-        totalSpeed = 0;
+        baseStats.attack = 0;
+        baseStats.defense = 0;
+        baseStats.speed = 0;
         foreach (var wordData in imageGenerator.words)
         {
-            totalAttack += wordData.attackModifier;
-            totalDefense += wordData.defenseModifier;
-            totalSpeed += wordData.speedModifier;
+            baseStats.attack += wordData.attackModifier;
+            baseStats.defense += wordData.defenseModifier;
+            baseStats.speed += wordData.speedModifier;
         }
     }
 

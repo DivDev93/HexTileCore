@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Reflex.Attributes;
 using System;
 using UnityEngine;
@@ -7,16 +8,24 @@ public class OfflineCardSpawner : MonoBehaviour, ICardSpawner
     [Inject]
     IStaticEvents staticEvents;
 
-    public int playerId = 0;
+    [Inject]
+    IGameManager gameManager;
+
+    [Inject]
+    IGameBoard gameBoard;
+
+    public int playerIndex => gameManager.CurrentPlayerTurn;
 
     //offline version of NetworkObjectDispenser
     public GameObject cardPrefab;
     public GameObject currentInteractable;
     public float distanceToSpawnNew = .5f;
-    public Transform spawnTransform;
+    public Transform[] spawnTransforms;
+    public Transform spawnTransform => spawnTransforms[playerIndex];
     public float spawnCooldown = .5f;
     internal float m_SpawnCooldownTimer = 0f;
     public float currentDistance = 0f;
+
     public bool CheckInteractablePosition()
     {
         if (currentInteractable == null)
@@ -61,23 +70,28 @@ public class OfflineCardSpawner : MonoBehaviour, ICardSpawner
 
     public void OnEnable()
     {
-        staticEvents.OnTurnEnd += OnTurnEnd;
-        SpawnInteractablePrefab(spawnTransform);
+        staticEvents.OnTurnStart += OnTurnStart;
     }
 
     public void OnDisable()
     {
-        staticEvents.OnTurnEnd -= OnTurnEnd;
+        staticEvents.OnTurnStart -= OnTurnStart;
     }
 
-    private void OnTurnEnd(int player)
+    private async void OnTurnStart()
     {
         if (CheckInteractablePosition())
         {
             currentInteractable = null;
         }
 
-        if (player == playerId && currentInteractable == null)
+        while(!gameBoard.boardPositions.isBoardCreated)
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+        }
+
+        //check if player turn is current player == playerId
+        if (currentInteractable == null)//gameManager.CurrentPlayerTurn == playerIndex && 
         {
             SpawnInteractablePrefab(spawnTransform);
         }

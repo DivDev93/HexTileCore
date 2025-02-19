@@ -1,10 +1,14 @@
 using UnityEngine;
 
 public abstract class Entity : MonoBehaviour, IVisitable {
-    [SerializeField] BaseStats baseStats;
+    [SerializeField] protected BaseStats baseStats;
     public Stats Stats { get; private set; }
 
     void Awake() {
+        if (baseStats == null)
+        {
+            baseStats = new BaseStats();
+        }
         Stats = new Stats(new StatsMediator(), baseStats);
     }
 

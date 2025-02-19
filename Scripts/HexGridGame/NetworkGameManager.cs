@@ -6,7 +6,10 @@ public interface IGameManager
 {
     public bool IsStarted { get; set; }
     public void StartGame();
-    
+    public int CurrentPlayerTurn { get; set; }
+    public void EndTurn();
+    public void StartTurn();
+
 }
 
 public class NetworkGameManager : NetworkBehaviour, IGameManager
@@ -22,6 +25,8 @@ public class NetworkGameManager : NetworkBehaviour, IGameManager
 
     bool isStarted = false;
     public bool IsStarted { get => isStarted; set => isStarted = value; }
+
+    public int CurrentPlayerTurn { get => currentPlayerTurn.Value; set => currentPlayerTurn.Value = value; }
 
     //public GameObject offlineObjects;
 
@@ -41,7 +46,7 @@ public class NetworkGameManager : NetworkBehaviour, IGameManager
         {
             totalPlayers = 2;
             gameBoard.SelectStartHexTilesForPlayer(0);
-            gameBoard.StartGame(VersusGameMode.HumanVsHuman, IsOnline);
+            gameBoard.OnGameStart(VersusGameMode.HumanVsHuman, IsOnline);
             Debug.Log("Game started OFFLINE");
         }
         else
@@ -130,7 +135,7 @@ public class NetworkGameManager : NetworkBehaviour, IGameManager
             currentPlayerTurn.Value = 0;
             NotifyPlayerTurnClientRpc(currentPlayerTurn.Value);
         }
-        gameBoard.StartGame(VersusGameMode.HumanVsHuman, IsOnline);
+        gameBoard.OnGameStart(VersusGameMode.HumanVsHuman, IsOnline);
     }
 
    
@@ -164,5 +169,15 @@ public class NetworkGameManager : NetworkBehaviour, IGameManager
     public void OnPlayerConnected()
     {
         Debug.Log("Player connected");
+    }
+
+    public void EndTurn()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void StartTurn()
+    {
+        throw new System.NotImplementedException();
     }
 }

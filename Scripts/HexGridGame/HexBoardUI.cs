@@ -67,7 +67,7 @@ public class HexBoardUI : MonoBehaviour, IGameUI
 
     async void StartGame(float rotateYAngle)
     {
-        m_Board.boardRotation.Value = rotateYAngle;
+        //m_Board.boardRotation.Value = rotateYAngle;
         gameManager.StartGame();
         //send message to start game via network rpc to other player later on with 180 degree rotation
         cameraRotation.OnGameStart(rotateYAngle);

@@ -8,7 +8,7 @@ public class PlaceableCard : BoardPlaceable
     public EElementType cardElementType;
 
     [Inject]
-    IStaticEvents staticEvents;
+    IGameManager gameManager;
 
     [Inject]
     List<ElementalStrengths> strengths;
@@ -30,7 +30,7 @@ public class PlaceableCard : BoardPlaceable
         if (!placedForFirstTime)
         {
             placedForFirstTime = true;
-            staticEvents.OnTurnEnd?.Invoke(0);
+            gameManager.EndTurn();
         }
     }
 
