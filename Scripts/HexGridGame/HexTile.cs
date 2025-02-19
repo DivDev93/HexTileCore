@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,13 +7,18 @@ using UnityUtils;
 using Reflex.Attributes;
 using JSAM;
 
-public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISelectableTarget
+public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosition
 {
     [Inject]
     IGameBoard gameBoard;
 
-    public Vector2Int GridPosition; // Axial coordinate
-    public List<HexTile> Neighbors { get; private set; } = new List<HexTile>();
+    [Inject]
+    IStaticEvents staticEvents;
+
+    public EElementType tileType;
+    Vector2Int m_gridPosition;
+    public Vector2Int GridPosition { get => m_gridPosition; set => m_gridPosition = value; } // Axial coordinate
+    public List<IBoardSelectablePosition> Neighbors { get; private set; } = new List<IBoardSelectablePosition>();
     
     bool isSelected = false;
 
@@ -37,7 +41,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISel
 
 
     bool isHighlighted = false;
-    bool IBoardPosition.IsHighlighted 
+    public bool IsHighlighted 
     { 
         get => isHighlighted;
         set 
@@ -47,18 +51,17 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISel
         } 
     }
 
-    Transform IBoardPosition.transform => gameObject.transform;
+    new Transform transform => gameObject.transform;
 
     Vector3 m_originalPos;
 
     public Vector3 originalPos { get => m_originalPos; set => m_originalPos = value; }
-    public Action OnTilePulse { get => onTilePulse; set => onTilePulse = value; }
+    public Action OnSelect { get => onTilePulse; set => onTilePulse = value; }
 
     public Color selectColor = Color.yellow;
     public Color hoverColor = Color.cyan;
     MeshRenderer tileRenderer;
-    //AudioSource audioSource;
-    bool ignoreHighlight = false;
+    EventTrigger eventTrigger;
 
     public static Action<HexTile> OnTileClicked;
     Action onTilePulse;
@@ -68,18 +71,33 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISel
     void Awake()
     {
         tileRenderer = GetComponent<MeshRenderer>();
-        //audioSource = GetComponent<AudioSource>();
+        eventTrigger = GetComponent<EventTrigger>();
+    }
+    void OnEnable()
+    {
+        staticEvents.OnGameStarted += EnableEventTrigger;
+    }
+
+    void OnDisable()
+    {
+        staticEvents.OnGameStarted -= EnableEventTrigger;
+    }
+
+    public void EnableEventTrigger()
+    {
+        eventTrigger.enabled = true;
     }
     // Initialize tile
-    public void Initialize(Vector2Int gridPosition)
+    public void Initialize(BoardTileData tileData)
     {
-        GridPosition = gridPosition;
-        gameObject.name = $"Hex ({gridPosition.x}, {gridPosition.y})";
+        tileType = tileData.tileType;
+        GridPosition = tileData.gridPosition;
+        gameObject.name = $"Hex ({GridPosition.x}, {GridPosition.y})";
         //gameObject.AddComponent<MeshCollider>().convex = true;
     }
 
     // Add a neighbor to this tile
-    public void AddNeighbor(HexTile neighbor)
+    public void AddNeighbor(IBoardSelectablePosition neighbor)
     {
         if (!Neighbors.Contains(neighbor))
         {
@@ -87,22 +105,20 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISel
         }
     }
 
-    public void OnTileClick()
+    public void OnSelectionClick()
     {
-        ignoreHighlight = true;
         OnTileClicked?.Invoke(this);
-        ignoreHighlight = false;
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        OnTileClick();
+        OnSelectionClick();
     }
 
     //Recursive function to highlight neighbors
-    public int SelectNeighbors(int step, out List<HexTile> selectedTiles)
+    public int SelectNeighbors(int step, out List<IBoardSelectablePosition> selectedTiles)
     {
-        selectedTiles = new List<HexTile>();
+        selectedTiles = new List<IBoardSelectablePosition>();
         if (step == 0)
         {
             return 0;
@@ -112,12 +128,12 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISel
         foreach (var neighbor in Neighbors)
         {
             // Add a delay based on the step
-            neighbor.SelectNeighbors(step - 1, out List<HexTile> subSelectedTiles);
+            neighbor.SelectNeighbors(step - 1, out List<IBoardSelectablePosition> subSelectedTiles);
             HexUtility.AddUniqueRange(selectedTiles, subSelectedTiles);
         }
 
         HexUtility.AddUniqueRange(selectedTiles, Neighbors);
-        selectedTiles.RemoveAll(tile => tile == this);
+        selectedTiles.RemoveAll(tile => (HexTile)tile == this);
         return step - 1;
     }
 
@@ -152,10 +168,22 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISel
         }
     }
 
+    public bool isPulsing = false;
     public void OnHoverEnter()
     {
         isHighlighted = true;
-        //tileRenderer.material.color = hoverColor;
+        if (!isPulsing)
+        {
+            isPulsing = true;
+            Sequence sequence = Sequence.Create();
+            sequence.Append(transform.PulseY(transform.localPosition.With(y: 0f), gameBoard.tileGameData.pulseData.height * gameBoard.tileGameData.parentScale, 1, gameBoard.tileGameData.pulseData.duration, true).SetEase(Ease.Linear));
+            sequence.OnComplete(() => isPulsing = false);
+            sequence.Play();
+
+            if (!AudioManager.IsSoundPlaying(HexTileAudioLibSounds.Clunk, transform))
+                AudioManager.PlaySound(HexTileAudioLibSounds.Clunk, transform);
+            //Debug.Log("Pulsing" + GridPosition);
+        }
         OnTileHoverEnter?.Invoke(this);
     }
 
@@ -163,13 +191,13 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardPosition, ISel
     {
         Sequence sequence = DOTween.Sequence();
         sequence.SetDelay(delay * pulseData.delay);
-        sequence.Append(PrimeTweenExtensions.PulseY(transform, transform.localPosition.With(y: 0f), pulseData.height * gameBoard.tileGameData.parentScale, 1, pulseData.duration, true).SetEase(Ease.Linear));
         sequence.AppendCallback(() =>
         {
-            OnTilePulse?.Invoke();
-            if(!AudioManager.IsSoundPlaying(HexTileAudioLibSounds.Clunk, transform))
+            OnSelect?.Invoke();
+            if (!AudioManager.IsSoundPlaying(HexTileAudioLibSounds.Clunk, transform))
                 AudioManager.PlaySound(HexTileAudioLibSounds.Clunk, transform);
         });
+        sequence.Append(PrimeTweenExtensions.PulseY(transform, transform.localPosition.With(y: 0f), pulseData.height * gameBoard.tileGameData.parentScale, 1, pulseData.duration, true).SetEase(Ease.InOutCirc));  
         sequence.OnComplete(() =>
         {
             if (delay != 0f && gameBoard.selectedTiles.Contains(this))

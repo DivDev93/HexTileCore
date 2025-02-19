@@ -118,9 +118,9 @@ namespace UnityLabs.Slices.Games.Chess
             ScheduleJob();
         }
 
-        protected abstract void UpdateVFX(List<IBoardPosition> boardList);
+        protected abstract void UpdateVFX(List<IBoardSelectablePosition> boardList);
 
-        protected abstract void ShutDownVFX(List<IBoardPosition> boardList);
+        protected abstract void ShutDownVFX(List<IBoardSelectablePosition> boardList);
 
         protected abstract void ScheduleJob();
         private void OnDisable()

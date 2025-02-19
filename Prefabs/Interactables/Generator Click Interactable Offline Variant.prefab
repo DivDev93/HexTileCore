@@ -1,0 +1,352 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8727310219764091203
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -4410142897673380276, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1199869181
+      objectReference: {fileID: 0}
+    - target: {fileID: -4410142897673380276, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: ActiveSceneSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4410142897673380276, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453462420423966815, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453462420423966815, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453462420423966815, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453462420423966815, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453462420423966815, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2270746595748025237, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_Name
+      value: Generator Click Interactable Offline Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 7908071726068982232, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.225
+      objectReference: {fileID: 0}
+    - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.486
+      objectReference: {fileID: 0}
+    - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10.687
+      objectReference: {fileID: 0}
+    - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8230217376939817145, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8399770298675791417, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      propertyPath: OutlineTransforms.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3393606911819460183, guid: 16e1eca382366f646937393346284b47, type: 3}
+    - {fileID: 6636892491929127564, guid: 16e1eca382366f646937393346284b47, type: 3}
+    - {fileID: -4410142897673380276, guid: 16e1eca382366f646937393346284b47, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2270746595748025237, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 755533203512830072}
+    - targetCorrespondingSourceObject: {fileID: 2270746595748025237, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3411524056755302804}
+    - targetCorrespondingSourceObject: {fileID: 2270746595748025237, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 862719566254518601}
+    - targetCorrespondingSourceObject: {fileID: 2270746595748025237, guid: 16e1eca382366f646937393346284b47,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8946099646683669749}
+  m_SourcePrefab: {fileID: 100100000, guid: 16e1eca382366f646937393346284b47, type: 3}
+--- !u!114 &976253019846758266 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8399770298675791417, guid: 16e1eca382366f646937393346284b47,
+    type: 3}
+  m_PrefabInstance: {fileID: 8727310219764091203}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7394608878028184278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25346c8fb321719409d649542bc95872, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1486961047901972635 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7908071726068982232, guid: 16e1eca382366f646937393346284b47,
+    type: 3}
+  m_PrefabInstance: {fileID: 8727310219764091203}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &7394608878028184278 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2270746595748025237, guid: 16e1eca382366f646937393346284b47,
+    type: 3}
+  m_PrefabInstance: {fileID: 8727310219764091203}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &755533203512830072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7394608878028184278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 976253019846758266}
+          m_TargetAssemblyTypeName: TilePlaceable, Assembly-CSharp
+          m_MethodName: OnSelected
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 3411524056755302804}
+          m_TargetAssemblyTypeName: PointerClickDraggable, Assembly-CSharp
+          m_MethodName: TweenUp
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8946099646683669749}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 976253019846758266}
+          m_TargetAssemblyTypeName: TilePlaceable, Assembly-CSharp
+          m_MethodName: OnSelectExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1486961047901972635}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 862719566254518601}
+          m_TargetAssemblyTypeName: PlayableCard, Assembly-CSharp
+          m_MethodName: SetInfoUI
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1486961047901972635}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 862719566254518601}
+          m_TargetAssemblyTypeName: PlayableCard, Assembly-CSharp
+          m_MethodName: UnsetInfoUI
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 13
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 976253019846758266}
+          m_TargetAssemblyTypeName: TilePlaceable, Assembly-CSharp
+          m_MethodName: ClickPlacedTile
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &3411524056755302804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7394608878028184278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f379b0330977124babfd49ab940459e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDragging: 0
+  isDragged: 0
+--- !u!114 &862719566254518601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7394608878028184278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdcbf8e928c869b4999cadb018dc291b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardInfoUI: {fileID: 0}
+  totalAttack: 0
+  totalDefense: 0
+  totalSpeed: 0
+--- !u!114 &8946099646683669749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7394608878028184278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6a44ceaef819dc438c89364be24f9d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -8,11 +8,12 @@ using UnityLabs.Slices.Games.Chess;
 
 public class HexBoardUI : MonoBehaviour, IGameUI
 {
+    public CameraRotationBehavior cameraRotation;
     [Inject]
     HexGridManager m_Board;
 
     [Inject]
-    NetworkGameManager m_NetworkGameManager;
+    IGameManager gameManager;
 
     [SerializeField]
     XRBaseInteractable[] m_StartReceiver = null;
@@ -66,8 +67,10 @@ public class HexBoardUI : MonoBehaviour, IGameUI
 
     async void StartGame(float rotateYAngle)
     {
-        m_Board.boardRotation.Value = rotateYAngle;
-        m_NetworkGameManager.StartGame();
+        //m_Board.boardRotation.Value = rotateYAngle;
+        gameManager.StartGame();
+        //send message to start game via network rpc to other player later on with 180 degree rotation
+        cameraRotation.OnGameStart(rotateYAngle);
         await DelayDeactivateUniTask();
     }
 
@@ -84,11 +87,11 @@ public class HexBoardUI : MonoBehaviour, IGameUI
         }
     }
 
-    public void OnGUI()
-    {
-        if (GUI.Button(new Rect(10, 10, 150, 100), "StartGame"))
-        {
-            StartGame(m_StartYAngles[0]);
-        }
-    }
+    //public void OnGUI()
+    //{
+    //    if (GUI.Button(new Rect(10, 10, 150, 100), "StartGame"))
+    //    {
+    //        StartGame(m_StartYAngles[0]);
+    //    }
+    //}
 }

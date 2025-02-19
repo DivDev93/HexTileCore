@@ -12,10 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ea3176511adb5f41b1b2e1785633694, type: 3}
   m_Name: TileGameData
   m_EditorClassIdentifier: 
+  yOffset: 5
   parentScale: 0.025
   pulseData:
     duration: 0.25
     delay: 0.1
     height: 0.3
   placedCardScale: 0.18
-  sphereCastSize: 0.017
+  sphereCastSize: 0.013
+  selectAnimationDuration: 0.25
+  cardSelectionPlaneHeight: 0.2
+  cardPlacedDisplacement: 0.01
+  cardPulsePower: 1
+  m_volumetricStartOffset: 297.6

@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityLabs.Slices.Games.Chess;
 using UnityEngine.Jobs;
+using System;
 
 public interface IGameUI
 {
@@ -20,15 +21,22 @@ public enum VersusGameMode : byte
 public interface IBoardPositions
 { 
     public GameObject boardGameObject { get; }
-    public List<IBoardPosition> positionList { get; }
+    public List<IBoardSelectablePosition> positionList { get; }
     public TransformAccessArray transformAccessArray { get; }
     public bool isBoardCreated { get; set; }
 }
 
 public interface IBoardPosition
 {
+    public Vector2Int GridPosition { get; set; }
     public bool IsHighlighted { get; set; }
     public Transform transform { get; }
     public Vector3 originalPos { get; set; }
-    public bool IsSelected { get; set; }
+}
+
+public interface IBoardSelectablePosition : ISelectableTarget, IBoardPosition
+{
+    public void AddNeighbor(IBoardSelectablePosition neighbor);
+    public int SelectNeighbors(int step, out List<IBoardSelectablePosition> selectedTiles);
+    public void PulseSelect(PulseData pulseData, float delay = 0f);
 }

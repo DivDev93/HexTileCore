@@ -29,8 +29,8 @@ namespace UnityLabs.Slices.Games.Chess
         [SerializeField]
         Image m_BoardCenterImage = null;
 
-        [SerializeField]
-        RectTransform m_BoardRectTransform = null;
+        //[SerializeField]
+        //RectTransform m_BoardRectTransform = null;
 
         [SerializeField]
         ParticleBoardJobVisualizer m_Visualzer = null;

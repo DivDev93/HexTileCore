@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Sentences;
 
 public class SentenceDataLoader : MonoBehaviour
 {

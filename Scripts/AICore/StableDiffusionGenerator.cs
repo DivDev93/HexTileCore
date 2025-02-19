@@ -8,6 +8,8 @@ using Cysharp.Threading.Tasks;
 using Unity.Netcode;
 using System.Collections.Generic;
 using Reflex.Attributes;
+using GLTFast.Schema;
+using Sentences;
 
 public struct ImageData : INetworkSerializable
 {
@@ -32,17 +34,13 @@ public class StableDiffusionGenerator : NetworkBehaviour
         public string inputs;
     }
 
+    public List<WordData> words;
     public string prompt = "A beautiful sunset over the city";
     Texture2D currentTexture;
     public TMP_InputField inputField;
     static ServerConfigEndpoints endpoints = null;
     public bool validate = false;
-
-    private void Awake()
-    {
-        if (endpoints == null)
-            endpoints = Resources.Load<ServerConfigEndpoints>("EndpointsConfig");
-    }
+    public bool isTextureReady = false;
 
     public void SetPrompt(string newPrompt)
     {
@@ -50,22 +48,38 @@ public class StableDiffusionGenerator : NetworkBehaviour
 
     }
 
+    void SetMainMaterialTexture(ref Texture2D texture)
+    {
+        Renderer r = GetComponent<Renderer>();
+        if (r != null)
+        {
+            r.material.mainTexture = texture;
+            isTextureReady = true;
+        }
+    }
+
     private void OnValidate()
     {
         if (validate)
         {
-            prompt = sentenceGenerator.GetRandomizedPrompt();
+            prompt = sentenceGenerator.GetRandomizedPrompt(out words);
             validate = false;
         }
     }
 
-    private void Start()
+    public void Initialize()
     {
+        if (endpoints == null)
+            endpoints = Resources.Load<ServerConfigEndpoints>("EndpointsConfig");
+
         // Call this from somewhere to begin the image generation
-        if (generateOnStart && IsServer)
+        if (generateOnStart)
         {
-            prompt = sentenceGenerator.GetRandomizedPrompt();
-            StartImageGeneration();
+            if (IsServer || !NetworkManager.Singleton.IsListening)
+            {
+                prompt = sentenceGenerator.GetRandomizedPrompt(out words);
+                StartImageGeneration();
+            }          
         }
 
         if(inputField != null)
@@ -85,11 +99,7 @@ public class StableDiffusionGenerator : NetworkBehaviour
         Texture2D texture = new Texture2D(2, 2);
         texture.LoadImage(textureData);
 
-        Renderer r = GetComponent<Renderer>();
-        if (r != null)
-        {
-            r.material.mainTexture = texture;
-        }
+        SetMainMaterialTexture(ref texture);
     }
 
     List<byte> textureBuffer = new List<byte>();
@@ -107,11 +117,7 @@ public class StableDiffusionGenerator : NetworkBehaviour
             textureBuffer.Clear();
 
             // Apply the texture
-            Renderer r = GetComponent<Renderer>();
-            if (r != null)
-            {
-                r.material.mainTexture = texture;
-            }
+            SetMainMaterialTexture(ref texture);
         }
     }
 
@@ -126,11 +132,7 @@ public class StableDiffusionGenerator : NetworkBehaviour
     {
         Texture2D texture = new Texture2D(2, 2);
         texture.LoadImage(imageData.data);
-        Renderer r = GetComponent<Renderer>();
-        if (r != null)
-        {
-            r.material.mainTexture = texture;
-        }
+        SetMainMaterialTexture(ref texture);
     }
 
     public void SendTextureInChunks(byte[] textureData)
@@ -186,11 +188,7 @@ public class StableDiffusionGenerator : NetworkBehaviour
                 //RPCSendImageDataSerializableRpc(imageData);
 
                 // Example: apply the texture to this GameObject's material
-                Renderer r = GetComponent<Renderer>();
-                if (r != null)
-                {
-                    r.material.mainTexture = currentTexture;
-                }
+                SetMainMaterialTexture(ref currentTexture);
 
                 // If using UI, you could assign tex to an Image component's sprite, for example.
             }
@@ -209,16 +207,16 @@ public class StableDiffusionGenerator : NetworkBehaviour
     }
 
     //ongui button to trigger the image generation
-    private void OnGUI()
-    {
-        if (GUI.Button(new Rect(10, 130, 150, 50), "Generate Image"))
-        {
-            StartImageGeneration();
-        }
+    //private void OnGUI()
+    //{
+    //    if (GUI.Button(new Rect(10, 130, 150, 50), "Generate Image"))
+    //    {
+    //        StartImageGeneration();
+    //    }
 
-        if (GUI.Button(new Rect(10, 190, 150, 50), "Create Model"))
-        {
-            CreateModelFromCurrentTexture();
-        }
-    }
+    //    if (GUI.Button(new Rect(10, 190, 150, 50), "Create Model"))
+    //    {
+    //        CreateModelFromCurrentTexture();
+    //    }
+    //}
 }
