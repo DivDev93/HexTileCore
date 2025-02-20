@@ -92,8 +92,9 @@ public class OfflineCardSpawner : MonoBehaviour, ICardSpawner
 
         //check if player turn is current player == playerId
         if (currentInteractable == null)//gameManager.CurrentPlayerTurn == playerIndex && 
-        {
-            SpawnInteractablePrefab(spawnTransform);
+        { 
+            PlayableCard card = SpawnInteractablePrefab(spawnTransform).GetComponent<PlayableCard>();
+            gameManager.Players[playerIndex].AddCard(card);
         }
     }
 

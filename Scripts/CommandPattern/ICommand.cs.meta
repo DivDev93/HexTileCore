@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5ec7507d67016f345b4e70adbcbd2863
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 289616
+  packageName: Level up your code with design patterns and SOLID
+  packageVersion: 1.1
+  assetPath: Assets/UnityTechnologies/LevelUpYourCode/_DesignPatterns/4_Command/Scripts/Pattern/ICommand.cs
+  uploadId: 678909

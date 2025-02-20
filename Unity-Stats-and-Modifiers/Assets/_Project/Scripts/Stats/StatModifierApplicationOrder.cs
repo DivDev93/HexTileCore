@@ -16,7 +16,12 @@ public class NormalStatModifierOrder : IStatModifierApplicationOrder {
         foreach (var modifier in allModifiers.Where(modifier => modifier.Strategy is MultiplyOperation)) {
             baseValue = modifier.Strategy.Calculate(baseValue);
         }
-        
+
+        foreach (var modifier in allModifiers.Where(modifier => modifier.Strategy is MultiplyFloatOperation))
+        {
+            baseValue = modifier.Strategy.Calculate(baseValue);
+        }
+
         return baseValue;
     }
 }

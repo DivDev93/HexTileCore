@@ -23,22 +23,12 @@ public class PointerClickDraggable : MonoBehaviour, IPointerClickHandler, IBegin
     private Vector3 mLastPos;
     private Vector3 mLastPos2;
     //float startPosY = 0f;
-    Tween tweenUp;
 
     void Awake()
     {
         //startPosY = transform.position.y;
         
-    }
-
-    public void TweenUp()
-    {
-        if (!tweenUp.IsPlaying())
-        {
-            tweenUp = Tween.PositionY(transform, gameData.cardSelectionPlaneHeight, gameData.selectAnimationDuration);//.OnComplete(() => isTweeningUp = false);
-            tweenUp.SetEase(Ease.InBounce);
-        }
-    }
+    }   
    
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -50,11 +40,7 @@ public class PointerClickDraggable : MonoBehaviour, IPointerClickHandler, IBegin
     }
 
     public void OnBeginDrag(PointerEventData eventData)
-    {
-        if(tweenUp.IsPlaying())
-        {
-            tweenUp.Stop();
-        }
+    {       
 
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
         mXCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).x;

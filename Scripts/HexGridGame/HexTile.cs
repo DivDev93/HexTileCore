@@ -15,7 +15,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     [Inject]
     IStaticEvents staticEvents;
 
-    public EElementType tileType;
+    [SerializeField] EElementType tileType;
     Vector2Int m_gridPosition;
     public Vector2Int GridPosition { get => m_gridPosition; set => m_gridPosition = value; } // Axial coordinate
     public List<IBoardSelectablePosition> Neighbors { get; private set; } = new List<IBoardSelectablePosition>();
@@ -57,6 +57,8 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
 
     public Vector3 originalPos { get => m_originalPos; set => m_originalPos = value; }
     public Action OnSelect { get => onTilePulse; set => onTilePulse = value; }
+
+    public EElementType ElementType => tileType;
 
     public Color selectColor = Color.yellow;
     public Color hoverColor = Color.cyan;

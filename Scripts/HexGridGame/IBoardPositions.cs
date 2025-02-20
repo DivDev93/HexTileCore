@@ -39,4 +39,5 @@ public interface IBoardSelectablePosition : ISelectableTarget, IBoardPosition
     public void AddNeighbor(IBoardSelectablePosition neighbor);
     public int SelectNeighbors(int step, out List<IBoardSelectablePosition> selectedTiles);
     public void PulseSelect(PulseData pulseData, float delay = 0f);
+    public EElementType ElementType { get; }
 }

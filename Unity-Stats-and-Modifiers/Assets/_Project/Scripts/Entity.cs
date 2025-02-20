@@ -4,7 +4,7 @@ public abstract class Entity : MonoBehaviour, IVisitable {
     [SerializeField] protected BaseStats baseStats;
     public Stats Stats { get; private set; }
 
-    void Awake() {
+    protected virtual void Awake() {
         if (baseStats == null)
         {
             baseStats = new BaseStats();

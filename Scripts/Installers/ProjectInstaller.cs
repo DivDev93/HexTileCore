@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class ProjectInstaller : MonoBehaviour, IInstaller
 {
+    public ElementalStatModifiersScriptableObject elementalStatModifiers;
     public TileGameDataScriptableObject tileGameData;
     public StartTileIndicesScriptableObject startTileIndicesScriptableObject;
     public SentenceData sentenceData;
@@ -19,6 +20,7 @@ public class ProjectInstaller : MonoBehaviour, IInstaller
         Debug.Log("Project bindings installing");
         builder.AddSingleton<IStaticEvents>(IStaticEvents => new TileEventListeners());
         builder.AddSingleton(tileGameData);
+        builder.AddSingleton(elementalStatModifiers);
         builder.AddSingleton(startTileIndicesScriptableObject);
         builder.AddSingleton(sentenceData);
 

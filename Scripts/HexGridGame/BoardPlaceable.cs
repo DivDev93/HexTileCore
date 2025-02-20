@@ -5,11 +5,18 @@ using UnityUtils;
 using Reflex.Attributes;
 using VolumetricLines;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using System;
 
 public class BoardPlaceable : MonoBehaviour
 {
     [Inject]
     IGameBoard gameBoard;
+
+    [Inject]
+    TileGameDataScriptableObject gameData;
+
+    public IGamePlayer player;
 
     Vector3 defaultScale;
     float displacement => gameBoard.tileGameData.cardPlacedDisplacement;
@@ -57,9 +64,11 @@ public class BoardPlaceable : MonoBehaviour
                 }
 
                 HandleHighlightLine();
+                OnHighlightChange?.Invoke(highlightedTarget);
             }
         }
     }
+    public Action<ISelectableTarget> OnHighlightChange;
     public bool isPlaced = false;
     public bool isPlacing = false;
     public float jumpPower => gameBoard.tileGameData.pulseData.height * gameBoard.tileGameData.parentScale; //0.025f;
@@ -69,6 +78,7 @@ public class BoardPlaceable : MonoBehaviour
     Quaternion placedLocalRotation = Quaternion.identity;
     public Transform localPlayerTransform;
     public UnityEvent OnTilePlaced = new();
+    Tween tweenUp;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public virtual void Start()
@@ -134,18 +144,30 @@ public class BoardPlaceable : MonoBehaviour
         }
     }
 
-    public void OnSelectExit()
-    {
+    public virtual void OnSelectExit()
+    {     
+        //ExecuteSelection();
         if (HighlightedTarget != null)
         {
-            PlaceOnTile();
+            ExecuteSelection();
         }
         else if (PlacedTarget != null)
         {
             HighlightedTarget = PlacedTarget;
             PlaceOnTile();
         }
-        //Debug.Log("UNSELECTED" + gameObject.name);
+    }
+
+    void ExecuteSelection()
+    {
+        var command = new PlaceOnBoardCommand(this, HighlightedTarget as IBoardSelectablePosition, PlacedTarget as IBoardSelectablePosition);
+        player.Commands.ExecuteCommand(command);
+    }
+
+    public void PlaceOnTile(Vector2Int gridPos)
+    {
+        HighlightedTarget = gameBoard.GetTile(gridPos);
+        PlaceOnTile();
     }
 
     public virtual void PlaceOnTile()
@@ -258,6 +280,22 @@ public class BoardPlaceable : MonoBehaviour
         {
             //Debug.Log("DRAWING LINE");
             currentRaycastLine = VolumetricLinePool.DrawLine(transform.position.With(y : transform.position.y - gameBoard.tileGameData.VolumetricStartOffset), highlightedTarget.GetTransform().position, Color.cyan, currentRaycastLine);
+        }
+    }
+    public void TweenUp()
+    {
+        if (!tweenUp.IsPlaying())
+        {
+            tweenUp = Tween.PositionY(transform, gameData.cardSelectionPlaneHeight, gameData.selectAnimationDuration);//.OnComplete(() => isTweeningUp = false);
+            tweenUp.SetEase(Ease.InBounce);
+        }
+    }
+
+    public void OnBeginDrag()
+    {
+        if (tweenUp.IsPlaying())
+        {
+            tweenUp.Stop();
         }
     }
 }

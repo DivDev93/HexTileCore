@@ -15,5 +15,5 @@ public interface IGameBoard
     public void SelectStartHexTilesForPlayer(int playerIndex);
     public GeneratedBoardData boardData { get; set; }
     public Dictionary<Collider, IBoardSelectablePosition> tileColliderDict { get; }
-
+    public IBoardSelectablePosition GetTile(Vector2Int gridPosition);
 }

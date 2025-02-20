@@ -50,7 +50,6 @@ public class CardInfoUI : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        canvasGroup = GetComponent<CanvasGroup>();
     }
 
     void SetWindowOpened(bool isOpened)
