@@ -22,6 +22,10 @@ public class OfflineCardSpawner : MonoBehaviour, ICardSpawner
     public float distanceToSpawnNew = .5f;
     public Transform[] spawnTransforms;
     public Transform spawnTransform => spawnTransforms[playerIndex];
+
+    IPlayerCard m_card;
+    public IPlayerCard CurrentSpawnedCard => currentInteractable != null? m_card : null;
+
     public float spawnCooldown = .5f;
     internal float m_SpawnCooldownTimer = 0f;
     public float currentDistance = 0f;
@@ -95,6 +99,7 @@ public class OfflineCardSpawner : MonoBehaviour, ICardSpawner
         { 
             PlayableCard card = SpawnInteractablePrefab(spawnTransform).GetComponent<PlayableCard>();
             gameManager.Players[playerIndex].AddCard(card);
+            m_card = card;
         }
     }
 

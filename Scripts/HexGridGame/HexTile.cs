@@ -26,7 +26,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     {
         get => isSelected;
         set
-        {
+        {           
             isSelected = value;
             if (isSelected)
             {
@@ -59,6 +59,9 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     public Action OnSelect { get => onTilePulse; set => onTilePulse = value; }
 
     public EElementType ElementType => tileType;
+
+    bool isOccupied = false;
+    public bool IsOccupied { get => isOccupied; set => isOccupied = value; }
 
     public Color selectColor = Color.yellow;
     public Color hoverColor = Color.cyan;
@@ -135,7 +138,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
         }
 
         HexUtility.AddUniqueRange(selectedTiles, Neighbors);
-        selectedTiles.RemoveAll(tile => (HexTile)tile == this);
+        selectedTiles.RemoveAll(tile => (HexTile)tile == this || tile.IsOccupied);
         return step - 1;
     }
 
@@ -202,7 +205,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
         sequence.Append(PrimeTweenExtensions.PulseY(transform, transform.localPosition.With(y: 0f), pulseData.height * gameBoard.tileGameData.parentScale, 1, pulseData.duration, true).SetEase(Ease.InOutCirc));  
         sequence.OnComplete(() =>
         {
-            if (delay != 0f && gameBoard.selectedTiles.Contains(this))
+            if (delay != 0f && gameBoard.SelectedTiles.Contains(this))
             {
                 IsSelected = true;
             }
@@ -218,7 +221,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
 
     public void OnHoverExit()
     {
-        if (!gameBoard.selectedTiles.Contains(this))
+        if (!gameBoard.SelectedTiles.Contains(this))
         {
             ClearHighlight();
         }

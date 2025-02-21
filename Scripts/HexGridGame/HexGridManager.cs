@@ -143,8 +143,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     public IBoardPositions boardPositions => this;
 
     TileGameDataScriptableObject IGameBoard.tileGameData => tileGameData;
-    List<IBoardSelectablePosition> IGameBoard.selectedTiles => selectedTiles.Cast<IBoardSelectablePosition>().ToList();
-
+    public List<IBoardSelectablePosition> SelectedTiles => selectedTiles;
     public GeneratedBoardData boardData { get => m_boardData; set => m_boardData = value; }
 
     public Dictionary<Collider, IBoardSelectablePosition> tileColliderDict => m_tileColliderDict;//.ToDictionary(kvp => kvp.Key, kvp => (IBoardPosition)kvp.Value);
@@ -507,11 +506,14 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
         {
             Debug.LogError("Invalid player index");
         }
+
+        selectedTiles.Clear();
+
         for (int i = 0; i < startTileIndices.PlayerStartIndices[playerIndex].indices.Length; i++)
         {
             Vector2Int index = startTileIndices.PlayerStartIndices[playerIndex].indices[i];
             var tile = GetTile(index);
-            if (tile != null)
+            if (tile != null && !tile.IsOccupied)
             {
                 tile.IsSelected = true;
                 selectedTiles.Add(tile);

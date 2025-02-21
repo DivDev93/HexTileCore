@@ -83,11 +83,13 @@ public class PlayableCard : Entity, IPlayerCard
             //currentModifiers.Add(attackMod);
             //currentModifiers.Add(defenseMod);
             //currentModifiers.Add(speedMod);
+            Debug.Log("Element Change to Same Element update stats");
         }
         else
         {
             Stats.Mediator.DisposeAll();
+            Debug.Log("Element Change to Different Element reset stats");
         }
-        SetInfoUI();
+        cardInfoUI.RefreshInfo();
     }
 }

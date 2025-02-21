@@ -52,7 +52,7 @@ public class InstancedSelectionRenderer : MonoBehaviour
 
     void UpdateSelectedTiles()
     {
-        numInstances = gameBoard.selectedTiles.Count;
+        numInstances = gameBoard.SelectedTiles.Count;
 
         if (!cacheRenderParams)
             rpSelected = new RenderParams(selectMaterial);
@@ -80,14 +80,14 @@ public class InstancedSelectionRenderer : MonoBehaviour
 
     void AddSelectedIndex(int i, bool add = true)
     {
-        if (!gameBoard.selectedTiles[i].IsSelected || hoveredTiles.Contains(gameBoard.selectedTiles[i]))
+        if (!gameBoard.SelectedTiles[i].IsSelected || hoveredTiles.Contains(gameBoard.SelectedTiles[i]))
         {
             if (add)
                 instData.Add(new Matrix4x4());
             return;
         }
 
-        Vector3 translation = gameBoard.selectedTiles[i].transform.position.With(y: transform.position.y) + offset;
+        Vector3 translation = gameBoard.SelectedTiles[i].transform.position.With(y: transform.position.y) + offset;
         Vector3 matrixScale = gameBoard.tileGameData.parentScale * selectedScale;
         Matrix4x4 inst = Matrix4x4.TRS(translation, Quaternion.identity, matrixScale);
 

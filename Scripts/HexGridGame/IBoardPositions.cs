@@ -35,7 +35,8 @@ public interface IBoardPosition
 }
 
 public interface IBoardSelectablePosition : ISelectableTarget, IBoardPosition
-{
+{    
+    public bool IsOccupied { get; set; }
     public void AddNeighbor(IBoardSelectablePosition neighbor);
     public int SelectNeighbors(int step, out List<IBoardSelectablePosition> selectedTiles);
     public void PulseSelect(PulseData pulseData, float delay = 0f);

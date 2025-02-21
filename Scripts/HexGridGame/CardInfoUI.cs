@@ -34,11 +34,9 @@ public class CardInfoUI : MonoBehaviour
                 transform.SetParent(null);
             }
 
-            cardType.text = value.cardType.ToString();
-            attackValue.text = value.Stats.Attack.ToString();
-            defenseValue.text = value.Stats.Defense.ToString();
-            speedValue.text = value.Stats.Speed.ToString();
+            RefreshInfo();
             SetWindowOpened(true);
+            //Debug.Log("Card Info Set should have updated UI text with mediator count  " + value.Stats.Mediator.MediatorCount);
         }
     }
 
@@ -52,7 +50,20 @@ public class CardInfoUI : MonoBehaviour
     {
     }
 
-    void SetWindowOpened(bool isOpened)
+    public void RefreshInfo()
+    {
+        if (CurrentCard == null)
+        {
+            return;
+        }
+
+        cardType.text = CurrentCard.cardType.ToString();
+        attackValue.text = CurrentCard.Stats.Attack.ToString();
+        defenseValue.text = CurrentCard.Stats.Defense.ToString();
+        speedValue.text = CurrentCard.Stats.Speed.ToString();
+    }
+
+        void SetWindowOpened(bool isOpened)
     {
         if(!isOpened)
         {

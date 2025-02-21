@@ -8,6 +8,13 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System;
 
+public enum EPlaceableState
+{
+    NOT_PLACED,
+    PLACED,
+    PLACING
+}
+
 public class BoardPlaceable : MonoBehaviour
 {
     [Inject]
@@ -21,12 +28,12 @@ public class BoardPlaceable : MonoBehaviour
     Vector3 defaultScale;
     float displacement => gameBoard.tileGameData.cardPlacedDisplacement;
     float sphereCastSize => gameBoard.tileGameData.sphereCastSize;
-    public ISelectableTarget placedTarget;
-    private ISelectableTarget highlightedTarget;
+    public IBoardSelectablePosition placedTarget;
+    private IBoardSelectablePosition highlightedTarget;
     public LayerMask layerMask;// = LayerMask.GetMask("HexTile");
     int m_layerMask => layerMask.value;// = LayerMask.GetMask("HexTile");
     public VolumetricLineStripBehavior currentRaycastLine = null;
-    public ISelectableTarget PlacedTarget
+    public IBoardSelectablePosition PlacedTarget
     {
         get { return placedTarget; }
         set
@@ -34,16 +41,24 @@ public class BoardPlaceable : MonoBehaviour
             if (placedTarget != value)
             {
                 if (placedTarget != null)
+                {
                     placedTarget.OnSelect -= OnTargetPlace;
+                    placedTarget.IsOccupied = false;
+                }
 
                 placedTarget = value;
 
                 if (placedTarget != null)
+                {
                     placedTarget.OnSelect += OnTargetPlace;
+                    placedTarget.IsOccupied = true;
+                }
+
+                OnPlacedTileChange?.Invoke(placedTarget);
             }
         }
     }
-    public virtual ISelectableTarget HighlightedTarget
+    public virtual IBoardSelectablePosition HighlightedTarget
     {
         get { return highlightedTarget; }
         set
@@ -69,8 +84,18 @@ public class BoardPlaceable : MonoBehaviour
         }
     }
     public Action<ISelectableTarget> OnHighlightChange;
-    public bool isPlaced = false;
-    public bool isPlacing = false;
+    public Action<ISelectableTarget> OnPlacedTileChange;
+    public bool isPlaced => PlaceableState == EPlaceableState.PLACED;
+    public bool isPlacing => PlaceableState == EPlaceableState.PLACING;
+    public EPlaceableState PlaceableState
+    {
+        get => placeableState;
+        set
+        {
+            placeableState = value;
+        }
+    }
+    EPlaceableState placeableState = EPlaceableState.NOT_PLACED;
     public float jumpPower => gameBoard.tileGameData.pulseData.height * gameBoard.tileGameData.parentScale; //0.025f;
     public float placementDuration = 0.5f;
     private Rigidbody rb;
@@ -90,7 +115,7 @@ public class BoardPlaceable : MonoBehaviour
     // Update is called once per frame
     public virtual void Update()
     {
-        if(!isPlaced && !isPlacing)
+        if(PlaceableState == EPlaceableState.NOT_PLACED)
         {
             RayCastTile();
         }
@@ -137,7 +162,8 @@ public class BoardPlaceable : MonoBehaviour
 
     public void ClickPlacedTile()
     {
-        isPlaced = false;
+        //isPlaced = false;
+        PlaceableState = EPlaceableState.NOT_PLACED;
         if (PlacedTarget != null)
         {
             PlacedTarget.OnSelectionClick();
@@ -172,7 +198,8 @@ public class BoardPlaceable : MonoBehaviour
 
     public virtual void PlaceOnTile()
     {
-        isPlacing = true;
+        //isPlacing = true;
+        PlaceableState = EPlaceableState.PLACING;
         ReleaseCurrentLine();
         //transform.parent = null;
         //var localPlayer = XRINetworkGameManager.Instance.GetLocalPlayer();
@@ -187,9 +214,10 @@ public class BoardPlaceable : MonoBehaviour
         sequence.OnComplete(() =>
         {
             HighlightedTarget.OnHoverExit();
-            HighlightedTarget.OnSelectionClick();
+            //HighlightedTarget.OnSelectionClick();
             PlacedTarget = HighlightedTarget; //neccessary to prevent unneccessary listener invocation making object pulse
-            isPlaced = true;
+            //isPlaced = true;
+            placeableState = EPlaceableState.PLACED;
         });
         sequence.Play();
         OnTilePlaced.Invoke();
@@ -203,8 +231,8 @@ public class BoardPlaceable : MonoBehaviour
 
         if (PlacedTarget != null)
         {
-            if (isPlacing)
-                isPlacing = false;
+            if (placeableState == EPlaceableState.PLACING)
+                placeableState = EPlaceableState.PLACED;
             else
             {
                 Debug.Log("Placed target is jumppower is" + jumpPower);
@@ -231,30 +259,30 @@ public class BoardPlaceable : MonoBehaviour
                 //    highlightedTile.OnHoverExit();
                 //}
 
-                if (!gameBoard.selectedTiles.Contains(hexTile))
+                if (!gameBoard.SelectedTiles.Contains(hexTile))
                 {
                     HighlightedTarget = null;
-                    //Debug.Log("Hovered Tile is not among selected " + hit.collider.name + " dict count is " + gameBoard.tileColliderDict.Count);
+                    Debug.Log("Hovered Tile is not among selected " + hit.collider.name + " dict count is " + gameBoard.tileColliderDict.Count);
                     return;
                 }
 
                 if (HighlightedTarget != hexTile)
                 {
                     HighlightedTarget = hexTile;
-                    //Debug.Log("Tile hit" + hexTile.GridPosition);
+                    Debug.Log("Tile hit" + hexTile.GridPosition);
                 }
 
             }
             else if (HighlightedTarget != null)
             {
                 HighlightedTarget = null;
-                //Debug.Log("No tile hit but found collider " + hit.collider.name + " dict count is " + gameBoard.tileColliderDict.Count);
+                Debug.Log("No tile hit but found collider " + hit.collider.name + " dict count is " + gameBoard.tileColliderDict.Count);
             }
         }
         else if (HighlightedTarget != null)
         {
             HighlightedTarget = null;
-            //Debug.Log("No tile hit" + gameBoard.tileColliderDict.Count);
+            Debug.Log("No tile hit" + gameBoard.tileColliderDict.Count);
         }
     }
 
