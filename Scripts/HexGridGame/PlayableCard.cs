@@ -7,6 +7,9 @@ public interface IPlayerCard
 {
     public PlaceableCard placeable { get; set; }
     public StableDiffusionGenerator imageGenerator { get; set; }
+    public List<IBoardSelectablePosition> GetNeighborsFromPlacedTile();
+    public EElementType CardType { get; }
+
 }
 
 public class PlayableCard : Entity, IPlayerCard
@@ -20,7 +23,7 @@ public class PlayableCard : Entity, IPlayerCard
     [Inject]
     IStatModifierFactory statModifierFactory;
 
-    public EElementType cardType => placeable.cardElementType;
+    public EElementType CardType => placeable.cardElementType;
 
 
     protected override void Awake()
@@ -30,6 +33,7 @@ public class PlayableCard : Entity, IPlayerCard
         placeable = GetComponent<PlaceableCard>();
         imageGenerator.Initialize();
         RefreshStats();
+        name = imageGenerator.prompt;
         placeable.OnElementalTileChange += OnElementChange;
     }
 
@@ -91,5 +95,12 @@ public class PlayableCard : Entity, IPlayerCard
             Debug.Log("Element Change to Different Element reset stats");
         }
         cardInfoUI.RefreshInfo();
+    }
+
+    public List<IBoardSelectablePosition> GetNeighborsFromPlacedTile()
+    {
+        List<IBoardSelectablePosition> selectedTiles = null;
+        placeable.PlacedTarget.SelectNeighbors(Stats.Speed, out selectedTiles);
+        return selectedTiles;
     }
 }

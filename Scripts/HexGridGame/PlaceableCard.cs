@@ -6,11 +6,10 @@ using UnityEngine;
 
 public class PlaceableCard : BoardPlaceable
 {
-
     public EElementType cardElementType;
 
     [Inject]
-    IGameManager gameManager;
+    IStaticEvents staticEvents;
 
     [Inject]
     List<ElementalStrengths> strengths;
@@ -24,29 +23,55 @@ public class PlaceableCard : BoardPlaceable
     public void Awake()
     {
         outline = GetComponentInChildren<Outline>();
-        OnHighlightChange += HighlightChange;
+        OnHighlightChange += HighlightChanged;
+        OnPlacedTileChange += PlacedTileChanged;
+        staticEvents.OnTurnEnd += OnTurnEnd;
+        Debug.Log("should register end turn listener" + name);
     }
 
     private void OnDestroy()
     {
-        OnHighlightChange -= HighlightChange;
+        OnHighlightChange -= HighlightChanged;
+        OnPlacedTileChange -= PlacedTileChanged;
     }
 
     bool placedForFirstTime = false;
 
-    public override void OnTargetPlace()
+    public void OnTurnEnd()
     {
-        base.OnTargetPlace();
-        if (!placedForFirstTime)
+        if (!placedForFirstTime && PlacedTarget != null)
         {
             placedForFirstTime = true;
+            staticEvents.OnTurnEnd -= OnTurnEnd;
             //gameManager.EndTurn();
+            Debug.Log("should unregister end turn listener " + name);
         }
+        else
+            Debug.Log("Turn ended but card not placed " + name);
     }
 
-    void HighlightChange(ISelectableTarget selectableTarget)
+    protected override void ExecuteSelection()
     {
-        OnElementalTileChange.Invoke(selectableTarget == null? false : cardElementType == ((IBoardSelectablePosition)selectableTarget).ElementType);
+        if (player.ExecutedPlacementCommand && player.LastPlacementCommand != null)
+        {
+            if(player.LastPlacementCommand.card != this)
+                player.Commands.UndoCommand();
+
+            player.ExecutedPlacementCommand = false;
+        }
+        base.ExecuteSelection();
+    }
+
+    void PlacedTileChanged(IBoardSelectablePosition placedTile)
+    {
+        if(player is AIPlayer)
+            Debug.Log("AI Player PLACED Card on " + placedTile.GridPosition);
+
+    }
+
+    void HighlightChanged(IBoardSelectablePosition highlightedTile)
+    {
+        OnElementalTileChange.Invoke(highlightedTile == null? false : cardElementType == highlightedTile.ElementType);
     }
 
     public override void HandleHighlightLine()
@@ -91,5 +116,21 @@ public class PlaceableCard : BoardPlaceable
         }
         positions[OutlineTransforms.Count] = targetPos;
         return positions;
+    }
+
+    public override void ClickPlacedTile()
+    {
+        if (placedForFirstTime)
+            base.ClickPlacedTile();
+        else
+            gameBoard.SelectStartHexTilesForPlayer(player.PlayerIndex);
+        //Debug.Log("Card Selected");
+        //gameManager.EndTurn();
+    }
+
+    public override void OnBeginDrag()
+    {
+        if(AllowInteraction())
+            base.OnBeginDrag();
     }
 }

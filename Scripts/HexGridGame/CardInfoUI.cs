@@ -57,7 +57,7 @@ public class CardInfoUI : MonoBehaviour
             return;
         }
 
-        cardType.text = CurrentCard.cardType.ToString();
+        cardType.text = CurrentCard.CardType.ToString();
         attackValue.text = CurrentCard.Stats.Attack.ToString();
         defenseValue.text = CurrentCard.Stats.Defense.ToString();
         speedValue.text = CurrentCard.Stats.Speed.ToString();

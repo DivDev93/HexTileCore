@@ -117,7 +117,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        OnSelectionClick();
+        //OnSelectionClick();
     }
 
     //Recursive function to highlight neighbors

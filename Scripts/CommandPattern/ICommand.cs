@@ -15,7 +15,7 @@ public class PlaceOnBoardCommand : ICommand
 {
     IBoardSelectablePosition newGripPos;
     IBoardSelectablePosition oldGripPos;
-    BoardPlaceable card;
+    public BoardPlaceable card;
 
     public PlaceOnBoardCommand(BoardPlaceable card, IBoardSelectablePosition highlighted, IBoardSelectablePosition placed)
     {          
@@ -43,6 +43,7 @@ public class PlaceOnBoardCommand : ICommand
         {
             card.OnSelected();
             card.TweenUp();
+            card.HighlightedTarget = card.PlacedTarget = null;
             Debug.Log("Undoing Command to null should have tweened up ");
         }
     }

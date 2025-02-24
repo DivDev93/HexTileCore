@@ -21,6 +21,16 @@ public class CommandInvoker
         s_RedoStack.Clear();
     }
 
+    public ICommand GetLastCommand()
+    {
+        if (s_UndoStack.Count > 0)
+        {
+            ICommand activeCommand = s_UndoStack.Peek();
+            return activeCommand;
+        }
+        return null;
+    }
+
     public void UndoCommand()
     {
         // If we have commands to undo
