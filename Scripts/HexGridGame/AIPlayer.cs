@@ -146,6 +146,6 @@ public class AIPlayer : HexPlayer
     {
         int guid = System.Guid.NewGuid().GetHashCode();
         Random.InitState(guid + Time.frameCount);
-        return selectedTiles[Random.Range(0, gameBoard.SelectedTiles.Count)];
+        return selectedTiles[Random.Range(0, selectedTiles.Count)];
     }
 }
