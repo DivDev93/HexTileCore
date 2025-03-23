@@ -25,7 +25,6 @@ public class PlayableCard : Entity, IPlayerCard
 
     public EElementType CardType => placeable.cardElementType;
 
-
     protected override void Awake()
     {
         base.Awake();
@@ -35,11 +34,28 @@ public class PlayableCard : Entity, IPlayerCard
         RefreshStats();
         name = imageGenerator.prompt;
         placeable.OnElementalTileChange += OnElementChange;
+        placeable.HighlightOtherPlaceableAction += OnHighlightOtherPlaceable;
+    }
+
+    public void OnHighlightOtherPlaceable(IPlaceable otherPlaceable)
+    {
+        if(otherPlaceable == null)
+        {
+            CardAttackUI.SetCardsAction?.Invoke(null, null);
+            return;
+        }
+
+        if (otherPlaceable is PlaceableCard otherCard)
+        {
+            PlayableCard otherPlayable = otherCard.GetComponent<PlayableCard>();
+            CardAttackUI.SetCardsAction?.Invoke(this, otherPlayable);
+        }
     }
 
     void OnDestroy()
     {
         placeable.OnElementalTileChange -= OnElementChange;
+        placeable.HighlightOtherPlaceableAction -= OnHighlightOtherPlaceable;
     }
 
     public PlaceableCard placeable { get; set; }

@@ -1,3 +1,4 @@
+#if !UNITY_WEBGL
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -371,3 +372,4 @@ public class ContinuousMicToWhisper : MonoBehaviour
         // Now you can use processedSamples as needed
     }
 }
+#endif

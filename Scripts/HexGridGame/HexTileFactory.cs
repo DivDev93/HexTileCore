@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Ensure that the enum values are the same as the index of the mesh in the hexMeshPrefabs array
 [Serializable]
 public enum EElementType
 {
@@ -39,17 +40,5 @@ public class HexTileFactory : MonoBehaviour
     public Mesh GetMeshForTileType(EElementType tileType)
     {
         return hexMeshPrefabs[(int)tileType];
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

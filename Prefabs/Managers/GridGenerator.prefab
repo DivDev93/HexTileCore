@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 263057633889402065}
   - component: {fileID: 4987900329326937078}
   - component: {fileID: 4397128386631289835}
+  - component: {fileID: 6629039749747608543}
   m_Layer: 0
   m_Name: GridGenerator
   m_TagString: Untagged
@@ -96,7 +97,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isBoardCreated: 0
   startTileIndices: {fileID: 11400000, guid: bced12f82e3ef564e925f97e0263ca91, type: 2}
-  tileGameData: {fileID: 0}
+  tileGameData: {fileID: 11400000, guid: 17ee4745f68f21648b39a4d89813b4a2, type: 2}
+  hexTileFactory: {fileID: 6629039749747608543}
   minScale: 0.1
   maxScale: 0.99
   noiseScale: 0.1
@@ -186,6 +188,27 @@ MonoBehaviour:
   shakeDuration: 0.25
   shakeMagnitude: 0.004
   isShaking: 0
+--- !u!114 &6629039749747608543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4792851942385861106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68f62ed4de17feb408efe235bb40927f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hexMeshPrefabs:
+  - {fileID: -143568367455913774, guid: 24df6b6d94c04d64ba6d4c086d2268bb, type: 3}
+  - {fileID: -3340089967896460798, guid: c3a990a342fa5ba4b95de515fc137b2d, type: 3}
+  - {fileID: -143568367455913774, guid: b0fc5a5e39df7374582239bae8584aa7, type: 3}
+  - {fileID: -143568367455913774, guid: e14d6ba7ce5f6844c9e5e1aee0eefa47, type: 3}
+  - {fileID: 7282060047093973861, guid: 3fa629d1e1e1dd044add4e2c7cf45bb6, type: 3}
+  - {fileID: -143568367455913774, guid: 7ff34fefa90feff4cb6a91a527ecf4d2, type: 3}
+  - {fileID: -143568367455913774, guid: 383f5bcdc4d18ad4fa33fe6fc6c60b7b, type: 3}
+  tileTypeArray: 02000000060000000100000004000000030000000500000000000000
 --- !u!1001 &6125059582249966407
 PrefabInstance:
   m_ObjectHideFlags: 0

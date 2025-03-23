@@ -15,7 +15,7 @@ public enum EPlaceableState
     PLACING
 }
 
-public class BoardPlaceable : MonoBehaviour
+public class BoardPlaceable : MonoBehaviour, IPlaceable
 {
     [Inject]
     protected IGameBoard gameBoard;
@@ -46,7 +46,10 @@ public class BoardPlaceable : MonoBehaviour
                 if (placedTarget != null)
                 {
                     placedTarget.OnSelect -= PlacedTileSelected;
-                    placedTarget.IsOccupied = false;
+                    //placedTarget.IsOccupied = false;
+
+                    if (gameBoard.GridPlaceables.ContainsKey(placedTarget.GridPosition))
+                        gameBoard.GridPlaceables.Remove(placedTarget.GridPosition);
                 }
 
                 placedTarget = value;
@@ -54,7 +57,10 @@ public class BoardPlaceable : MonoBehaviour
                 if (placedTarget != null)
                 {
                     placedTarget.OnSelect += PlacedTileSelected;
-                    placedTarget.IsOccupied = true;
+                    //placedTarget.IsOccupied = true;
+
+                    if(!gameBoard.GridPlaceables.ContainsKey(placedTarget.GridPosition))
+                        gameBoard.GridPlaceables.Add(placedTarget.GridPosition, this);
                 }
 
                 OnPlacedTileChange?.Invoke(placedTarget);
@@ -71,13 +77,26 @@ public class BoardPlaceable : MonoBehaviour
                 if (highlightedTarget != null)
                 {
                     highlightedTarget.OnHoverExit();
+                    if (gameBoard.GridPlaceables.ContainsKey(highlightedTarget.GridPosition))
+                    {
+                        if (gameBoard.GridPlaceables[highlightedTarget.GridPosition] == this)
+                        {
+                            OnHighlightOtherPlaceable(null);
+                            //
+                        }
+                    }
                 }
 
-                highlightedTarget = value;
+                highlightedTarget = value;                
 
                 if (highlightedTarget != null)
                 {
                     highlightedTarget.OnHoverEnter();
+
+                    if (gameBoard.GridPlaceables.ContainsKey(highlightedTarget.GridPosition))
+                    {
+                        OnHighlightOtherPlaceable(gameBoard.GridPlaceables[highlightedTarget.GridPosition]);
+                    }
                     //Debug.Log("HIGHLIGHTED TARGET IS " + highlightedTarget.GetTransform().name);
                 }
 
@@ -88,6 +107,7 @@ public class BoardPlaceable : MonoBehaviour
     }
     public Action<IBoardSelectablePosition> OnHighlightChange;
     public Action<IBoardSelectablePosition> OnPlacedTileChange;
+    public Action<IPlaceable> HighlightOtherPlaceableAction;
     public bool isPlaced => PlaceableState == EPlaceableState.PLACED;
     public bool isPlacing => PlaceableState == EPlaceableState.PLACING;
     public EPlaceableState PlaceableState
@@ -100,6 +120,9 @@ public class BoardPlaceable : MonoBehaviour
     }
     EPlaceableState placeableState = EPlaceableState.NOT_PLACED;
     public float jumpPower => gameBoard.tileGameData.pulseData.height * gameBoard.tileGameData.parentScale; //0.025f;
+
+    public Vector2Int GridPosition { get => PlacedTarget == null? Vector2Int.one * -1 : PlacedTarget.GridPosition; }
+
     public float placementDuration = 0.5f;
     private Rigidbody rb;
     Vector3 placedPosition = Vector3.zero;
@@ -275,7 +298,7 @@ public class BoardPlaceable : MonoBehaviour
                 }
 
                 if (HighlightedTarget != hexTile)
-                {
+                {                    
                     HighlightedTarget = hexTile;
                     //Debug.Log("Tile hit" + hexTile.GridPosition);
                 }
@@ -292,6 +315,13 @@ public class BoardPlaceable : MonoBehaviour
             HighlightedTarget = null;
             //Debug.Log("No tile hit" + gameBoard.tileColliderDict.Count);
         }
+    }
+
+    public virtual void OnHighlightOtherPlaceable(IPlaceable highlightedPlaceable)
+    {
+        HighlightOtherPlaceableAction?.Invoke(highlightedPlaceable);
+        if(highlightedPlaceable != null)
+            Debug.Log("Highlighting other placeable" + (highlightedPlaceable as BoardPlaceable).name);
     }
 
     private void OnDrawGizmos()

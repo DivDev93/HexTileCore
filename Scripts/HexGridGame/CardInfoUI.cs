@@ -1,7 +1,6 @@
 using PrimeTween;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class CardInfoUI : MonoBehaviour
 {
@@ -45,11 +44,6 @@ public class CardInfoUI : MonoBehaviour
     public TextMeshProUGUI defenseValue;
     public TextMeshProUGUI speedValue;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Awake()
-    {
-    }
-
     public void RefreshInfo()
     {
         if (CurrentCard == null)
@@ -63,7 +57,7 @@ public class CardInfoUI : MonoBehaviour
         speedValue.text = CurrentCard.Stats.Speed.ToString();
     }
 
-        void SetWindowOpened(bool isOpened)
+    public void SetWindowOpened(bool isOpened)
     {
         if(!isOpened)
         {

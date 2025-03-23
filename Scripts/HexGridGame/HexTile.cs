@@ -68,10 +68,13 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     MeshRenderer tileRenderer;
     EventTrigger eventTrigger;
 
-    public static Action<HexTile> OnTileClicked;
     Action onTilePulse;
+
+#pragma warning disable UDR0001 // Domain Reload Analyzer
+    public static Action<HexTile> OnTileClicked;
     public static Action<HexTile> OnTileHoverEnter;
     public static Action<HexTile> OnTileHoverExit;
+#pragma warning restore UDR0001 // Domain Reload Analyzer
 
     void Awake()
     {

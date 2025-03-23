@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 //namespace DesignPatterns.Command
@@ -46,6 +44,44 @@ public class PlaceOnBoardCommand : ICommand
             card.HighlightedTarget = card.PlacedTarget = null;
             Debug.Log("Undoing Command to null should have tweened up ");
         }
+    }
+}
+
+public class AttackCardCommand : ICommand
+{
+    StatModifier defenseModifier;
+    CardInfoUI attackingCard;
+    CardInfoUI defendingCard;
+    IStatModifierFactory statModifierFactory;
+
+    public AttackCardCommand(CardInfoUI attackingCard, CardInfoUI defendingCard, IStatModifierFactory statModifierFactory)
+    {
+        this.attackingCard = attackingCard;
+        this.defendingCard = defendingCard;
+        this.statModifierFactory = statModifierFactory;
+    }
+
+    public void Execute()
+    {
+        var attackerCard = attackingCard.CurrentCard;
+        var defenderCard = defendingCard.CurrentCard;
+        var attackValue = attackerCard.Stats.Attack;
+        var defenseValue = defenderCard.Stats.Defense;
+        var damage = attackValue - defenseValue;
+        if (damage > 0)
+        {
+            IOperationStrategy attackStrategy = new AddOperation(-damage);
+
+            defenseModifier = statModifierFactory.Create(OperatorType.Add, EStatType.Defense, -damage);
+            defenderCard.Stats.Mediator.AddModifier(defenseModifier);
+            defendingCard.RefreshInfo();
+        }
+    }
+
+    public void Undo()
+    {
+        defenseModifier.MarkedForRemoval = true;
+        defendingCard.RefreshInfo();
     }
 }
 //}

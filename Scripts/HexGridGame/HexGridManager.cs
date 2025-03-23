@@ -90,8 +90,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     [Inject]
     public TileGameDataScriptableObject tileGameData;
 
-    [Inject]
-    HexTileFactory hexTileFactory;
+    public HexTileFactory hexTileFactory;
 
     public float minScale = 0.1f;
     public float maxScale = 0.99f;
@@ -147,6 +146,9 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     public GeneratedBoardData boardData { get => m_boardData; set => m_boardData = value; }
 
     public Dictionary<Collider, IBoardSelectablePosition> tileColliderDict => m_tileColliderDict;//.ToDictionary(kvp => kvp.Key, kvp => (IBoardPosition)kvp.Value);
+
+    Dictionary<Vector2Int, BoardPlaceable> m_GridPlaceables = new Dictionary<Vector2Int, BoardPlaceable>();
+    public Dictionary<Vector2Int, BoardPlaceable> GridPlaceables { get => m_GridPlaceables; set => m_GridPlaceables = value; }
 
     public UnityEvent OnStartGame = new UnityEvent();
     public UnityEvent OnBoardCreate = new UnityEvent();    
