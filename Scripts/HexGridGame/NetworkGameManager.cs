@@ -1,4 +1,5 @@
 using Reflex.Attributes;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public interface IGameManager
     public int CurrentPlayerTurn { get; set; }
     public void EndTurn();
     public void StartTurn();
+    public List<IGamePlayer> Players { get; set; }
 
 }
 
@@ -27,6 +29,7 @@ public class NetworkGameManager : NetworkBehaviour, IGameManager
     public bool IsStarted { get => isStarted; set => isStarted = value; }
 
     public int CurrentPlayerTurn { get => currentPlayerTurn.Value; set => currentPlayerTurn.Value = value; }
+    public List<IGamePlayer> Players { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     //public GameObject offlineObjects;
 

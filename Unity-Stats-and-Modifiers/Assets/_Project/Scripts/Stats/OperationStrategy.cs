@@ -21,3 +21,15 @@ public class MultiplyOperation : IOperationStrategy {
     
     public int Calculate(int value) => value * this.value;
 }
+
+public class MultiplyFloatOperation : IOperationStrategy
+{
+    readonly float value;
+
+    public MultiplyFloatOperation(float value)
+    {
+        this.value = value;
+    }
+
+    public int Calculate(int value) => (int)(value * this.value);
+}

@@ -5,21 +5,38 @@ using UnityUtils;
 using Reflex.Attributes;
 using VolumetricLines;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using System;
 
-public class BoardPlaceable : MonoBehaviour
+public enum EPlaceableState
+{
+    NOT_PLACED,
+    PLACED,
+    PLACING
+}
+
+public class BoardPlaceable : MonoBehaviour, IPlaceable
 {
     [Inject]
-    IGameBoard gameBoard;
+    protected IGameBoard gameBoard;
+
+    [Inject]
+    TileGameDataScriptableObject gameData;
+
+    [Inject]
+    IGameManager gameManager;
+
+    public IGamePlayer player;
 
     Vector3 defaultScale;
     float displacement => gameBoard.tileGameData.cardPlacedDisplacement;
     float sphereCastSize => gameBoard.tileGameData.sphereCastSize;
-    public ISelectableTarget placedTarget;
-    private ISelectableTarget highlightedTarget;
+    private IBoardSelectablePosition placedTarget;
+    private IBoardSelectablePosition highlightedTarget;
     public LayerMask layerMask;// = LayerMask.GetMask("HexTile");
     int m_layerMask => layerMask.value;// = LayerMask.GetMask("HexTile");
     public VolumetricLineStripBehavior currentRaycastLine = null;
-    public ISelectableTarget PlacedTarget
+    public IBoardSelectablePosition PlacedTarget
     {
         get { return placedTarget; }
         set
@@ -27,16 +44,30 @@ public class BoardPlaceable : MonoBehaviour
             if (placedTarget != value)
             {
                 if (placedTarget != null)
-                    placedTarget.OnSelect -= OnTargetPlace;
+                {
+                    placedTarget.OnSelect -= PlacedTileSelected;
+                    //placedTarget.IsOccupied = false;
+
+                    if (gameBoard.GridPlaceables.ContainsKey(placedTarget.GridPosition))
+                        gameBoard.GridPlaceables.Remove(placedTarget.GridPosition);
+                }
 
                 placedTarget = value;
 
                 if (placedTarget != null)
-                    placedTarget.OnSelect += OnTargetPlace;
+                {
+                    placedTarget.OnSelect += PlacedTileSelected;
+                    //placedTarget.IsOccupied = true;
+
+                    if(!gameBoard.GridPlaceables.ContainsKey(placedTarget.GridPosition))
+                        gameBoard.GridPlaceables.Add(placedTarget.GridPosition, this);
+                }
+
+                OnPlacedTileChange?.Invoke(placedTarget);
             }
         }
     }
-    public virtual ISelectableTarget HighlightedTarget
+    public virtual IBoardSelectablePosition HighlightedTarget
     {
         get { return highlightedTarget; }
         set
@@ -46,29 +77,59 @@ public class BoardPlaceable : MonoBehaviour
                 if (highlightedTarget != null)
                 {
                     highlightedTarget.OnHoverExit();
+                    if (gameBoard.GridPlaceables.ContainsKey(highlightedTarget.GridPosition))
+                    {
+                        if (gameBoard.GridPlaceables[highlightedTarget.GridPosition] == this)
+                        {
+                            OnHighlightOtherPlaceable(null);
+                            //
+                        }
+                    }
                 }
 
-                highlightedTarget = value;
+                highlightedTarget = value;                
 
                 if (highlightedTarget != null)
                 {
                     highlightedTarget.OnHoverEnter();
+
+                    if (gameBoard.GridPlaceables.ContainsKey(highlightedTarget.GridPosition))
+                    {
+                        OnHighlightOtherPlaceable(gameBoard.GridPlaceables[highlightedTarget.GridPosition]);
+                    }
                     //Debug.Log("HIGHLIGHTED TARGET IS " + highlightedTarget.GetTransform().name);
                 }
 
                 HandleHighlightLine();
+                OnHighlightChange?.Invoke(highlightedTarget);
             }
         }
     }
-    public bool isPlaced = false;
-    public bool isPlacing = false;
+    public Action<IBoardSelectablePosition> OnHighlightChange;
+    public Action<IBoardSelectablePosition> OnPlacedTileChange;
+    public Action<IPlaceable> HighlightOtherPlaceableAction;
+    public bool isPlaced => PlaceableState == EPlaceableState.PLACED;
+    public bool isPlacing => PlaceableState == EPlaceableState.PLACING;
+    public EPlaceableState PlaceableState
+    {
+        get => placeableState;
+        set
+        {
+            placeableState = value;
+        }
+    }
+    EPlaceableState placeableState = EPlaceableState.NOT_PLACED;
     public float jumpPower => gameBoard.tileGameData.pulseData.height * gameBoard.tileGameData.parentScale; //0.025f;
+
+    public Vector2Int GridPosition { get => PlacedTarget == null? Vector2Int.one * -1 : PlacedTarget.GridPosition; }
+
     public float placementDuration = 0.5f;
     private Rigidbody rb;
     Vector3 placedPosition = Vector3.zero;
     Quaternion placedLocalRotation = Quaternion.identity;
     public Transform localPlayerTransform;
     public UnityEvent OnTilePlaced = new();
+    Tween tweenUp;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public virtual void Start()
@@ -80,7 +141,7 @@ public class BoardPlaceable : MonoBehaviour
     // Update is called once per frame
     public virtual void Update()
     {
-        if(!isPlaced && !isPlacing)
+        if(PlaceableState == EPlaceableState.NOT_PLACED)
         {
             RayCastTile();
         }
@@ -125,32 +186,46 @@ public class BoardPlaceable : MonoBehaviour
         scaleTween.Chain(transform.DOScale(defaultScale, gameBoard.tileGameData.selectAnimationDuration));        
     }
 
-    public void ClickPlacedTile()
+    public virtual void ClickPlacedTile()
     {
-        isPlaced = false;
+        //isPlaced = false;
         if (PlacedTarget != null)
         {
             PlacedTarget.OnSelectionClick();
         }
     }
 
-    public void OnSelectExit()
-    {
-        if (HighlightedTarget != null)
+    public virtual void OnSelectExit()
+    {     
+        //ExecuteSelection();
+        if (AllowInteraction() && HighlightedTarget != null)
         {
-            PlaceOnTile();
+            ExecuteSelection();
         }
         else if (PlacedTarget != null)
         {
             HighlightedTarget = PlacedTarget;
             PlaceOnTile();
         }
-        //Debug.Log("UNSELECTED" + gameObject.name);
+    }
+
+    protected virtual void ExecuteSelection()
+    {       
+        var command = new PlaceOnBoardCommand(this, HighlightedTarget as IBoardSelectablePosition, PlacedTarget as IBoardSelectablePosition);
+        player.Commands.ExecuteCommand(command);
+        player.ExecutedPlacementCommand = true;
+    }
+
+    public void PlaceOnTile(Vector2Int gridPos)
+    {
+        HighlightedTarget = gameBoard.GetTile(gridPos);
+        PlaceOnTile();
     }
 
     public virtual void PlaceOnTile()
     {
-        isPlacing = true;
+        //isPlacing = true;
+        PlaceableState = EPlaceableState.PLACING;
         ReleaseCurrentLine();
         //transform.parent = null;
         //var localPlayer = XRINetworkGameManager.Instance.GetLocalPlayer();
@@ -165,16 +240,17 @@ public class BoardPlaceable : MonoBehaviour
         sequence.OnComplete(() =>
         {
             HighlightedTarget.OnHoverExit();
-            HighlightedTarget.OnSelectionClick();
+            //HighlightedTarget.OnSelectionClick();
             PlacedTarget = HighlightedTarget; //neccessary to prevent unneccessary listener invocation making object pulse
-            isPlaced = true;
+            //isPlaced = true;
+            placeableState = EPlaceableState.PLACED;
         });
         sequence.Play();
         OnTilePlaced.Invoke();
     }
 
     //comes roundabout through events from the OnSelect event invocation in the SelectedTarget
-    public virtual void OnTargetPlace()
+    public virtual void PlacedTileSelected()
     {
         if (!isPlaced)
             return;        
@@ -182,7 +258,7 @@ public class BoardPlaceable : MonoBehaviour
         if (PlacedTarget != null)
         {
             if (isPlacing)
-                isPlacing = false;
+                placeableState = EPlaceableState.PLACED;
             else
             {
                 Debug.Log("Placed target is jumppower is" + jumpPower);
@@ -191,6 +267,11 @@ public class BoardPlaceable : MonoBehaviour
                 //PrimeTweenExtensions.PulseY(transform, placedPosition, jumpPower, 1, gameBoard.tileGameData.pulseData.duration, true).SetEase(Ease.Linear);
             }
         }
+    }
+
+    protected bool AllowInteraction()
+    {
+        return gameManager.CurrentPlayerTurn == player.PlayerIndex;
     }
 
     public virtual void RayCastTile()
@@ -209,7 +290,7 @@ public class BoardPlaceable : MonoBehaviour
                 //    highlightedTile.OnHoverExit();
                 //}
 
-                if (!gameBoard.selectedTiles.Contains(hexTile))
+                if (!gameBoard.SelectedTiles.Contains(hexTile))
                 {
                     HighlightedTarget = null;
                     //Debug.Log("Hovered Tile is not among selected " + hit.collider.name + " dict count is " + gameBoard.tileColliderDict.Count);
@@ -217,7 +298,7 @@ public class BoardPlaceable : MonoBehaviour
                 }
 
                 if (HighlightedTarget != hexTile)
-                {
+                {                    
                     HighlightedTarget = hexTile;
                     //Debug.Log("Tile hit" + hexTile.GridPosition);
                 }
@@ -234,6 +315,13 @@ public class BoardPlaceable : MonoBehaviour
             HighlightedTarget = null;
             //Debug.Log("No tile hit" + gameBoard.tileColliderDict.Count);
         }
+    }
+
+    public virtual void OnHighlightOtherPlaceable(IPlaceable highlightedPlaceable)
+    {
+        HighlightOtherPlaceableAction?.Invoke(highlightedPlaceable);
+        if(highlightedPlaceable != null)
+            Debug.Log("Highlighting other placeable" + (highlightedPlaceable as BoardPlaceable).name);
     }
 
     private void OnDrawGizmos()
@@ -259,5 +347,23 @@ public class BoardPlaceable : MonoBehaviour
             //Debug.Log("DRAWING LINE");
             currentRaycastLine = VolumetricLinePool.DrawLine(transform.position.With(y : transform.position.y - gameBoard.tileGameData.VolumetricStartOffset), highlightedTarget.GetTransform().position, Color.cyan, currentRaycastLine);
         }
+    }
+    public void TweenUp()
+    {
+        if (!tweenUp.IsPlaying())
+        {
+            tweenUp = Tween.PositionY(transform, gameData.cardSelectionPlaneHeight, gameData.selectAnimationDuration);//.OnComplete(() => isTweeningUp = false);
+            tweenUp.SetEase(Ease.InBounce);
+        }
+    }
+
+    public virtual void OnBeginDrag()
+    {
+        if (tweenUp.IsPlaying())
+        {
+            tweenUp.Stop();
+        }
+        PlaceableState = EPlaceableState.NOT_PLACED;
+        ClickPlacedTile();
     }
 }

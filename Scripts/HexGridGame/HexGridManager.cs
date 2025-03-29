@@ -90,8 +90,7 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     [Inject]
     public TileGameDataScriptableObject tileGameData;
 
-    [Inject]
-    HexTileFactory hexTileFactory;
+    public HexTileFactory hexTileFactory;
 
     public float minScale = 0.1f;
     public float maxScale = 0.99f;
@@ -143,11 +142,13 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
     public IBoardPositions boardPositions => this;
 
     TileGameDataScriptableObject IGameBoard.tileGameData => tileGameData;
-    List<IBoardSelectablePosition> IGameBoard.selectedTiles => selectedTiles.Cast<IBoardSelectablePosition>().ToList();
-
+    public List<IBoardSelectablePosition> SelectedTiles => selectedTiles;
     public GeneratedBoardData boardData { get => m_boardData; set => m_boardData = value; }
 
     public Dictionary<Collider, IBoardSelectablePosition> tileColliderDict => m_tileColliderDict;//.ToDictionary(kvp => kvp.Key, kvp => (IBoardPosition)kvp.Value);
+
+    Dictionary<Vector2Int, BoardPlaceable> m_GridPlaceables = new Dictionary<Vector2Int, BoardPlaceable>();
+    public Dictionary<Vector2Int, BoardPlaceable> GridPlaceables { get => m_GridPlaceables; set => m_GridPlaceables = value; }
 
     public UnityEvent OnStartGame = new UnityEvent();
     public UnityEvent OnBoardCreate = new UnityEvent();    
@@ -507,11 +508,14 @@ public class HexGridManager : MonoBehaviour, IBoardPositions, IGameBoard//Single
         {
             Debug.LogError("Invalid player index");
         }
+
+        selectedTiles.Clear();
+
         for (int i = 0; i < startTileIndices.PlayerStartIndices[playerIndex].indices.Length; i++)
         {
             Vector2Int index = startTileIndices.PlayerStartIndices[playerIndex].indices[i];
             var tile = GetTile(index);
-            if (tile != null)
+            if (tile != null && !tile.IsOccupied)
             {
                 tile.IsSelected = true;
                 selectedTiles.Add(tile);

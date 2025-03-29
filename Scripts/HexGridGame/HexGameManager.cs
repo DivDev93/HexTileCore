@@ -16,7 +16,7 @@ public class HexGameManager : MonoBehaviour, IGameManager
     IStaticEvents staticEvents;
 
     int currentPlayerTurn;
-    public List<IGamePlayer> players = new List<IGamePlayer>();
+    List<IGamePlayer> players = new List<IGamePlayer>();
 
     bool isStarted = false;
     public bool IsStarted { get => isStarted; set => isStarted = value; }
@@ -30,6 +30,8 @@ public class HexGameManager : MonoBehaviour, IGameManager
             StartTurn();
         }
     }
+
+    public List<IGamePlayer> Players { get => players; set => players = value; }
 
     public void StartGame()
     {
@@ -64,5 +66,10 @@ public class HexGameManager : MonoBehaviour, IGameManager
     void Update()
     {
         
+    }
+
+    public List<IGamePlayer> GetPlayers()
+    {
+        return players;
     }
 }

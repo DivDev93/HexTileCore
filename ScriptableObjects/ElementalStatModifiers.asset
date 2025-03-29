@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4eef5aadc5f9dea46bf359ead53243c5, type: 3}
-  m_Name: SentenceDataJ
-  m_EditorClassIdentifier: Assembly-CSharp::SentenceData
-  sentenceTemplates: []
-  words: []
+  m_Script: {fileID: 11500000, guid: e4fcf10a9c16c2349a235abb07575f3e, type: 3}
+  m_Name: ElementalStatModifiers
+  m_EditorClassIdentifier: 
+  attackMultiplier: 1.5
+  defenseMultiplier: 1.5
+  speedMultiplier: 1.5

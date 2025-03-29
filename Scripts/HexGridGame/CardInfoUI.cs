@@ -1,7 +1,6 @@
 using PrimeTween;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class CardInfoUI : MonoBehaviour
 {
@@ -34,11 +33,9 @@ public class CardInfoUI : MonoBehaviour
                 transform.SetParent(null);
             }
 
-            cardType.text = value.cardType.ToString();
-            attackValue.text = value.Stats.Attack.ToString();
-            defenseValue.text = value.Stats.Defense.ToString();
-            speedValue.text = value.Stats.Speed.ToString();
+            RefreshInfo();
             SetWindowOpened(true);
+            //Debug.Log("Card Info Set should have updated UI text with mediator count  " + value.Stats.Mediator.MediatorCount);
         }
     }
 
@@ -47,13 +44,20 @@ public class CardInfoUI : MonoBehaviour
     public TextMeshProUGUI defenseValue;
     public TextMeshProUGUI speedValue;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Awake()
+    public void RefreshInfo()
     {
-        canvasGroup = GetComponent<CanvasGroup>();
+        if (CurrentCard == null)
+        {
+            return;
+        }
+
+        cardType.text = CurrentCard.CardType.ToString();
+        attackValue.text = CurrentCard.Stats.Attack.ToString();
+        defenseValue.text = CurrentCard.Stats.Defense.ToString();
+        speedValue.text = CurrentCard.Stats.Speed.ToString();
     }
 
-    void SetWindowOpened(bool isOpened)
+    public void SetWindowOpened(bool isOpened)
     {
         if(!isOpened)
         {

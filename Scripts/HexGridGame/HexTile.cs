@@ -15,7 +15,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     [Inject]
     IStaticEvents staticEvents;
 
-    public EElementType tileType;
+    [SerializeField] EElementType tileType;
     Vector2Int m_gridPosition;
     public Vector2Int GridPosition { get => m_gridPosition; set => m_gridPosition = value; } // Axial coordinate
     public List<IBoardSelectablePosition> Neighbors { get; private set; } = new List<IBoardSelectablePosition>();
@@ -26,7 +26,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     {
         get => isSelected;
         set
-        {
+        {           
             isSelected = value;
             if (isSelected)
             {
@@ -58,15 +58,23 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
     public Vector3 originalPos { get => m_originalPos; set => m_originalPos = value; }
     public Action OnSelect { get => onTilePulse; set => onTilePulse = value; }
 
+    public EElementType ElementType => tileType;
+
+    bool isOccupied = false;
+    public bool IsOccupied { get => isOccupied; set => isOccupied = value; }
+
     public Color selectColor = Color.yellow;
     public Color hoverColor = Color.cyan;
     MeshRenderer tileRenderer;
     EventTrigger eventTrigger;
 
-    public static Action<HexTile> OnTileClicked;
     Action onTilePulse;
+
+#pragma warning disable UDR0001 // Domain Reload Analyzer
+    public static Action<HexTile> OnTileClicked;
     public static Action<HexTile> OnTileHoverEnter;
     public static Action<HexTile> OnTileHoverExit;
+#pragma warning restore UDR0001 // Domain Reload Analyzer
 
     void Awake()
     {
@@ -112,7 +120,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        OnSelectionClick();
+        //OnSelectionClick();
     }
 
     //Recursive function to highlight neighbors
@@ -133,7 +141,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
         }
 
         HexUtility.AddUniqueRange(selectedTiles, Neighbors);
-        selectedTiles.RemoveAll(tile => (HexTile)tile == this);
+        selectedTiles.RemoveAll(tile => (HexTile)tile == this || tile.IsOccupied);
         return step - 1;
     }
 
@@ -200,7 +208,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
         sequence.Append(PrimeTweenExtensions.PulseY(transform, transform.localPosition.With(y: 0f), pulseData.height * gameBoard.tileGameData.parentScale, 1, pulseData.duration, true).SetEase(Ease.InOutCirc));  
         sequence.OnComplete(() =>
         {
-            if (delay != 0f && gameBoard.selectedTiles.Contains(this))
+            if (delay != 0f && gameBoard.SelectedTiles.Contains(this))
             {
                 IsSelected = true;
             }
@@ -216,7 +224,7 @@ public class HexTile : MonoBehaviour, IPointerClickHandler, IBoardSelectablePosi
 
     public void OnHoverExit()
     {
-        if (!gameBoard.selectedTiles.Contains(this))
+        if (!gameBoard.SelectedTiles.Contains(this))
         {
             ClearHighlight();
         }

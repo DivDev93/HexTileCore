@@ -48,13 +48,16 @@ public class ChessGameMode : NetworkBehaviour//, IGameMode
 
     private void OnDisable()
     {
-        if (IsServer)
+        if (NetworkManager.IsListening)
         {
-            NetworkManager.OnServerStarted -= HideGameMode;
-        }
-        else
-        {
-            NetworkManager.OnClientStarted -= HideGameMode;
+            if (IsServer)
+            {
+                NetworkManager.OnServerStarted -= HideGameMode;
+            }
+            else
+            {
+                NetworkManager.OnClientStarted -= HideGameMode;
+            }
         }
     }
 

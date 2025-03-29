@@ -5,6 +5,7 @@ public class StatsMediator {
     readonly List<StatModifier> listModifiers = new();
     readonly Dictionary<EStatType, IEnumerable<StatModifier>> modifiersCache = new();
     readonly IStatModifierApplicationOrder order = new NormalStatModifierOrder(); // OR INJECT
+    public int MediatorCount => listModifiers.Count;
 
     public void PerformQuery(object sender, Query query) {
         if (!modifiersCache.ContainsKey(query.StatType)) {
@@ -24,6 +25,14 @@ public class StatsMediator {
         
         modifier.OnDispose += _ => InvalidateCache(modifier.Type);
         modifier.OnDispose += _ => listModifiers.Remove(modifier);
+    }
+
+    public void DisposeAll()
+    {
+        foreach (var modifier in listModifiers)
+        {
+            modifier.MarkedForRemoval = true;
+        }
     }
 
     public void Update(float deltaTime) {
