@@ -27,7 +27,7 @@ MonoBehaviour:
       defenseModifier: 0
       speedModifier: 0
     - wordType: 0
-      word: Water
+      word: Metal
       cost: 3
       attackModifier: 1
       defenseModifier: 2
