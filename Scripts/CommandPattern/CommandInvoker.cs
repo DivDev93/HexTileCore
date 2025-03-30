@@ -52,4 +52,10 @@ public class CommandInvoker
             activeCommand.Execute();
         }
     }
+
+    public void Clear()
+    {
+        s_UndoStack.Clear();
+        s_RedoStack.Clear();
+    }
 }

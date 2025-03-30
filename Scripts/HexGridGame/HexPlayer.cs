@@ -71,6 +71,7 @@ public class HexPlayer : MonoBehaviour, IGamePlayer
     {
         gameManager.EndTurn();
         ExecutedPlacementCommand = false;
+        Commands.Clear();
     }
 
     public void UndoLastMove()
