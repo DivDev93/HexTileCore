@@ -1,74 +1,94 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Reflex.Attributes;
 using UnityEngine;
 using System.Collections.Generic;
 
 public interface IPlayerCard
 {
-    public PlaceableCard placeable { get; set; }
-    public StableDiffusionGenerator imageGenerator { get; set; }
-    public List<IBoardSelectablePosition> GetNeighborsFromPlacedTile();
-    public EElementType CardType { get; }
-
+    PlaceableCard placeable { get; }
+    StableDiffusionGenerator imageGenerator { get; }
+    List<IBoardSelectablePosition> GetNeighborsFromPlacedTile();
+    EElementType CardType { get; }
+    void RefreshStats();
+    void SetInfoUI();
+    void UnsetInfoUI();
 }
 
 public class PlayableCard : Entity, IPlayerCard
 {
-    [Inject]
-    ElementalStatModifiersScriptableObject elementalStatModifiers;
+    [Inject] private ElementalStatModifiersScriptableObject elementalStatModifiers;
+    [Inject] private CardInfoUI cardInfoUI;
+    [Inject] private IStatModifierFactory statModifierFactory;
 
-    [Inject]
-    public CardInfoUI cardInfoUI;
+    private PlaceableCard _placeable;
+    private StableDiffusionGenerator _imageGenerator;
+    private List<StatModifier> currentModifiers = new List<StatModifier>();
 
-    [Inject]
-    IStatModifierFactory statModifierFactory;
-
+    public PlaceableCard placeable => _placeable;
+    public StableDiffusionGenerator imageGenerator => _imageGenerator;
     public EElementType CardType => placeable.cardElementType;
 
     protected override void Awake()
     {
         base.Awake();
-        imageGenerator = GetComponentInChildren<StableDiffusionGenerator>();
-        placeable = GetComponent<PlaceableCard>();
-        imageGenerator.Initialize();
+        InitializeComponents();
+        SetupEventHandlers();
+    }
+
+    private void InitializeComponents()
+    {
+        _imageGenerator = GetComponentInChildren<StableDiffusionGenerator>();
+        _placeable = GetComponent<PlaceableCard>();
+        _imageGenerator.Initialize();
+        
         RefreshStats();
-        name = imageGenerator.prompt;
-        placeable.OnElementalTileChange += OnElementChange;
-        placeable.HighlightOtherPlaceableAction += OnHighlightOtherPlaceable;
+        name = _imageGenerator.prompt;
     }
 
-    public void OnHighlightOtherPlaceable(IPlaceable otherPlaceable)
+    private void SetupEventHandlers()
     {
-        if(otherPlaceable == null)
+        if (_placeable != null)
         {
-            CardAttackUI.SetCardsAction?.Invoke(null, null);
-            return;
-        }
-
-        if (otherPlaceable is PlaceableCard otherCard)
-        {
-            PlayableCard otherPlayable = otherCard.GetComponent<PlayableCard>();
-            CardAttackUI.SetCardsAction?.Invoke(this, otherPlayable);
+            _placeable.OnElementalTileChange += OnElementChange;
+            _placeable.HighlightOtherPlaceableAction += OnHighlightOtherPlaceable;
         }
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
-        placeable.OnElementalTileChange -= OnElementChange;
-        placeable.HighlightOtherPlaceableAction -= OnHighlightOtherPlaceable;
+        if (_placeable != null)
+        {
+            _placeable.OnElementalTileChange -= OnElementChange;
+            _placeable.HighlightOtherPlaceableAction -= OnHighlightOtherPlaceable;
+        }
     }
-
-    public PlaceableCard placeable { get; set; }
-    public StableDiffusionGenerator imageGenerator { get; set; }
 
     public void RefreshStats()
     {
-        var _monsterType = imageGenerator.words.Find(x => x.wordType == Sentences.WordType.Type).word.ToUpper();
-        placeable.cardElementType = (EElementType)System.Enum.Parse(typeof(EElementType), _monsterType);
+        UpdateElementType();
+        ResetBaseStats();
+        ApplyWordModifiers();
+    }
+
+    private void UpdateElementType()
+    {
+        var monsterType = _imageGenerator.words.Find(x => x.wordType == Sentences.WordType.Type).word.ToUpper();
+        if (!string.IsNullOrEmpty(monsterType))
+        {
+            _placeable.cardElementType = (EElementType)System.Enum.Parse(typeof(EElementType), monsterType);
+        }
+    }
+
+    private void ResetBaseStats()
+    {
         baseStats.attack = 0;
         baseStats.defense = 0;
         baseStats.speed = 0;
-        foreach (var wordData in imageGenerator.words)
+    }
+
+    private void ApplyWordModifiers()
+    {
+        foreach (var wordData in _imageGenerator.words)
         {
             baseStats.attack += wordData.attackModifier;
             baseStats.defense += wordData.defenseModifier;
@@ -76,47 +96,60 @@ public class PlayableCard : Entity, IPlayerCard
         }
     }
 
-    public void SetInfoUI()
+    public void OnHighlightOtherPlaceable(IPlaceable otherPlaceable)
     {
-        cardInfoUI.SetPlayableCard(this);
-    }
+        if (otherPlaceable == null)
+        {
+            CardAttackUI.SetCardsAction?.Invoke(null, null);
+            return;
+        }
 
-    public void UnsetInfoUI()
-    {
-        cardInfoUI.SetPlayableCard(null);
+        if (otherPlaceable is PlaceableCard otherCard)
+        {
+            var otherPlayable = otherCard.GetComponent<PlayableCard>();
+            CardAttackUI.SetCardsAction?.Invoke(this, otherPlayable);
+        }
     }
 
     public void OnElementChange(bool isSameElement)
     {
-        //modify stats through stats mediator
+        Stats.Mediator.DisposeAll();
+        
         if (isSameElement)
         {
-            Stats.Mediator.DisposeAll();
-            var attackMod = statModifierFactory.Create(OperatorType.Multiply, EStatType.Attack, elementalStatModifiers.attackMultiplier, -1);
-            var defenseMod = statModifierFactory.Create(OperatorType.Multiply, EStatType.Defense, elementalStatModifiers.defenseMultiplier, -1);
-            var speedMod = statModifierFactory.Create(OperatorType.Multiply, EStatType.Speed, elementalStatModifiers.speedMultiplier, -1);
-            
-            Stats.Mediator.AddModifier(attackMod);
-            Stats.Mediator.AddModifier(defenseMod);
-            Stats.Mediator.AddModifier(speedMod);
+            ApplyElementalBonuses();
+        }
 
-            //currentModifiers.Add(attackMod);
-            //currentModifiers.Add(defenseMod);
-            //currentModifiers.Add(speedMod);
-            Debug.Log("Element Change to Same Element update stats");
-        }
-        else
-        {
-            Stats.Mediator.DisposeAll();
-            Debug.Log("Element Change to Different Element reset stats");
-        }
         cardInfoUI.RefreshInfo();
+    }
+
+    private void ApplyElementalBonuses()
+    {
+        var attackMod = statModifierFactory.Create(OperatorType.Multiply, EStatType.Attack, elementalStatModifiers.attackMultiplier);
+        var defenseMod = statModifierFactory.Create(OperatorType.Multiply, EStatType.Defense, elementalStatModifiers.defenseMultiplier);
+        var speedMod = statModifierFactory.Create(OperatorType.Multiply, EStatType.Speed, elementalStatModifiers.speedMultiplier);
+        
+        Stats.Mediator.AddModifier(attackMod);
+        Stats.Mediator.AddModifier(defenseMod);
+        Stats.Mediator.AddModifier(speedMod);
     }
 
     public List<IBoardSelectablePosition> GetNeighborsFromPlacedTile()
     {
+        if (_placeable?.PlacedTarget == null) return null;
+        
         List<IBoardSelectablePosition> selectedTiles = null;
-        placeable.PlacedTarget.SelectNeighbors(Stats.Speed, out selectedTiles);
+        _placeable.PlacedTarget.SelectNeighbors(Stats.Speed, out selectedTiles);
         return selectedTiles;
+    }
+
+    public void SetInfoUI()
+    {
+        cardInfoUI?.SetPlayableCard(this);
+    }
+
+    public void UnsetInfoUI()
+    {
+        cardInfoUI?.SetPlayableCard(null);
     }
 }

@@ -8,34 +8,43 @@ public class PlaceableCard : BoardPlaceable
 {
     public EElementType cardElementType;
 
-    [Inject]
-    IStaticEvents staticEvents;
+    [Inject] private IStaticEvents staticEvents;
+    [Inject] private List<ElementalStrengths> strengths;
 
-    [Inject]
-    List<ElementalStrengths> strengths;
-
-    Outline outline;
+    private Outline outline;
+    private bool placedForFirstTime;
 
     public List<Transform> OutlineTransforms;
-
     public Action<bool> OnElementalTileChange = default;
 
-    public void Awake()
+    protected virtual void Awake()
     {
         outline = GetComponentInChildren<Outline>();
+        RegisterEventHandlers();
+    }
+
+    private void RegisterEventHandlers()
+    {
         OnHighlightChange += HighlightChanged;
         OnPlacedTileChange += PlacedTileChanged;
         staticEvents.OnTurnEnd += OnTurnEnd;
-        Debug.Log("should register end turn listener" + name);
+        Debug.Log($"Registered end turn listener for {name}");
     }
 
     private void OnDestroy()
     {
-        OnHighlightChange -= HighlightChanged;
-        OnPlacedTileChange -= PlacedTileChanged;
+        UnregisterEventHandlers();
     }
 
-    bool placedForFirstTime = false;
+    private void UnregisterEventHandlers()
+    {
+        OnHighlightChange -= HighlightChanged;
+        OnPlacedTileChange -= PlacedTileChanged;
+        if (!placedForFirstTime)
+        {
+            staticEvents.OnTurnEnd -= OnTurnEnd;
+        }
+    }
 
     public void OnTurnEnd()
     {
@@ -43,72 +52,99 @@ public class PlaceableCard : BoardPlaceable
         {
             placedForFirstTime = true;
             staticEvents.OnTurnEnd -= OnTurnEnd;
-            //gameManager.EndTurn();
-            Debug.Log("should unregister end turn listener " + name);
+            Debug.Log($"Unregistered end turn listener for {name}");
         }
         else
-            Debug.Log("Turn ended but card not placed " + name);
+        {
+            Debug.Log($"Turn ended but card not placed: {name}");
+        }
     }
 
     protected override void ExecuteSelection()
     {
         if (player.ExecutedPlacementCommand && player.LastPlacementCommand != null)
         {
-            if(player.LastPlacementCommand.card != this)
+            if (player.LastPlacementCommand.card != this)
+            {
                 player.Commands.UndoCommand();
-
+            }
             player.ExecutedPlacementCommand = false;
         }
         base.ExecuteSelection();
     }
 
-    void PlacedTileChanged(IBoardSelectablePosition placedTile)
+    private void PlacedTileChanged(IBoardSelectablePosition placedTile)
     {
-        if(player is AIPlayer)
-            Debug.Log("AI Player PLACED Card on " + placedTile.GridPosition);
-
+        if (player is AIPlayer)
+        {
+            Debug.Log($"AI Player placed card on {placedTile.GridPosition}");
+        }
     }
 
-    void HighlightChanged(IBoardSelectablePosition highlightedTile)
+    private void HighlightChanged(IBoardSelectablePosition highlightedTile)
     {
-        OnElementalTileChange.Invoke(highlightedTile == null? false : cardElementType == highlightedTile.ElementType);
+        bool isSameElement = highlightedTile != null && cardElementType == highlightedTile.ElementType;
+        OnElementalTileChange?.Invoke(isSameElement);
     }
 
     public override void HandleHighlightLine()
     {
         if (HighlightedTarget == null)
         {
-            ReleaseCurrentLine();
-            outline.enabled = false;
+            ClearHighlight();
+            return;
         }
-        else 
-        {
-            Color col = Color.cyan;
-            if (HighlightedTarget is IBoardSelectablePosition highlightedHex)
-            {
-                var elementStrengths = strengths.Find(x => x.Element == cardElementType);
-                if (cardElementType == highlightedHex.ElementType) //(elementStrengths.IsStrongAgainst(highlightedHex.tileType))
-                {
-                    col = Color.green;
-                }
-                else if (elementStrengths.IsWeakAgainst(highlightedHex.ElementType))
-                {
-                    col = Color.red;
-                }
-            }
 
-            outline.enabled = true;
-            outline.OutlineColor = col;
-
-            currentRaycastLine = VolumetricLinePool.DrawLine(LinePositionsWithTarget(HighlightedTarget.GetTransform().position), col, currentRaycastLine);
-            //Debug.Log("DRAWING LINE");
-            //currentRaycastLine = VolumetricLinePool.DrawLine(transform.position, HighlightedTarget.GetTransform().position, col, currentRaycastLine);
-        }
+        UpdateHighlight();
     }
 
-    Vector3[] LinePositionsWithTarget(Vector3 targetPos)
+    private void ClearHighlight()
     {
-        //add targetPos position to end of Line Positions
+        ReleaseCurrentLine();
+        outline.enabled = false;
+    }
+
+    private void UpdateHighlight()
+    {
+        Color highlightColor = DetermineHighlightColor();
+        ApplyHighlightColor(highlightColor);
+        DrawHighlightLine(highlightColor);
+    }
+
+    private Color DetermineHighlightColor()
+    {
+        if (!(HighlightedTarget is IBoardSelectablePosition highlightedHex))
+        {
+            return Color.cyan;
+        }
+
+        var elementStrengths = strengths.Find(x => x.Element == cardElementType);
+        if (cardElementType == highlightedHex.ElementType)
+        {
+            return Color.green;
+        }
+        else if (elementStrengths.IsWeakAgainst(highlightedHex.ElementType))
+        {
+            return Color.red;
+        }
+
+        return Color.cyan;
+    }
+
+    private void ApplyHighlightColor(Color color)
+    {
+        outline.enabled = true;
+        outline.OutlineColor = color;
+    }
+
+    private void DrawHighlightLine(Color color)
+    {
+        Vector3[] positions = LinePositionsWithTarget(HighlightedTarget.GetTransform().position);
+        currentRaycastLine = VolumetricLinePool.DrawLine(positions, color, currentRaycastLine);
+    }
+
+    protected Vector3[] LinePositionsWithTarget(Vector3 targetPos)
+    {
         Vector3[] positions = new Vector3[OutlineTransforms.Count + 1];
         for (int i = 0; i < OutlineTransforms.Count; i++)
         {
@@ -121,16 +157,20 @@ public class PlaceableCard : BoardPlaceable
     public override void ClickPlacedTile()
     {
         if (placedForFirstTime)
+        {
             base.ClickPlacedTile();
+        }
         else
+        {
             gameBoard.SelectStartHexTilesForPlayer(player.PlayerIndex);
-        //Debug.Log("Card Selected");
-        //gameManager.EndTurn();
+        }
     }
 
     public override void OnBeginDrag()
     {
-        if(AllowInteraction())
+        if (AllowInteraction())
+        {
             base.OnBeginDrag();
+        }
     }
 }
