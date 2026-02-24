@@ -28,6 +28,7 @@ public class PlaceableCard : BoardPlaceable
         OnHighlightChange += HighlightChanged;
         OnPlacedTileChange += PlacedTileChanged;
         staticEvents.OnTurnEnd += OnTurnEnd;
+        OnTilePlaced.AddListener(NotifyCardPlaced);
         Debug.Log($"Registered end turn listener for {name}");
     }
 
@@ -40,6 +41,7 @@ public class PlaceableCard : BoardPlaceable
     {
         OnHighlightChange -= HighlightChanged;
         OnPlacedTileChange -= PlacedTileChanged;
+        OnTilePlaced.RemoveListener(NotifyCardPlaced);
         if (!placedForFirstTime)
         {
             staticEvents.OnTurnEnd -= OnTurnEnd;
@@ -85,6 +87,11 @@ public class PlaceableCard : BoardPlaceable
     {
         bool isSameElement = highlightedTile != null && cardElementType == highlightedTile.ElementType;
         OnElementalTileChange?.Invoke(isSameElement);
+    }
+
+    private void NotifyCardPlaced()
+    {
+        staticEvents?.OnCardPlaced?.Invoke(player);
     }
 
     public override void HandleHighlightLine()

@@ -15,6 +15,7 @@ public interface IGamePlayer
     public void RemoveCard(PlayableCard card);
     public bool IsLocalPlayer { get; }
     public PlaceOnBoardCommand LastPlacementCommand { get => Commands.GetLastCommand() as PlaceOnBoardCommand; }
+    public void ExecuteAction(ICardAction action);
 }
 
 
@@ -89,5 +90,16 @@ public class HexPlayer : MonoBehaviour, IGamePlayer
     public virtual void RemoveCard(PlayableCard card)
     {
         playableCards.Remove(card);
+    }
+
+    public virtual void ExecuteAction(ICardAction action)
+    {
+        if (action == null || !action.CanExecute())
+        {
+            return;
+        }
+
+        Commands.ExecuteCommand(action);
+        gameManager.ResolveActionForCurrentPlayer();
     }
 }

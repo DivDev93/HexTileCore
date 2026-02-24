@@ -95,7 +95,7 @@ public class AIPlayer : HexPlayer
     public void PlacedTileChanged(IBoardSelectablePosition placedTile)
     {
         currentCard.placeable.OnPlacedTileChange -= PlacedTileChanged;
-        EndTurn();
+        // Allow the placement event to advance the action phase; AI auto-resolves via game mode rules.
     }
 
     IBoardSelectablePosition GetMatchingFromNeighbors()

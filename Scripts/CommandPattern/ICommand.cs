@@ -9,6 +9,18 @@ public interface ICommand
     public void Undo();
 }
 
+public interface ICardAction : ICommand
+{
+    /// <summary>
+    /// Friendly identifier for logging or UI (e.g., "Attack", "Defend").
+    /// </summary>
+    public string ActionName { get; }
+    /// <summary>
+    /// Validates that the action has a usable context; Execute should be skipped when this returns false.
+    /// </summary>
+    public bool CanExecute();
+}
+
 public class PlaceOnBoardCommand : ICommand
 {
     IBoardSelectablePosition newGripPos;
@@ -47,7 +59,7 @@ public class PlaceOnBoardCommand : ICommand
     }
 }
 
-public class AttackCardCommand : ICommand
+public class AttackCardCommand : ICardAction
 {
     StatModifier defenseModifier;
     CardInfoUI attackingCard;
@@ -59,6 +71,13 @@ public class AttackCardCommand : ICommand
         this.attackingCard = attackingCard;
         this.defendingCard = defendingCard;
         this.statModifierFactory = statModifierFactory;
+    }
+
+    public string ActionName => "Attack";
+
+    public bool CanExecute()
+    {
+        return attackingCard?.CurrentCard != null && defendingCard?.CurrentCard != null;
     }
 
     public void Execute()
@@ -84,5 +103,3 @@ public class AttackCardCommand : ICommand
         defendingCard.RefreshInfo();
     }
 }
-//}
-

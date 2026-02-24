@@ -10,6 +10,7 @@ public interface IGameManager
     public int CurrentPlayerTurn { get; set; }
     public void EndTurn();
     public void StartTurn();
+    public void ResolveActionForCurrentPlayer();
     public List<IGamePlayer> Players { get; set; }
 
 }
@@ -180,6 +181,11 @@ public class NetworkGameManager : NetworkBehaviour, IGameManager
     }
 
     public void StartTurn()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void ResolveActionForCurrentPlayer()
     {
         throw new System.NotImplementedException();
     }
