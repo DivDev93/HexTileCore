@@ -14,8 +14,17 @@ public interface IGamePlayer
     public void AddCard(PlayableCard card);
     public void RemoveCard(PlayableCard card);
     public bool IsLocalPlayer { get; }
+    /// <summary>
+    /// When true, the game mode will automatically resolve actions for this player (e.g. AI-controlled players).
+    /// </summary>
+    public bool RequiresAutoResolve { get; }
     public PlaceOnBoardCommand LastPlacementCommand { get => Commands.GetLastCommand() as PlaceOnBoardCommand; }
     public void ExecuteAction(ICardAction action);
+    /// <summary>
+    /// Executes the action and optionally triggers action resolution for the current turn.
+    /// Pass <c>false</c> to defer action resolution, enabling multiple actions to be queued before resolution.
+    /// </summary>
+    public void ExecuteAction(ICardAction action, bool resolveAction);
 }
 
 
@@ -68,6 +77,8 @@ public class HexPlayer : MonoBehaviour, IGamePlayer
         }
     }
 
+    public virtual bool RequiresAutoResolve => false;
+
     public void EndTurn()
     {
         gameManager.EndTurn();
@@ -94,12 +105,21 @@ public class HexPlayer : MonoBehaviour, IGamePlayer
 
     public virtual void ExecuteAction(ICardAction action)
     {
+        ExecuteAction(action, true);
+    }
+
+    public virtual void ExecuteAction(ICardAction action, bool resolveAction)
+    {
         if (action == null || !action.CanExecute())
         {
             return;
         }
 
         Commands.ExecuteCommand(action);
-        gameManager.ResolveActionForCurrentPlayer();
+
+        if (resolveAction)
+        {
+            gameManager.ResolveActionForCurrentPlayer();
+        }
     }
 }

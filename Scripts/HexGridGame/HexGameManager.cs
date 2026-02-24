@@ -39,6 +39,11 @@ public class HexGameManager : MonoBehaviour, IGameManager
 
     public void StartGame()
     {
+        if (gameModeRules == null)
+        {
+            Debug.LogWarning("gameModeRules was not initialized before StartGame. Falling back to default HumanVsAI rules.");
+            gameModeRules = GameModeRulesFactory.Create(startingMode);
+        }
         localPlayer.PlayerIndex = 0;
         aiPlayer.PlayerIndex = 1;
         players.Add(localPlayer);
@@ -93,6 +98,11 @@ public class HexGameManager : MonoBehaviour, IGameManager
 
     public void ResolveActionForCurrentPlayer()
     {
+        if (currentPhase != TurnPhase.Action)
+        {
+            Debug.LogWarning($"ResolveActionForCurrentPlayer called outside of Action phase (current phase: {currentPhase}). Ignoring.");
+            return;
+        }
         staticEvents.OnActionResolved?.Invoke(players[CurrentPlayerTurn]);
     }
 
@@ -113,7 +123,8 @@ public class HexGameManager : MonoBehaviour, IGameManager
             }
             else if (!HasActionableTargets(actingPlayer))
             {
-                // When there is nothing to target, resolve the action phase to keep turns flowing.
+                // No valid targets available; skip the action phase and keep turns flowing.
+                Debug.LogWarning($"Action phase started for player {CurrentPlayerTurn} but no actionable targets found. Auto-resolving.");
                 ResolveActionForCurrentPlayer();
             }
         }
@@ -143,13 +154,32 @@ public class HexGameManager : MonoBehaviour, IGameManager
         {
             return false;
         }
+
+        bool hasActingPlayerPlaceable = false;
+        bool hasOpponentPlaceable = false;
+
         foreach (var placeable in gameBoard.GridPlaceables.Values)
         {
-            if (placeable != null && placeable.player != null && placeable.player != actingPlayer)
+            if (placeable == null || placeable.player == null)
+            {
+                continue;
+            }
+
+            if (placeable.player == actingPlayer)
+            {
+                hasActingPlayerPlaceable = true;
+            }
+            else
+            {
+                hasOpponentPlaceable = true;
+            }
+
+            if (hasActingPlayerPlaceable && hasOpponentPlaceable)
             {
                 return true;
             }
         }
+
         return false;
     }
 }

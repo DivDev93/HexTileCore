@@ -91,7 +91,13 @@ public class PlaceableCard : BoardPlaceable
 
     private void NotifyCardPlaced()
     {
-        staticEvents?.OnCardPlaced?.Invoke(player);
+        if (staticEvents == null)
+        {
+            Debug.LogWarning($"staticEvents is not initialized when NotifyCardPlaced is called for {name}.");
+            return;
+        }
+
+        staticEvents.OnCardPlaced?.Invoke(player);
     }
 
     public override void HandleHighlightLine()
