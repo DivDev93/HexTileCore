@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public enum TurnPhase
 {
@@ -33,6 +34,7 @@ public class RoundRobinGameModeRules : IGameModeRules
     {
         if (players == null || players.Count == 0)
         {
+            Debug.LogError("GetNextPlayerIndex called with null or empty players list. This is an invalid game state.");
             return 0;
         }
         return (currentPlayerIndex + 1) % players.Count;
@@ -42,7 +44,7 @@ public class RoundRobinGameModeRules : IGameModeRules
 
     public virtual bool AutoResolveActions(IGamePlayer player)
     {
-        return player is AIPlayer;
+        return player != null && player.RequiresAutoResolve;
     }
 }
 

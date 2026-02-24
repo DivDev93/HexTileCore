@@ -16,6 +16,7 @@ public class AIPlayer : HexPlayer
     IStaticEvents staticEvents;
 
     public override bool IsLocalPlayer => false;
+    public override bool RequiresAutoResolve => true;
 
     public AIPlayer()
     {
