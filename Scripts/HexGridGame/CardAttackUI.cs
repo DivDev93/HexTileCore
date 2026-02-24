@@ -41,7 +41,10 @@ public class CardAttackUI : MonoBehaviour
     public void Attack()
     {
         var command = new AttackCardCommand(attacker, defender, statModifierFactory);
-        attacker.CurrentCard.placeable.player.Commands.ExecuteCommand(command);
+        if (command.CanExecute())
+        {
+            attacker.CurrentCard.placeable.player.ExecuteAction(command);
+        }
 
         //if (attacker.CurrentCard == null || defender.CurrentCard == null)
         //{

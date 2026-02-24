@@ -6,6 +6,7 @@ public class HexGameManager : MonoBehaviour, IGameManager
 {
     [SerializeField] InterfaceReference<IGamePlayer> localPlayerRef;
     [SerializeField] InterfaceReference<IGamePlayer> aiPlayerRef;
+    [SerializeField] VersusGameMode startingMode = VersusGameMode.HumanVsAI;
     IGamePlayer localPlayer => localPlayerRef.Value;
     IGamePlayer aiPlayer => aiPlayerRef.Value;
 
@@ -14,6 +15,9 @@ public class HexGameManager : MonoBehaviour, IGameManager
 
     [Inject]
     IStaticEvents staticEvents;
+
+    TurnPhase currentPhase = TurnPhase.Placement;
+    IGameModeRules gameModeRules;
 
     int currentPlayerTurn;
     List<IGamePlayer> players = new List<IGamePlayer>();
@@ -39,25 +43,39 @@ public class HexGameManager : MonoBehaviour, IGameManager
         aiPlayer.PlayerIndex = 1;
         players.Add(localPlayer);
         players.Add(aiPlayer);
-        gameBoard.OnGameStart(VersusGameMode.HumanVsAI, true);
-        CurrentPlayerTurn = 0;
+        gameBoard.OnGameStart(gameModeRules.Mode, true);
+        CurrentPlayerTurn = gameModeRules.GetStartingPlayerIndex(players);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Awake()
+    {
+        gameModeRules = GameModeRulesFactory.Create(startingMode);
+    }
+
     void Start()
     {
         gameBoard.Initialize();
+        staticEvents.OnCardPlaced += HandleCardPlaced;
+        staticEvents.OnActionResolved += HandleActionResolved;
+    }
+
+    private void OnDestroy()
+    {
+        staticEvents.OnCardPlaced -= HandleCardPlaced;
+        staticEvents.OnActionResolved -= HandleActionResolved;
     }
 
     public void StartTurn()
     {
+        currentPhase = TurnPhase.Placement;
         gameBoard.SelectStartHexTilesForPlayer(CurrentPlayerTurn);
-        staticEvents.OnTurnStart.Invoke();
+        staticEvents.OnTurnStart?.Invoke();
     }
 
     public void EndTurn()
     {
-        CurrentPlayerTurn = (CurrentPlayerTurn + 1) % players.Count;
+        CurrentPlayerTurn = gameModeRules.GetNextPlayerIndex(CurrentPlayerTurn, players);
         staticEvents.OnTurnEnd?.Invoke();
         Debug.Log("End Turn next player turn is " + CurrentPlayerTurn);
     }
@@ -71,5 +89,67 @@ public class HexGameManager : MonoBehaviour, IGameManager
     public List<IGamePlayer> GetPlayers()
     {
         return players;
+    }
+
+    public void ResolveActionForCurrentPlayer()
+    {
+        staticEvents.OnActionResolved?.Invoke(players[CurrentPlayerTurn]);
+    }
+
+    void HandleCardPlaced(IGamePlayer actingPlayer)
+    {
+        if (!IsCurrentPlayer(actingPlayer))
+        {
+            return;
+        }
+
+        if (gameModeRules.CanEnterActionPhase(actingPlayer))
+        {
+            currentPhase = TurnPhase.Action;
+            Debug.Log($"Action phase started for player {CurrentPlayerTurn}");
+            if (gameModeRules.AutoResolveActions(actingPlayer))
+            {
+                ResolveActionForCurrentPlayer();
+            }
+            else if (!HasActionableTargets(actingPlayer))
+            {
+                // When there is nothing to target, resolve the action phase to keep turns flowing.
+                ResolveActionForCurrentPlayer();
+            }
+        }
+        else
+        {
+            EndTurn();
+        }
+    }
+
+    void HandleActionResolved(IGamePlayer actingPlayer)
+    {
+        if (!IsCurrentPlayer(actingPlayer))
+        {
+            return;
+        }
+        EndTurn();
+    }
+
+    bool IsCurrentPlayer(IGamePlayer player)
+    {
+        return CurrentPlayerTurn < players.Count && players[CurrentPlayerTurn] == player;
+    }
+
+    bool HasActionableTargets(IGamePlayer actingPlayer)
+    {
+        if (gameBoard?.GridPlaceables == null)
+        {
+            return false;
+        }
+        foreach (var placeable in gameBoard.GridPlaceables.Values)
+        {
+            if (placeable != null && placeable.player != null && placeable.player != actingPlayer)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
